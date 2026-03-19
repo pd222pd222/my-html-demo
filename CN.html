@@ -309,7 +309,7 @@
             { tag: "交通", time: "08:56", title: "重慶北站高鐵", info: "D2244車次", 
               img: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Front_South_Square_of_Chongqingbei_Railway_Station.jpg", 
               mapUrl:"https://j.map.baidu.com/77/v2J",
-              transport: "drive", duration: "15分鐘" },
+              transport: "HSR", duration: "4小時32分鐘" },
 
             { tag: "交通", time: "13:28", title: "宜昌東站高鐵", info: "", 
               img: "https://upload.wikimedia.org/wikipedia/commons/d/db/Yichang_East_Railway_Station.jpg", 
@@ -387,7 +387,7 @@
             { tag: "景點", time: "16:20", title: "磁浮列車", info: "", 
               img: "https://dimg04.tripcdn.com/images/1n94m224x8zghxn9z19E7.jpg?proc=format/f_webp", 
               mapUrl: "https://j.map.baidu.com/14/lc",
-              transport: "subway", duration: "浦東航站樓 -> 1站 -> 龍陽路站 -> 2號線(3站) -> 世紀大道站 -> 9號線(14站) -> 七寶站" },
+              transport: ["subway","Maglev"], duration: ["浦東航站樓 -> 1站 -> 龍陽路站"," 2號線(3站) -> 世紀大道站 -> 9號線(14站) -> 七寶站"] },
 
             { tag: "住宿", time: "Check-in", title: "如家商旅飯店", info: "七寶地鐵站店 | 放下行李直衝老街", 
               img: "https://ak-d.tripcdn.com/images/1mc1f12000b9wn8jxD83C_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F", 
@@ -415,7 +415,7 @@
     ];
 
     const tagColors = { "交通": "#bae1ff", "餐點": "#ffb3ba", "景點": "#ffdfba", "住宿": "#baffc9", "家人": "#ddd" };
-    const transIcons = { "walk": "🚶 步行", "drive": "🚗 車程", "subway": "🚇 地鐵", "ship": "🚢 航行", "airplane": "✈️ 飛行" };
+    const transIcons = { "walk": "🚶 步行", "drive": "🚗 車程", "subway": "🚇 地鐵", "ship": "🚢 航行", "airplane": "✈️ 飛行", "HSR": "🚄 高鐵", "Maglev":"🚝 磁浮列車" };
 
     const nav = document.getElementById('dayNav');
     const content = document.getElementById('content');
