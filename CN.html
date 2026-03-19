@@ -120,10 +120,10 @@
 
         /* 親友卡片的專屬樣式 */
         .family-card {
-            background: rgba(240, 240, 240, 0.6) !important; /* 變成淺灰色 */
-            border: 1px dashed #bbb !important;            /* 變成虛線邊框 */
-            opacity: 0.85;                                  /* 稍微透明一點 */
-            transform: scale(0.8);                         /* 稍微縮小一點 */
+            background: rgba(240, 240, 240, 0.6) !important;
+            border: 1px dashed #bbb !important;
+            opacity: 0.85;
+            transform: scale(0.8);
         }
 
         /* 親友標籤樣式 */
@@ -137,14 +137,14 @@
         }
         #lightbox img { max-width: 90%; max-height: 80%; border: 8px solid white; border-radius: 10px; }
 
-/* 費用標籤基礎樣式 */
-.price-tag {
-    font-size: 0.7rem;
-    padding: 1px 6px;
-    border-radius: 4px;
-    margin-left: 5px;
-    font-weight: 600;
-}
+	/* 費用標籤基礎樣式 */
+	.price-tag {
+	    font-size: 0.7rem;
+	    padding: 1px 6px;
+	    border-radius: 4px;
+	    margin-left: 5px;
+	    font-weight: 600;
+	}
 
 .price-twd { background: #f0f7ff; color: #4682b4; border: 1px solid #d1e3f8; }
 .price-rmb { background: #fffaf0; color: #cd853f; border: 1px solid #feeace; }
@@ -166,10 +166,8 @@
 }
 
 .book-link:hover {
-    background: #37474f; /* 游標移上去深一點 */
+    background: #37474f; 
 }
-
-/* 費用標籤也稍微調淡一點點 */
 
 
     </style>
@@ -213,7 +211,7 @@
         ]},
 
         { date: "06/06", label: "飛往重慶", items: [
-            { tag: "家人", time: "11:15 - 14:40", title: "廈門高崎T3／重慶江北T3", info: "XMN -> CKG (2h50m)", type: "family", 
+            { tag: "家人", time: "11:15 - 14:40", title: "廈門T3／重慶T3", info: "XMN -> CKG (MF8413)", type: "family", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg/500px-Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg",
               mapUrl: "https://j.map.baidu.com/47/bYd" },
         
@@ -281,7 +279,8 @@
               img: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_530616/20250909063452_fbl3u/jpg", 
               mapUrl:"https://j.map.baidu.com/8f/s7Fk",
               transport: "drive", duration: "15分鐘/7.7km",
-              priceTwd: "2,229",
+              priceTwd: "2,290",
+	      priceRmb: "499",
               bookUrl: "https://www.klook.com/zh-TW/activity/142214-chongqing-qingyu-banquet-palace-feast-experience/?campaignid=23492310427&adgroupid=&targetid=&matchtype=&device=c&creative=&extensionid=&keyword=&loc_interest_ms=&loc_physical_ms=9197957&network=x&utm_content=campaignid_23492310427_adgroupid_&gad_source=1&gad_campaignid=23482566441&gbraid=0AAAAACa_CWxI7OqkWwrNRxetGogMS2w7U&gclid=Cj0KCQjwve7NBhC-ARIsALZy9HXkYcD8hKK9vEcEefMChV-w3jHc0VHsKViBaKmwYIo-DOYBr2VdvFkaAk3KEALw_wcB" },
             
             { tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業", 
@@ -394,9 +393,9 @@
         ]},
 
         { date: "06/13", label: "重回上海", items: [
-            { tag: "家人", time: "11:30 - 13:30", title: "重慶江北T3／廈門高崎T3", info: "CKG -> XMN (2h20m)", type: "family", 
+            { tag: "家人", time: "11:30 - 13:30", title: "重慶T3／廈門T3", info: "CKG -> XMN (MF8404)", type: "family", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
-              mapUrl: "https://j.map.baidu.com/67/9Mri" },
+              mapUrl: "https://j.map.baidu.com/67/9Mri"},
 
             { tag: "交通", time: "09:30", title: "機場寄放行李", info: "用存知己查寄放行李", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
@@ -423,10 +422,13 @@
               mapUrl: "https://j.map.baidu.com/14/lc",
               transport: "walk", duration: "2分鐘/150m" },
 
-            { tag: "景點", time: "16:20", title: "磁浮列車", info: "", 
+            { tag: "景點", time: "16:20", title: "磁浮列車", info: "浦東航站樓站 -> 龍陽路站", 
               img: "https://dimg04.tripcdn.com/images/1n94m224x8zghxn9z19E7.jpg?proc=format/f_webp", 
               mapUrl: "https://j.map.baidu.com/14/lc",
-              transport: ["Maglev","subway"], duration: ["1站","龍陽路站 -> 2號線(3站) -> 世紀大道站 -> 9號線(14站) -> 七寶站"] },
+              transport: "subway", duration: "龍陽路站 -> 2號線(3站) -> 世紀大道站 -> 9號線(14站) -> 七寶站",
+	      priceTwd: "184",
+	      priceRmb: "40",
+	      bookUrl: "http://www.smtdc.com/cn/jszl.html" },
 
             { tag: "住宿", time: "Check-in", title: "如家商旅飯店", info: "七寶地鐵站店 | 放下行李直衝老街", 
               img: "https://ak-d.tripcdn.com/images/1mc1f12000b9wn8jxD83C_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F", 
