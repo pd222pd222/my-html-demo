@@ -126,7 +126,7 @@
             transform: scale(0.8);                         /* 稍微縮小一點 */
         }
 
-        /* 也可以幫「親友」這個標籤改顏色 */
+        /* 親友標籤樣式 */
         .tag[style*="#ddd"] { 
             color: #888; 
         }
@@ -136,6 +136,42 @@
             z-index: 1000; justify-content: center; align-items: center;
         }
         #lightbox img { max-width: 90%; max-height: 80%; border: 8px solid white; border-radius: 10px; }
+
+/* 費用標籤基礎樣式 */
+.price-tag {
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+    font-weight: 600;
+}
+
+.price-twd { background: #f0f7ff; color: #4682b4; border: 1px solid #d1e3f8; }
+.price-rmb { background: #fffaf0; color: #cd853f; border: 1px solid #feeace; }
+
+/* 預訂按鈕樣式 */
+.book-link {
+    display: inline-block;
+    margin-top: 8px;
+    margin-left: 10px;
+    padding: 4px 12px;
+    background: #546e7a;
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.book-link:hover {
+    background: #37474f; /* 游標移上去深一點 */
+}
+
+/* 費用標籤也稍微調淡一點點 */
+
+
     </style>
 </head>
 <body>
@@ -153,7 +189,8 @@
             { tag: "交通", time: "17:15", title: "松山T1起飛", info: "TSA -> SHA", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG/500px-%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG", 
               mapUrl: "https://j.map.baidu.com/bb/J8x",
-              transport: "airplane", duration: "1小時40分" },
+              transport: "airplane", duration: "1小時40分",
+              priceTwd: "9,500" },
 
             { tag: "交通", time: "18:55", title: "抵達上海虹橋T1", info: "", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg", 
@@ -243,7 +280,9 @@
             { tag: "餐點", time: "晚餐", title: "慶渝宴", info: "宮廷餐秀", 
               img: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_530616/20250909063452_fbl3u/jpg", 
               mapUrl:"https://j.map.baidu.com/8f/s7Fk",
-              transport: "drive", duration: "15分鐘/7.7km" },
+              transport: "drive", duration: "15分鐘/7.7km",
+              priceTwd: "2,229",
+              bookUrl: "https://www.klook.com/zh-TW/activity/142214-chongqing-qingyu-banquet-palace-feast-experience/?campaignid=23492310427&adgroupid=&targetid=&matchtype=&device=c&creative=&extensionid=&keyword=&loc_interest_ms=&loc_physical_ms=9197957&network=x&utm_content=campaignid_23492310427_adgroupid_&gad_source=1&gad_campaignid=23482566441&gbraid=0AAAAACa_CWxI7OqkWwrNRxetGogMS2w7U&gclid=Cj0KCQjwve7NBhC-ARIsALZy9HXkYcD8hKK9vEcEefMChV-w3jHc0VHsKViBaKmwYIo-DOYBr2VdvFkaAk3KEALw_wcB" },
             
             { tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業", 
               img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
@@ -445,19 +484,26 @@
 
             card.innerHTML = `
                 <div class="info-side">
-                    <div class="tag-row">
-                        <span class="tag" style="background:${tagColors[item.tag] || '#eee'}">${item.tag}</span>
-                        ${item.time ? `<span class="time-text">${item.time}</span>` : ''}
-                    </div>
-                    <div class="spot-name">${item.title}</div>
-                    <div class="extra-info">${item.info}</div>
-                    <a href="${finalMapUrl}" target="_blank" class="nav-link">🧭 百度地圖</a>
+                <div class="tag-row">
+                    <span class="tag" style="background:${tagColors[item.tag] || '#eee'}">${item.tag}</span>
+                    ${item.time ? `<span class="time-text">${item.time}</span>` : ''}
+            
+                    ${item.priceTwd ? `<span class="price-tag price-twd">NT$ ${item.priceTwd}</span>` : ''}
+                    ${item.priceRmb ? `<span class="price-tag price-rmb">¥ ${item.priceRmb}</span>` : ''}
                 </div>
-                <div class="img-side" onclick="openLightbox('${item.img}')">
-                    <img src="${item.img}" alt="${item.title}">
+        
+                <div class="spot-name">${item.title}</div>
+                <div class="extra-info">${item.info}</div>
+        
+                <div class="action-row">
+                <a href="${finalMapUrl}" target="_blank" class="nav-link">🧭 百度地圖</a>
+    
+                    ${item.bookUrl ? `<a href="${item.bookUrl}" target="_blank" class="book-link">🔗 參考連結</a>` : ''}
                 </div>
-            `;
-            section.appendChild(card);
+                </div>
+                <div class="img-side" onclick="openLightbox('${item.img}')"><img src="${item.img}"></div>
+                `;
+                section.appendChild(card);
 
             // 處理複合交通顯示
             if (item.transport && index < day.items.length - 1) {
