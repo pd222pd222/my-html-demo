@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 China Trip | Full Itinerary</title>
+    <style>
+        :root {
+            --accent: #6c9edf;
+            --text: #444;
+            --card-bg: rgba(255, 255, 255, 0.88);
+            --line: #cbd5e1;
+        }
+
+        body {
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #fff1f2 100%);
+            background-attachment: fixed;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        .nav-bar-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-bar { display: flex; gap: 10px; padding: 0 15px; overflow-x: auto; }
+        .nav-bar::-webkit-scrollbar { display: none; }
+
+        .day-btn {
+            flex: 0 0 auto;
+            border: 1px solid rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.4);
+            padding: 8px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-align: center;
+            line-height: 1.2;
+            transition: 0.3s;
+        }
+
+        .day-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 158, 223, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-container { max-width: 620px; margin: 25px auto; padding: 0 18px; }
+        .day-section { display: none; }
+        .day-section.active { display: block; }
+
+        .item-card {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 22px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255,255,255,0.5);
+            gap: 15px;
+            align-items: center;
+        }
+
+        .info-side { flex: 1; }
+        .tag-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .tag { padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; color: #555; }
+        .time-text { font-size: 0.8rem; color: #888; font-weight: 500; }
+
+        .spot-name {
+            font-size: 1.45rem;
+            font-weight: 900;
+            margin: 4px 0 8px 0;
+            display: inline-block;
+            position: relative;
+        }
+
+        .spot-name::after {
+            content: "";
+            position: absolute; left: 0; bottom: 3px; width: 100%; height: 8px;
+            background: linear-gradient(90deg, rgba(143, 179, 255, 0.3), rgba(255, 179, 186, 0.3));
+            z-index: -1; border-radius: 4px;
+        }
+
+        .extra-info { font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 10px; }
+
+        .img-side {
+            width: 105px; height: 105px; flex-shrink: 0;
+            background: white; padding: 5px; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: rotate(-1.5deg); cursor: pointer; transition: 0.3s;
+        }
+        .img-side:hover { transform: rotate(0deg) scale(1.05); }
+        .img-side img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+
+        .route-connector {
+            margin-left: 40px; border-left: 2px dashed var(--line);
+            padding: 12px 0 12px 25px; position: relative;
+        }
+
+        .route-info {
+            display: flex; align-items: center; gap: 8px; font-size: 0.8rem;
+            color: #64748b; background: rgba(255,255,255,0.6);
+            padding: 4px 12px; border-radius: 15px; width: fit-content;
+        }
+
+        .nav-link {
+            text-decoration: none; font-size: 0.75rem; color: white;
+            background: var(--accent); padding: 5px 15px; border-radius: 20px;
+            display: inline-block;
+        }
+
+        /* 親友卡片的專屬樣式 */
+        .family-card {
+            background: rgba(240, 240, 240, 0.6) !important; /* 變成淺灰色 */
+            border: 1px dashed #bbb !important;            /* 變成虛線邊框 */
+            opacity: 0.85;                                  /* 稍微透明一點 */
+            transform: scale(0.8);                         /* 稍微縮小一點 */
+        }
+
+        /* 也可以幫「親友」這個標籤改顏色 */
+        .tag[style*="#ddd"] { 
+            color: #888; 
+        }
+
+        #lightbox {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 1000; justify-content: center; align-items: center;
+        }
+        #lightbox img { max-width: 90%; max-height: 80%; border: 8px solid white; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="nav-bar-container">
+    <div class="nav-bar" id="dayNav"></div>
+</div>
+
+<div class="main-container" id="content"></div>
+<div id="lightbox" onclick="this.style.display='none'"><img src="" id="lbImg"></div>
+
+<script>
+    const itineraryData = [
+        { date: "06/05", label: "抵達上海", items: [
+            { tag: "交通", time: "17:15", title: "松山 T1 起飛", info: "TSA -> SHA", 
+              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG/500px-%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG", 
+              mapUrl: "https://j.map.baidu.com/bb/J8x",
+              transport: "airplane", duration: "1小時40分" },
+
+            { tag: "交通", time: "18:55", title: "抵達上海虹橋 T1", info: "", 
+              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg", 
+              mapUrl: "https://j.map.baidu.com/78/hwc",
+              transport: ["subway", "walk"], duration: ["2號線/10站", "2分鐘/190m"] },
+            
+            { tag: "住宿", time: "", title: "漢庭酒店（南京路步行街）", info: "辦理入住 | 步行至南京路步行街", 
+              img: "https://ak-d.tripcdn.com/images/1mc2g12000rofbjl3C650_R_960_660_R5_D.jpg", 
+              mapUrl: "https://j.map.baidu.com/cd/bAr",
+              transport: "walk", duration: "2分鐘/190m" },
+            
+            { tag: "餐點", time: "晚餐", title: "蟹東來", info: "南京路必吃蟹粉麵", 
+              img: "https://ak-d.tripcdn.com/images/1mi29224x8zmf3ai857D6_W_640_0_R5_Q80.jpg?proc=source/trip",
+              mapUrl: "https://j.map.baidu.com/0f/FIMk",
+              transport: "walk", duration: "5分鐘/290m" },
+            
+            { tag: "景點", time: "", title: "外灘", info: "著名的夜景勝地", 
+              img: "https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/PVG/G0/PVG0000011/PVG0000011_61990.jpg",
+              mapUrl: "https://j.map.baidu.com/0f/FIMk" }
+        ]},
+
+        { date: "06/06", label: "飛往重慶", items: [
+            { tag: "家人", time: "11:15 - 14:40", title: "廈門高崎 T3 起飛／重慶江北 T3 抵達", info: "XMN -> CKG (2h50m)", type: "family", 
+              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg/500px-Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg",
+              mapUrl: "https://j.map.baidu.com/47/bYd" },
+        
+            { tag: "交通", time: "12:40", title: "上海虹橋 T2 起飛", info: "SHA -> CKG", 
+              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg",
+              mapUrl: "https://j.map.baidu.com/78/hwc",
+              transport: "airplane", duration: "2小時45分" },
+        
+            { tag: "交通", time: "18:55", title: "抵達重慶江北 T3", info: "", 
+              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
+              mapUrl: "https://j.map.baidu.com/67/9Mri",
+              transport: "drive", duration: "32分鐘/25.5km/計程車約56元" },
+
+            { tag: "住宿", time: "Check-in", title: "重慶渝中半島福朋喜來登酒店", info: "", 
+              img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+              mapUrl: "https://j.map.baidu.com/ea/zefM",
+              transport: "drive", duration: "選項1：14分鐘/4.7km/計程車約14元；選項2：23分鐘/9.7km/計程車約24元" },
+
+            { tag: "餐點", time: "選項1", title: "三生三味密宗川菜", info: "來福士店 | 觀賞無人機表演", 
+              img: "https://ak-d.tripcdn.com/images/1mh5g12000bgx3550F7DF_C_760_506_R5.jpg?proc=source%2ftrip",
+              mapUrl: "https://j.map.baidu.com/16/Rbai" },
+
+            { tag: "餐點", time: "選項2", title: "綠岸山色鳥巢餐酒吧", info: "南濱路江景餐廳 | 觀賞無人機表演", 
+              img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/597470313_25944052541854583_1658536766356315965_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=104&ccb=1-7&_nc_sid=e06c5d&_nc_ohc=LjQw7Us1qZQQ7kNvwHZUFf4&_nc_oc=AdoFhLLWuqu9AStytvdmwDtWvN1N_m8t4eRPE1HkxEDn53LLMYGNtQBrCrHzj0UVGsE&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=OwQSREVSGprpApbt0Jbbqg&_nc_ss=8&oh=00_AfzXyE4ufNHCjblM2RL-SIjs3OV7H2ckcKq4MCL86dFZwg&oe=69C166A1",
+              mapUrl: "https://j.map.baidu.com/c2/JodM"}
+        ]},
+
+        { date: "06/07", label: "老街漫步", items: [
+            { tag: "景點", time: "", title: "龍門浩老街", info: "", img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/480710856_1200009498152195_7269813424549274124_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=13d280&_nc_ohc=Y1KMz75II6wQ7kNvwGeTGZb&_nc_oc=AdpyzEsBXutwsix78UEYKfkCc5rxN5V4auc4WaWAZx7_RfbimVn9xCtM5TbOBZ-rmHI&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=prRFSLNcizJGNPvkGN-dYw&_nc_ss=8&oh=00_Afx4TL1FWY7Ycm6l0SSS6TxHhXCLOedBfETNr88JdqPXoQ&oe=69C14726", transport: "walk", duration: "5分鐘" },
+            { tag: "景點", time: "", title: "下浩里", info: "漫步下浩里歷史街區", img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/481012551_1200009554818856_2208383503050584940_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=13d280&_nc_ohc=ktUUUrX19ocQ7kNvwHgLqzS&_nc_oc=AdrPt-ecSosLs06pPmPDP0BHmfMIb0f74TEFJJzOJVYEg1rKB3b0xvG0zkhvXLeF3rs&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=PCEW0pB2LRnL0Bd6AsYpLQ&_nc_ss=8&oh=00_Afw9HZRTjGmHrX9YCpOezNd46JSt4yqgcx2NXxLog4YfRw&oe=69C147E5", transport: "walk", duration: "5分鐘" },
+            { tag: "餐點", time: "午餐", title: "福煲砂鍋", info: "下浩里店", img: "https://cloudapp01.ulifestyle.com.hk/post/1024-1024-1281-CR-1-RB-1/post_1767696942617.jpeg", transport: "drive", duration: "30分鐘" },
+            { tag: "景點", time: "", title: "觀音橋步行街", info: "打卡我在重慶", img: "https://ak-d.tripcdn.com/images/0100c12000resyv1qF8C5.jpg", transport: "walk", duration: "5分鐘" },
+            { tag: "餐點", time: "手搖", title: "李若桃", info: "必喝酸奶", img: "https://ak-d.tripcdn.com/images/1mi1312000qf4rhtf2E20_W_640_0_R5_Q80.jpg?proc=source/trip", transport: "walk", duration: "5分鐘" },
+            { tag: "景點", time: "", title: "光環購物中心", info: "沐光森林室內植物園", img: "https://ak-d.tripcdn.com/images/0102d12000kl2qubc97FD_C_1200_800_Q70.webp?proc=source%2ftrip" },
+            { tag: "餐點", time: "晚餐", title: "慶渝宴", info: "宮廷餐秀", img: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_530616/20250909063452_fbl3u/jpg", transport: "drive", duration: "30分鐘" },
+        ]},
+
+        { date: "06/08", label: "山城探索", items: [
+            { tag: "景點", time: "上午", title: "十八梯民俗區", info: "李子壩輕軌穿樓體驗", img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400", transport: "subway", duration: "20分鐘" },
+            { tag: "景點", time: "下午", title: "磁器口古鎮", info: "轉運樓看川劇變臉、吃陳麻花", img: "https://images.unsplash.com/photo-1582719478237-af7355e503f0?w=400", transport: "drive", duration: "25分鐘" },
+            { tag: "餐點", time: "晚上", title: "巴將軍火鍋", info: "解放碑店 | 漢服拍攝洪崖洞", img: "https://images.unsplash.com/photo-1528605248644-14dd04cb220d?w=400" }
+        ]},
+
+        { date: "06/09", label: "宜昌登船", items: [
+            { tag: "交通", time: "08:56", title: "重慶北站高鐵", info: "13:28 抵達宜昌東站", img: "https://images.unsplash.com/photo-1474487022182-f71f86ca7133?w=400", transport: "drive", duration: "15分鐘" },
+            { tag: "景點", time: "下午", title: "三峽遊客中心", info: "萬達廣場午餐後接駁登船", img: "https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=400", transport: "ship", duration: "航行中" },
+            { tag: "住宿", time: "登船", title: "長江攬月遊輪", info: "五星遊輪設施與自助餐", img: "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=400" }
+        ]},
+
+        { date: "06/10", label: "三峽大壩", items: [
+            { tag: "景點", time: "全天", title: "三峽大壩景區", info: "體驗世紀工程升船機", img: "https://images.unsplash.com/photo-1508062878650-88b52897f298?w=400", transport: "ship", duration: "航行中" },
+            { tag: "景點", time: "晚上", title: "巴東無源洞", info: "船上行經西陵峽", img: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400" }
+        ]},
+
+        { date: "06/11", label: "神女巫峽", items: [
+            { tag: "景點", time: "上午", title: "巫峽與瞿塘峽", info: "船上觀賞神女峰", img: "https://images.unsplash.com/photo-1528164344705-47542687990d?w=400", transport: "walk", duration: "1.5小時" },
+            { tag: "景點", time: "下午", title: "白帝城景點", info: "劉備託孤地，十元人民幣背景", img: "https://images.unsplash.com/photo-1599577180424-df373b5f4c54?w=400" }
+        ]},
+
+        { date: "06/12", label: "白鶴梁", items: [
+            { tag: "景點", time: "上午", title: "白鶴梁水下博物館", info: "或 816 工程遺址", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400", transport: "ship", duration: "最後一晚" },
+            { tag: "景點", time: "晚上", title: "船長歡送晚宴", info: "遊輪最後的精彩表演", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400" }
+        ]},
+
+        { date: "06/13", label: "重回上海", items: [
+            { tag: "交通", time: "15:20", title: "重慶江北起飛", info: "CKG -> PVG (17:50 抵達)", img: "https://images.unsplash.com/photo-1569154941061-e231b4725ef1?w=400", transport: "drive", duration: "50分鐘" },
+            { tag: "住宿", time: "Check-in", title: "如家商旅七寶店", info: "近地鐵站，放下行李直衝老街", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400", transport: "walk", duration: "5分鐘" },
+            { tag: "餐點", time: "晚餐", title: "七寶老街美食", info: "湯圓、蔥油餅、臭豆腐吃透透", img: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=400" }
+        ]},
+        
+        { date: "06/14", label: "回家囉", items: [
+            { tag: "交通", time: "08:15", title: "上海虹橋起飛", info: "SHA -> TSA | 記得提早到機場", img: "https://images.unsplash.com/photo-1464012391851-f01170645674?w=400", transport: "drive", duration: "30分鐘" },
+            { tag: "景點", time: "10:15", title: "抵達松山機場", info: "美好的旅程結束！", img: "https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?w=400" }
+        ]}
+    ];
+
+    const tagColors = { "交通": "#bae1ff", "餐點": "#ffb3ba", "景點": "#ffdfba", "住宿": "#baffc9", "家人": "#ddd" };
+    const transIcons = { "walk": "🚶 步行", "drive": "🚗 車程", "subway": "🚇 地鐵", "ship": "🚢 航行", "airplane": "✈️ 飛行" };
+
+    const nav = document.getElementById('dayNav');
+    const content = document.getElementById('content');
+
+    itineraryData.forEach((day, i) => {
+        const btn = document.createElement('button');
+        btn.className = `day-btn ${i===0?'active':''}`;
+        btn.innerHTML = `D${i+1}<br>${day.label}`;
+        btn.onclick = () => {
+            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`day-sec-${i}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        nav.appendChild(btn);
+
+        const section = document.createElement('div');
+        section.className = `day-section ${i===0?'active':''}`;
+        section.id = `day-sec-${i}`;
+
+        day.items.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = `item-card ${item.type==='family'?'family-card':''}`;
+
+            const finalMapUrl = item.mapUrl || `https://map.baidu.com/search/${encodeURIComponent(item.title)}`;
+
+            card.innerHTML = `
+                <div class="info-side">
+                    <div class="tag-row">
+                        <span class="tag" style="background:${tagColors[item.tag] || '#eee'}">${item.tag}</span>
+                        ${item.time ? `<span class="time-text">${item.time}</span>` : ''}
+                    </div>
+                    <div class="spot-name">${item.title}</div>
+                    <div class="extra-info">${item.info}</div>
+                    <a href="${finalMapUrl}" target="_blank" class="nav-link">🧭 百度地圖</a>
+                </div>
+                <div class="img-side" onclick="openLightbox('${item.img}')">
+                    <img src="${item.img}" alt="${item.title}">
+                </div>
+            `;
+            section.appendChild(card);
+
+            // 處理複合交通顯示
+            if (item.transport && index < day.items.length - 1) {
+                const routeDiv = document.createElement('div');
+                routeDiv.className = "route-connector";
+                let stepsHtml = "";
+    
+            // 如果是陣列（多重交通），就跑循環；如果不是，就直接顯示
+            if (Array.isArray(item.transport)) {
+                item.transport.forEach((t, idx) => {
+                    stepsHtml += `<div class="route-step">${transIcons[t]} ${item.duration[idx]}</div>`;
+            });
+            } 
+            
+            else {
+                stepsHtml = `<div class="route-step">${transIcons[item.transport]} ${item.duration}</div>`;
+            }
+    
+                routeDiv.innerHTML = `<div class="route-info">${stepsHtml}</div>`;
+                section.appendChild(routeDiv);
+            }
+        });
+        content.appendChild(section);
+    });
+
+    function openLightbox(src) {
+        document.getElementById('lbImg').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    
+
+</script>
+</body>
+</html>
