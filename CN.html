@@ -150,17 +150,17 @@
 <script>
     const itineraryData = [
         { date: "06/05", label: "抵達上海", items: [
-            { tag: "交通", time: "17:15", title: "松山 T1 起飛", info: "TSA -> SHA", 
+            { tag: "交通", time: "17:15", title: "松山T1起飛", info: "TSA -> SHA", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG/500px-%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG", 
               mapUrl: "https://j.map.baidu.com/bb/J8x",
               transport: "airplane", duration: "1小時40分" },
 
-            { tag: "交通", time: "18:55", title: "抵達上海虹橋 T1", info: "", 
+            { tag: "交通", time: "18:55", title: "抵達上海虹橋T1", info: "", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg", 
               mapUrl: "https://j.map.baidu.com/78/hwc",
               transport: ["subway", "walk"], duration: ["2號線/10站", "2分鐘/190m"] },
             
-            { tag: "住宿", time: "", title: "漢庭酒店（南京路步行街）", info: "辦理入住 | 步行至南京路步行街", 
+            { tag: "住宿", time: "", title: "漢庭酒店", info: "南京東路地鐵站 | 辦理入住 | 步行至南京路步行街", 
               img: "https://ak-d.tripcdn.com/images/1mc2g12000rofbjl3C650_R_960_660_R5_D.jpg", 
               mapUrl: "https://j.map.baidu.com/cd/bAr",
               transport: "walk", duration: "2分鐘/190m" },
@@ -176,21 +176,21 @@
         ]},
 
         { date: "06/06", label: "飛往重慶", items: [
-            { tag: "家人", time: "11:15 - 14:40", title: "廈門高崎 T3 起飛／重慶江北 T3 抵達", info: "XMN -> CKG (2h50m)", type: "family", 
+            { tag: "家人", time: "11:15 - 14:40", title: "廈門高崎T3／重慶江北T3", info: "XMN -> CKG (2h50m)", type: "family", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg/500px-Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg",
               mapUrl: "https://j.map.baidu.com/47/bYd" },
         
-            { tag: "交通", time: "12:40", title: "上海虹橋 T2 起飛", info: "SHA -> CKG", 
+            { tag: "交通", time: "12:40", title: "上海虹橋T2起飛", info: "SHA -> CKG", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg",
               mapUrl: "https://j.map.baidu.com/78/hwc",
               transport: "airplane", duration: "2小時45分" },
         
-            { tag: "交通", time: "18:55", title: "抵達重慶江北 T3", info: "", 
+            { tag: "交通", time: "18:55", title: "抵達重慶江北T3", info: "", 
               img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
               mapUrl: "https://j.map.baidu.com/67/9Mri",
               transport: "drive", duration: "32分鐘/25.5km/計程車約56元" },
 
-            { tag: "住宿", time: "Check-in", title: "重慶渝中半島福朋喜來登酒店", info: "", 
+            { tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業", 
               img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
               mapUrl: "https://j.map.baidu.com/ea/zefM",
               transport: "drive", duration: "選項1：14分鐘/4.7km/計程車約14元；選項2：23分鐘/9.7km/計程車約24元" },
@@ -246,7 +246,7 @@
             { tag: "住宿", time: "Check-in", title: "如家商旅七寶店", info: "近地鐵站，放下行李直衝老街", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400", transport: "walk", duration: "5分鐘" },
             { tag: "餐點", time: "晚餐", title: "七寶老街美食", info: "湯圓、蔥油餅、臭豆腐吃透透", img: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=400" }
         ]},
-        
+
         { date: "06/14", label: "回家囉", items: [
             { tag: "交通", time: "08:15", title: "上海虹橋起飛", info: "SHA -> TSA | 記得提早到機場", img: "https://images.unsplash.com/photo-1464012391851-f01170645674?w=400", transport: "drive", duration: "30分鐘" },
             { tag: "景點", time: "10:15", title: "抵達松山機場", info: "美好的旅程結束！", img: "https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?w=400" }
