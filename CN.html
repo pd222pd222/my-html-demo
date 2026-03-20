@@ -7,356 +7,392 @@
   <title>2026 China Trip | Full Itinerary</title>
   <style>
     :root {
-  --accent: #6c9edf;
-  --text: #444;
-  --card-bg: rgba(255, 255, 255, 0.88);
-  --line: #cbd5e1;
-}
+      --accent: #6c9edf;
+      --text: #444;
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --line: #cbd5e1;
+    }
 
-/* ===== 基本 ===== */
-body {
-  font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-  background: linear-gradient(135deg, #e0f2fe 0%, #fff1f2 100%);
-  background-attachment: fixed;
-  margin: 0;
-  padding-bottom: 50px;
-}
+    /* ===== 基本 ===== */
+    body {
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fff1f2 100%);
+      background-attachment: fixed;
+      margin: 0;
+      padding-bottom: 50px;
+    }
 
-/* ===== 導覽列 ===== */
-.nav-bar-container {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  display: flex;
-  justify-content: center;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-}
+    /* ===== 導覽列 ===== */
+    .nav-bar-container {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-.nav-bar {
-  display: flex;
-  gap: 10px;
-  padding: 0 15px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.nav-bar::-webkit-scrollbar {
-  display: none;
-}
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      padding: 0 15px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
 
-.day-btn {
-  flex: 0 0 auto;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.4);
-  padding: 8px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.75rem;
-  transition: 0.3s;
-}
+    .nav-bar::-webkit-scrollbar {
+      display: none;
+    }
 
-.day-btn.active {
-  background: var(--accent);
-  color: white;
-  box-shadow: 0 5px 15px rgba(108, 158, 223, 0.3);
-  transform: translateY(-2px);
-}
+    .day-btn {
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.4);
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: 0.3s;
+    }
 
-/* ===== 主容器 ===== */
-.main-container {
-  max-width: 620px;
-  margin: 25px auto;
-  padding: 0 18px;
-}
+    .day-btn.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 5px 15px rgba(108, 158, 223, 0.3);
+      transform: translateY(-2px);
+    }
 
-/* ===== 分頁（保留原名稱） ===== */
-.day-section,
-.page-content {
-  display: none;
-}
-.day-section.active,
-.page-content.active {
-  display: block;
-}
+    /* ===== 主容器 ===== */
+    .main-container {
+      max-width: 620px;
+      margin: 25px auto;
+      padding: 0 18px;
+    }
 
-/* ===== 卡片 ===== */
-.item-card {
-  display: flex;
-  background: var(--card-bg);
-  border-radius: 25px;
-  padding: 22px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  gap: 15px;
-  align-items: center;
-}
+    /* ===== 分頁（保留原名稱） ===== */
+    .day-section,
+    .page-content {
+      display: none;
+    }
 
-.family-card {
-  background: rgba(240, 240, 240, 0.6);
-  border: 1px dashed #bbb;
-  opacity: 0.85;
-  transform: scale(0.8);
-}
+    .day-section.active,
+    .page-content.active {
+      display: block;
+    }
 
-/* ===== 內容 ===== */
-.info-side {
-  flex: 1;
-}
+    /* ===== 卡片 ===== */
+    .item-card {
+      display: flex;
+      background: var(--card-bg);
+      border-radius: 25px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      gap: 15px;
+      align-items: center;
+    }
 
-.tag-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
+    .family-card {
+      background: rgba(240, 240, 240, 0.6);
+      border: 1px dashed #bbb;
+      opacity: 0.85;
+      transform: scale(0.8);
+    }
 
-.tag {
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  color: #555;
-}
+    /* ===== 內容 ===== */
+    .info-side {
+      flex: 1;
+    }
 
-.time-text {
-  font-size: 0.8rem;
-  color: #888;
-}
+    .tag-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
-.spot-name {
-  font-size: 1.45rem;
-  font-weight: 900;
-  margin: 4px 0 8px;
-  position: relative;
-}
+    .tag {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: #555;
+    }
 
-.spot-name::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 3px;
-  width: 100%;
-  height: 8px;
-  background: linear-gradient(90deg, rgba(143,179,255,0.3), rgba(255,179,186,0.3));
-  border-radius: 4px;
-  z-index: -1;
-}
+    .time-text {
+      font-size: 0.8rem;
+      color: #888;
+    }
 
-.extra-info {
-  font-size: 0.85rem;
-  color: #666;
-  line-height: 1.4;
-  margin-bottom: 10px;
-}
+    .spot-name {
+      font-size: 1.45rem;
+      font-weight: 900;
+      margin: 4px 0 8px;
+      position: relative;
+    }
 
-/* ===== 圖片 ===== */
-.img-side {
-  width: 105px;
-  height: 105px;
-  flex-shrink: 0;
-  background: white;
-  padding: 5px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: rotate(-1.5deg);
-  cursor: pointer;
-  transition: 0.3s;
-}
+    .spot-name::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 3px;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, rgba(143, 179, 255, 0.3), rgba(255, 179, 186, 0.3));
+      border-radius: 4px;
+      z-index: -1;
+    }
 
-.img-side:hover {
-  transform: rotate(0) scale(1.05);
-}
+    .extra-info {
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
 
-.img-side img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
+    /* ===== 圖片 ===== */
+    .img-side {
+      width: 105px;
+      height: 105px;
+      flex-shrink: 0;
+      background: white;
+      padding: 5px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: rotate(-1.5deg);
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-/* ===== 路線 ===== */
-.route-connector {
-  margin-left: 40px;
-  border-left: 2px dashed var(--line);
-  padding: 12px 0 12px 25px;
-}
+    .img-side:hover {
+      transform: rotate(0) scale(1.05);
+    }
 
-.route-info {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
-  color: #64748b;
-  background: rgba(255, 255, 255, 0.6);
-  padding: 4px 12px;
-  border-radius: 15px;
-  width: auto;
-  white-space: nowrap;
-}
+    .img-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
 
-/* ===== 按鈕 ===== */
-.nav-link,
-.book-link {
-  text-decoration: none;
-  font-size: 0.75rem;
-  border-radius: 20px;
-  display: inline-block;
-}
+    /* --- 圖片放大燈箱樣式 --- */
+    #lightbox {
+      display: none;
+      /* 預設隱藏 */
+      position: fixed;
+      /* 固定在螢幕最前方 */
+      inset: 0;
+      /* 填滿整個畫面 (top, bottom, left, right 都是 0) */
+      background: rgba(0, 0, 0, 0.9);
+      /* 90% 透明度的黑底 */
+      z-index: 9999;
+      /* 確保數字夠大，擋住所有導覽列與卡片 */
+      justify-content: center;
+      /* 水平居中 */
+      align-items: center;
+      /* 垂直居中 */
+      cursor: zoom-out;
+      /* 鼠標顯示縮小圖示，提醒點擊可關閉 */
+    }
 
-.nav-link {
-  color: white;
-  background: var(--accent);
-  padding: 5px 15px;
-}
+    #lightbox img {
+      max-width: 90%;
+      /* 寬度不超過螢幕 90% */
+      max-height: 80%;
+      /* 高度不超過螢幕 80% */
+      border: 5px solid white;
+      /* 白色相框感 */
+      border-radius: 12px;
+      /* 圓角 */
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+      /* 淡淡的光暈 */
+      object-fit: contain;
+      /* 確保圖片不變形 */
+    }
 
-.book-link {
-  margin-top: 8px;
-  margin-left: 10px;
-  padding: 4px 12px;
-  background: #546e7a;
-  color: white;
-  border-radius: 15px;
-  font-weight: bold;
-}
+    /* ===== 路線 ===== */
+    .route-connector {
+      margin-left: 40px;
+      border-left: 2px dashed var(--line);
+      padding: 12px 0 12px 25px;
+    }
 
-.book-link:hover {
-  background: #37474f;
-}
+    .route-info {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 4px 12px;
+      border-radius: 15px;
+      width: auto;
+      white-space: nowrap;
+    }
 
-/* ===== 價格標籤（已合併） ===== */
-.price-tag {
-  font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 600;
-  margin-left: 5px;
-  white-space: nowrap;
-}
+    /* ===== 按鈕 ===== */
+    .nav-link,
+    .book-link {
+      text-decoration: none;
+      font-size: 0.75rem;
+      border-radius: 20px;
+      display: inline-block;
+    }
 
-.price-tag.rmb {
-  background: #fee2e2;
-  color: #ef4444;
-}
+    .nav-link {
+      color: white;
+      background: var(--accent);
+      padding: 5px 15px;
+    }
 
-.price-tag.twd {
-  background: #dbeafe;
-  color: #3b82f6;
-}
+    .book-link {
+      margin-top: 8px;
+      margin-left: 10px;
+      padding: 4px 12px;
+      background: #546e7a;
+      color: white;
+      border-radius: 15px;
+      font-weight: bold;
+    }
 
-/* ===== 分頁切換 ===== */
-.tab-container {
-  display: flex;
-  justify-content: center;
-  background: white;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
-}
+    .book-link:hover {
+      background: #37474f;
+    }
 
-.tab-btn {
-  padding: 8px 20px;
-  border: none;
-  background: none;
-  font-weight: bold;
-  color: #888;
-  cursor: pointer;
-}
+    /* ===== 價格標籤（已合併） ===== */
+    .price-tag {
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-left: 5px;
+      white-space: nowrap;
+    }
 
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom: 2px solid var(--accent);
-}
+    .price-tag.rmb {
+      background: #fee2e2;
+      color: #ef4444;
+    }
 
-/* ===== 記帳表 ===== */
-.ledger-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-}
+    .price-tag.twd {
+      background: #dbeafe;
+      color: #3b82f6;
+    }
 
-.ledger-table th,
-.ledger-table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-}
+    /* ===== 分頁切換 ===== */
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      background: white;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
 
-.ledger-table th {
-  background: #f8fafc;
-  font-size: 0.8rem;
-}
+    .tab-btn {
+      padding: 8px 20px;
+      border: none;
+      background: none;
+      font-weight: bold;
+      color: #888;
+      cursor: pointer;
+    }
 
-.ledger-table td:nth-child(2),
-.ledger-table td:nth-child(3) {
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: #475569;
-  text-align: right;
-}
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+    }
 
-.ledger-table td:nth-child(2) {
-  color: #94a3b8;
-}
+    /* ===== 記帳表 ===== */
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
 
-.ledger-table td small {
-  display: block;
-  font-size: 0.7rem;
-  color: #94a3b8;
-}
+    .ledger-table th,
+    .ledger-table td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
 
-/* ===== TODO ===== */
-.todo-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
+    .ledger-table th {
+      background: #f8fafc;
+      font-size: 0.8rem;
+    }
 
-.todo-section {
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
+    .ledger-table td:nth-child(2),
+    .ledger-table td:nth-child(3) {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #475569;
+      text-align: right;
+    }
 
-.todo-section h4 {
-  margin-bottom: 10px;
-  color: #546e7a;
-  border-bottom: 1px solid #eee;
-}
+    .ledger-table td:nth-child(2) {
+      color: #94a3b8;
+    }
 
-.check-item {
-  font-size: 0.85rem;
-  display: flex;
-  gap: 5px;
-}
+    .ledger-table td small {
+      display: block;
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
 
-/* ===== 手機 ===== */
-@media (max-width: 600px) {
-  .ledger-table td {
-    font-size: 0.8rem;
-    padding: 8px 6px;
-  }
+    /* ===== TODO ===== */
+    .todo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
 
-  .ledger-table td:nth-child(2),
-  .ledger-table td:nth-child(3) {
-    font-size: 0.75rem;
-  }
+    .todo-section {
+      background: white;
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
 
-  .item-header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+    .todo-section h4 {
+      margin-bottom: 10px;
+      color: #546e7a;
+      border-bottom: 1px solid #eee;
+    }
 
-  .price-tag {
-    font-size: 0.7rem;
-  }
-}
+    .check-item {
+      font-size: 0.85rem;
+      display: flex;
+      gap: 5px;
+    }
 
+    /* ===== 手機 ===== */
+    @media (max-width: 600px) {
+      .ledger-table td {
+        font-size: 0.8rem;
+        padding: 8px 6px;
+      }
+
+      .ledger-table td:nth-child(2),
+      .ledger-table td:nth-child(3) {
+        font-size: 0.75rem;
+      }
+
+      .item-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .price-tag {
+        font-size: 0.7rem;
+      }
+    }
   </style>
 </head>
 
@@ -389,7 +425,7 @@ body {
           </tr>
         </thead>
         <tbody id="expenseBody"></tbody>
-        
+
       </table>
     </div>
   </div>
@@ -730,7 +766,7 @@ body {
             mapUrl: "https://j.map.baidu.com/c0/uKk",
             transport: "ship", duration: "航行中"
           },
-        
+
           {
             tag: "景點", time: "下午", title: "白帝城", info: "劉備託孤地 | 十元人民幣背景",
             img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002390.JPG",
@@ -887,10 +923,15 @@ body {
             ${item.bookUrl ? `<a href="${item.bookUrl}" target="_blank" class="book-link">🔗 連結</a>` : ''}
         </div>
     </div>
+    <div id="lightbox" onclick="this.style.display='none'">
+      <img id="lbImg" src="">
+    </div>
     <div class="img-side" onclick="openLightbox('${item.img}')">
         <img src="${item.img}">
     </div>
 `;
+
+
         section.appendChild(card);
 
         // 處理複合交通顯示
@@ -964,29 +1005,29 @@ body {
     };
 
     function initExtraPages() {
-    const body = document.getElementById('expenseBody');
-    if (!body) return;
+      const body = document.getElementById('expenseBody');
+      if (!body) return;
 
-    let sumCommon = 0, sumFamily = 0, sumYY = 0;
-    body.innerHTML = ""; 
+      let sumCommon = 0, sumFamily = 0, sumYY = 0;
+      body.innerHTML = "";
 
-    // 取得分類資料
-    const categories = Object.keys(expenseCategories);
+      // 取得分類資料
+      const categories = Object.keys(expenseCategories);
 
-    categories.forEach(catName => {
+      categories.forEach(catName => {
         const items = expenseCategories[catName];
-        
+
         // 1. 插入分類大標題
         body.innerHTML += `<tr style="background:#f8fafc; font-weight:bold;"><td colspan="3">${catName}</td></tr>`;
-        
+
         // 2. 插入該分類的每一行
         items.forEach(item => {
-            const subTotal = (item.twd || 0) + ((item.rmb || 0) * exchangeRate);
-            if (catName.includes("大家")) sumCommon += subTotal;
-            else if (catName.includes("家人")) sumFamily += subTotal;
-            else if (catName.includes("YY")) sumYY += subTotal;
-            
-            body.innerHTML += `<tr>
+          const subTotal = (item.twd || 0) + ((item.rmb || 0) * exchangeRate);
+          if (catName.includes("大家")) sumCommon += subTotal;
+          else if (catName.includes("家人")) sumFamily += subTotal;
+          else if (catName.includes("YY")) sumYY += subTotal;
+
+          body.innerHTML += `<tr>
               <td style="padding-left:20px;">${item.name}${item.note ? `<small>${item.note}</small>` : ''}</td>
               <td>${item.rmb > 0 ? '¥' + item.rmb : '-'}</td>
               <td>$${subTotal > 0 ? Math.round(subTotal).toLocaleString() : '-'}</td></tr>`;
@@ -994,15 +1035,15 @@ body {
 
         // 3. 插入小計列
         if (catName.includes("家人")) {
-            const familyTotal = sumCommon + sumFamily;
-            body.innerHTML += `<tr style="background: #fff1f2; font-weight:bold; color:#e11d48;"><td colspan="2" style="text-align:right;">👵 家人總預算 (含共同花費)</td><td>$${Math.round(familyTotal).toLocaleString()}</td></tr>`;
-        } 
-        else if (catName.includes("YY")) {
-            const yyTotal = sumCommon + sumYY;
-            body.innerHTML += `<tr style="background: #eff6ff; font-weight:bold; color:#2563eb;"><td colspan="2" style="text-align:right;">👤 YY 總預算 (含共同花費)</td><td>$${Math.round(yyTotal).toLocaleString()}</td></tr>`;
+          const familyTotal = sumCommon + sumFamily;
+          body.innerHTML += `<tr style="background: #fff1f2; font-weight:bold; color:#e11d48;"><td colspan="2" style="text-align:right;">👵 家人總預算 (含共同花費)</td><td>$${Math.round(familyTotal).toLocaleString()}</td></tr>`;
         }
-    });
-      
+        else if (catName.includes("YY")) {
+          const yyTotal = sumCommon + sumYY;
+          body.innerHTML += `<tr style="background: #eff6ff; font-weight:bold; color:#2563eb;"><td colspan="2" style="text-align:right;">👤 YY 總預算 (含共同花費)</td><td>$${Math.round(yyTotal).toLocaleString()}</td></tr>`;
+        }
+      });
+
 
       // --- 設定準備清單資料 ---
       const todoData = {
