@@ -384,6 +384,57 @@
     .page-content.active {
       display: block;
     }
+
+.price-group {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.price-tag {
+    font-size: 0.75rem;
+    border-radius: 4px;
+    padding: 1px 5px;
+    white-space: nowrap; /* 強制價格不要斷行 */
+}
+
+.price-tag.rmb { background: #fee2e2; color: #ef4444; } /* 淡淡的紅 */
+.price-tag.twd { background: #dbeafe; color: #3b82f6; } /* 淡淡的藍 */
+
+/* 專屬手機版的優化 */
+@media (max-width: 600px) {
+    /* 1. 縮小記帳表格文字 */
+    .ledger-table td {
+        font-size: 0.8rem;    /* 項目名稱變小 */
+        padding: 8px 6px;     /* 縮減左右內距，爭取空間 */
+    }
+    
+    .ledger-table td:nth-child(2), 
+    .ledger-table td:nth-child(3) {
+        font-size: 0.75rem;   /* 金額數字再小一點 */
+    }
+
+    /* 2. 處理行程標籤擠壓問題 */
+    .itinerary-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    /* 讓時間與價格標籤並排，但不要跟行程文字擠在一起 */
+    .item-header {
+        display: flex;
+        flex-wrap: wrap;       /* 空間不夠時自動換行 */
+        gap: 8px;
+        width: 100%;
+    }
+
+    .price-tag {
+        font-size: 0.7rem;     /* 價格標籤縮小 */
+        padding: 2px 6px;
+    }
+}
+
   </style>
 </head>
 
