@@ -5,12 +5,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2026 China Trip | Full Itinerary</title>
-  <style>
+  這段 CSS 程式碼中確實有一些重複定義以及功能重疊的部分，這通常是因為在多次修改過程中，新的樣式被加在後面，但舊的樣式沒有被刪除。
+
+  為了讓你的程式碼更乾淨、效能更好，我幫你抓出了以下幾個可以優化的地方：
+
+  1. 發現的冗餘/重複項
+  .price-tag 被定義了兩次：在中間定義過一次基礎樣式，後面又定義了一次。
+
+  .price-group 和相關顏色：在中間出現過一次（.price-twd, .price-rmb），後面又出現了一次（.price-tag.rmb, .price-tag.twd），這會導致樣式衝突或覆蓋。
+
+  white-space: nowrap：你在多個地方重複設定了這個屬性，其實可以統一在 .price-tag 裡寫一次就好。
+
+  2. 精簡後的完整版本
+  我幫你把重複的部分合併，並依照功能邏輯重新排序。你可以直接全選替換原本的 <style>
+    內容： CSS <style>
+
+    /* --- 1. 基礎變數與全域設定 --- */
     :root {
       --accent: #6c9edf;
       --text: #444;
       --card-bg: rgba(255, 255, 255, 0.88);
       --line: #cbd5e1;
+      --mono-font: 'JetBrains Mono', 'Roboto Mono', monospace;
+      /* 統一等寬字型變數 */
     }
 
     body {
@@ -19,9 +36,12 @@
       background-attachment: fixed;
       margin: 0;
       padding-bottom: 50px;
+      color: var(--text);
     }
 
-    .nav-bar-container {
+    /* --- 2. 導覽列與分頁標籤 --- */
+    .nav-bar-container,
+    .tab-container {
       position: sticky;
       top: 0;
       z-index: 100;
@@ -29,8 +49,8 @@
       backdrop-filter: blur(12px);
       display: flex;
       justify-content: center;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
     }
 
     .nav-bar {
@@ -44,36 +64,58 @@
       display: none;
     }
 
-    .day-btn {
-      flex: 0 0 auto;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      background: rgba(255, 255, 255, 0.4);
+    .day-btn,
+    .tab-btn {
       padding: 8px 14px;
       border-radius: 12px;
       cursor: pointer;
-      font-size: 0.75rem;
-      text-align: center;
-      line-height: 1.2;
       transition: 0.3s;
+      border: 1px solid transparent;
+      background: none;
+      color: #888;
     }
 
-    .day-btn.active {
+    .day-btn {
+      font-size: 0.75rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.4);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .day-btn.active,
+    .tab-btn.active {
       background: var(--accent);
       color: white;
       box-shadow: 0 5px 15px rgba(108, 158, 223, 0.3);
       transform: translateY(-2px);
     }
 
+    .tab-btn {
+      font-weight: bold;
+      border-radius: 0;
+    }
+
+    .tab-btn.active {
+      border-bottom: 2px solid var(--accent);
+      background: none;
+      color: var(--accent);
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* --- 3. 內容容器與卡片樣式 --- */
     .main-container {
       max-width: 620px;
       margin: 25px auto;
       padding: 0 18px;
     }
 
+    .page-content,
     .day-section {
       display: none;
     }
 
+    .page-content.active,
     .day-section.active {
       display: block;
     }
@@ -87,6 +129,7 @@
       border: 1px solid rgba(255, 255, 255, 0.5);
       gap: 15px;
       align-items: center;
+      margin-bottom: 15px;
     }
 
     .info-side {
@@ -98,6 +141,7 @@
       align-items: center;
       gap: 8px;
       margin-bottom: 8px;
+      flex-wrap: wrap;
     }
 
     .tag {
@@ -112,6 +156,7 @@
       font-size: 0.8rem;
       color: #888;
       font-weight: 500;
+      font-family: var(--mono-font);
     }
 
     .spot-name {
@@ -141,6 +186,7 @@
       margin-bottom: 10px;
     }
 
+    /* --- 4. 圖片與互動 --- */
     .img-side {
       width: 105px;
       height: 105px;
@@ -165,48 +211,6 @@
       border-radius: 8px;
     }
 
-    .route-connector {
-      margin-left: 40px;
-      border-left: 2px dashed var(--line);
-      padding: 12px 0 12px 25px;
-      position: relative;
-    }
-
-    .route-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: #64748b;
-      background: rgba(255, 255, 255, 0.6);
-      padding: 4px 12px;
-      border-radius: 15px;
-      width: fit-content;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      font-size: 0.75rem;
-      color: white;
-      background: var(--accent);
-      padding: 5px 15px;
-      border-radius: 20px;
-      display: inline-block;
-    }
-
-    /* 親友卡片的專屬樣式 */
-    .family-card {
-      background: rgba(240, 240, 240, 0.6) !important;
-      border: 1px dashed #bbb !important;
-      opacity: 0.85;
-      transform: scale(0.8);
-    }
-
-    /* 親友標籤樣式 */
-    .tag[style*="#ddd"] {
-      color: #888;
-    }
-
     #lightbox {
       display: none;
       position: fixed;
@@ -224,72 +228,60 @@
       border-radius: 10px;
     }
 
-    /* 費用標籤基礎樣式 */
+    /* --- 5. 價格標籤與按鈕 --- */
+    .price-group {
+      display: inline-flex;
+      gap: 4px;
+    }
+
     .price-tag {
       font-size: 0.7rem;
       padding: 1px 6px;
       border-radius: 4px;
-      margin-left: 5px;
       font-weight: 600;
+      white-space: nowrap;
+      font-family: var(--mono-font);
     }
 
+    .price-tag.twd,
     .price-twd {
-      background: #f0f7ff;
-      color: #4682b4;
+      background: #dbeafe;
+      color: #3b82f6;
       border: 1px solid #d1e3f8;
     }
 
+    .price-tag.rmb,
     .price-rmb {
-      background: #fffaf0;
-      color: #cd853f;
+      background: #fee2e2;
+      color: #ef4444;
       border: 1px solid #feeace;
     }
 
-    /* 預訂按鈕樣式 */
+    .nav-link,
     .book-link {
-      display: inline-block;
-      margin-top: 8px;
-      margin-left: 10px;
-      padding: 4px 12px;
-      background: #546e7a;
-      color: white;
       text-decoration: none;
-      border-radius: 15px;
       font-size: 0.75rem;
-      font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      color: white;
+      border-radius: 20px;
+      display: inline-block;
       transition: 0.3s;
+      padding: 5px 15px;
     }
 
-    /* 游標 */
+    .nav-link {
+      background: var(--accent);
+    }
+
+    .book-link {
+      background: #546e7a;
+      margin-left: 10px;
+    }
+
     .book-link:hover {
       background: #37474f;
     }
 
-    /* 分頁切換鈕樣式 */
-    .tab-container {
-      display: flex;
-      justify-content: center;
-      background: white;
-      padding: 10px 0;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .tab-btn {
-      padding: 8px 20px;
-      border: none;
-      background: none;
-      font-weight: bold;
-      color: #888;
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      color: var(--accent);
-      border-bottom: 2px solid var(--accent);
-    }
-
-    /* 記帳表格樣式 */
+    /* --- 6. 記帳表格 --- */
     .ledger-table {
       width: 100%;
       border-collapse: collapse;
@@ -311,33 +303,28 @@
       font-size: 0.8rem;
     }
 
-    .total-row {
-      background: #f0f7ff;
-      font-weight: bold;
+    .ledger-table td:nth-child(2),
+    .ledger-table td:nth-child(3) {
+      font-family: var(--mono-font);
+      font-size: 0.85rem;
+      color: #475569;
+      text-align: right;
+      letter-spacing: -0.5px;
     }
 
-    /* 針對表格中的數字列 (第 2 與 第 3 欄) */
-.ledger-table td:nth-child(2), 
-.ledger-table td:nth-child(3) {
-    font-family: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace; /* 等寬字體 */
-    font-size: 0.85rem;    /* 稍微縮小字體 */
-    color: #475569;        /* 使用深灰色，比純黑更有質感 */
-    text-align: right;     /* 數字靠右對齊 */
-    letter-spacing: -0.5px; /* 縮緊字距 */
-}
+    .ledger-table td:nth-child(2) {
+      color: #94a3b8;
+    }
 
-/* 讓 RMB 的錢號 (¥) 顏色淡一點，更有層次感 */
-.ledger-table td:nth-child(2) {
-    color: #94a3b8; 
-}
+    .ledger-table td small {
+      display: block;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      line-height: 1.1;
+      margin-top: 2px;
+    }
 
-/* 針對小計列的金額 (加粗並稍微放大) */
-.ledger-table tr[style*="font-weight:bold"] td:last-child {
-    font-size: 1rem;       /* 小計金額稍微明顯一點 */
-    letter-spacing: 0px;
-}
-
-    /* 準備清單兩欄佈局 */
+    /* --- 7. 準備清單 --- */
     .todo-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -348,14 +335,7 @@
       background: white;
       padding: 15px;
       border-radius: 15px;
-      margin-bottom: 15px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .todo-section h4 {
-      margin: 0 0 10px 0;
-      color: #546e7a;
-      border-bottom: 1px solid #eee;
     }
 
     .check-item {
@@ -366,75 +346,47 @@
       gap: 5px;
     }
 
-    /* 針對記帳表格內的備註小字 */
-    .ledger-table td small {
-      display: block;
-      font-size: 0.7rem;
-      color: #94a3b8;
-      line-height: 1.1;
-      margin-top: 2px;
-      font-weight: normal;
-    }
+    /* --- 8. 手機版優化 --- */
+    @media (max-width: 600px) {
+      .todo-grid {
+        grid-template-columns: 1fr;
+      }
 
-    /* 隱藏分頁 */
-    .page-content {
-      display: none;
-    }
+      .ledger-table td {
+        font-size: 0.8rem;
+        padding: 8px 6px;
+      }
 
-    .page-content.active {
-      display: block;
-    }
+      .ledger-table td:nth-child(2),
+      .ledger-table td:nth-child(3) {
+        font-size: 0.75rem;
+      }
 
-.price-group {
-    display: inline-flex;
-    gap: 4px;
-}
-
-.price-tag {
-    font-size: 0.75rem;
-    border-radius: 4px;
-    padding: 1px 5px;
-    white-space: nowrap; /* 強制價格不要斷行 */
-}
-
-.price-tag.rmb { background: #fee2e2; color: #ef4444; } /* 淡淡的紅 */
-.price-tag.twd { background: #dbeafe; color: #3b82f6; } /* 淡淡的藍 */
-
-/* 專屬手機版的優化 */
-@media (max-width: 600px) {
-    /* 1. 縮小記帳表格文字 */
-    .ledger-table td {
-        font-size: 0.8rem;    /* 項目名稱變小 */
-        padding: 8px 6px;     /* 縮減左右內距，爭取空間 */
-    }
-    
-    .ledger-table td:nth-child(2), 
-    .ledger-table td:nth-child(3) {
-        font-size: 0.75rem;   /* 金額數字再小一點 */
-    }
-
-    /* 2. 處理行程標籤擠壓問題 */
-    .itinerary-item {
+      .itinerary-item {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
         gap: 5px;
-    }
+      }
 
-    /* 讓時間與價格標籤並排，但不要跟行程文字擠在一起 */
-    .item-header {
+      .item-header {
         display: flex;
-        flex-wrap: wrap;       /* 空間不夠時自動換行 */
+        flex-wrap: wrap;
         gap: 8px;
         width: 100%;
+      }
+
+      .spot-name {
+        font-size: 1.2rem;
+      }
     }
 
-    .price-tag {
-        font-size: 0.7rem;     /* 價格標籤縮小 */
-        padding: 2px 6px;
+    /* 字型專屬 */
+    .day-num {
+      font-family: var(--mono-font);
+      font-weight: bold;
+      font-size: 1.1rem;
+      letter-spacing: -1px;
     }
-}
-
   </style>
 </head>
 
@@ -467,7 +419,7 @@
           </tr>
         </thead>
         <tbody id="expenseBody"></tbody>
-        
+
       </table>
     </div>
   </div>
@@ -801,7 +753,7 @@
             mapUrl: "https://j.map.baidu.com/c0/uKk",
             transport: "ship", duration: "航行中"
           },
-        
+
           {
             tag: "景點", time: "下午", title: "白帝城", info: "劉備託孤地，十元人民幣背景",
             img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002390.JPG",
@@ -917,7 +869,7 @@
     itineraryData.forEach((day, i) => {
       const btn = document.createElement('button');
       btn.className = `day-btn ${i === 0 ? 'active' : ''}`;
-      btn.innerHTML = `D${i + 1}<br>${day.label}`;
+      btn.innerHTML = `<span class="day-num">D${i + 1}</span><br>${day.label}`;
       btn.onclick = () => {
         document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
@@ -938,26 +890,30 @@
         const finalMapUrl = item.mapUrl || `https://map.baidu.com/search/${encodeURIComponent(item.title)}`;
 
         card.innerHTML = `
-                <div class="info-side">
-                <div class="tag-row">
-                    <span class="tag" style="background:${tagColors[item.tag] || '#eee'}">${item.tag}</span>
-                    ${item.time ? `<span class="time-text">${item.time}</span>` : ''}
+    <div class="info-side">
+        <div class="tag-row" style="display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-bottom: 8px;">
+            <span class="tag" style="background:${tagColors[item.tag] || '#eee'}">${item.tag}</span>
+            ${item.time ? `<span class="time-text" style="font-family: monospace; font-size: 0.85rem; color: #64748b;">${item.time}</span>` : ''}
             
-                    ${item.priceTwd ? `<span class="price-tag price-twd">NT$ ${item.priceTwd}</span>` : ''}
-                    ${item.priceRmb ? `<span class="price-tag price-rmb">¥ ${item.priceRmb}</span>` : ''}
-                </div>
+            <div class="price-group" style="display: flex; gap: 4px; margin-left: auto;">
+                ${item.priceTwd ? `<span class="price-tag price-twd" style="background:#dbeafe; color:#1e40af; font-size:0.7rem; padding:2px 6px; border-radius:4px; white-space:nowrap;">NT$ ${item.priceTwd}</span>` : ''}
+                ${item.priceRmb ? `<span class="price-tag price-rmb" style="background:#fee2e2; color:#b91c1c; font-size:0.7rem; padding:2px 6px; border-radius:4px; white-space:nowrap;">¥ ${item.priceRmb}</span>` : ''}
+            </div>
+        </div>
+
+        <div class="spot-name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 4px; line-height: 1.4;">${item.title}</div>
         
-                <div class="spot-name">${item.title}</div>
-                <div class="extra-info">${item.info}</div>
-        
-                <div class="action-row">
-                <a href="${finalMapUrl}" target="_blank" class="nav-link">🧭 百度</a>
-    
-                    ${item.bookUrl ? `<a href="${item.bookUrl}" target="_blank" class="book-link">🔗 連結</a>` : ''}
-                </div>
-                </div>
-                <div class="img-side" onclick="openLightbox('${item.img}')"><img src="${item.img}"></div>
-                `;
+        <div class="extra-info" style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">${item.info}</div>
+
+        <div class="action-row">
+            <a href="${finalMapUrl}" target="_blank" class="nav-link">🧭 百度</a>
+            ${item.bookUrl ? `<a href="${item.bookUrl}" target="_blank" class="book-link">🔗 連結</a>` : ''}
+        </div>
+    </div>
+    <div class="img-side" onclick="openLightbox('${item.img}')">
+        <img src="${item.img}">
+    </div>
+`;
         section.appendChild(card);
 
         // 處理複合交通顯示
@@ -1032,29 +988,29 @@
     };
 
     function initExtraPages() {
-    const body = document.getElementById('expenseBody');
-    if (!body) return;
+      const body = document.getElementById('expenseBody');
+      if (!body) return;
 
-    let sumCommon = 0, sumFamily = 0, sumYY = 0;
-    body.innerHTML = ""; 
+      let sumCommon = 0, sumFamily = 0, sumYY = 0;
+      body.innerHTML = "";
 
-    // 取得分類資料
-    const categories = Object.keys(expenseCategories);
+      // 取得分類資料
+      const categories = Object.keys(expenseCategories);
 
-    categories.forEach(catName => {
+      categories.forEach(catName => {
         const items = expenseCategories[catName];
-        
+
         // 1. 插入分類大標題
         body.innerHTML += `<tr style="background:#f8fafc; font-weight:bold;"><td colspan="3">${catName}</td></tr>`;
-        
+
         // 2. 插入該分類的每一行
         items.forEach(item => {
-            const subTotal = (item.twd || 0) + ((item.rmb || 0) * exchangeRate);
-            if (catName.includes("大家")) sumCommon += subTotal;
-            else if (catName.includes("家人")) sumFamily += subTotal;
-            else if (catName.includes("YY")) sumYY += subTotal;
-            
-            body.innerHTML += `<tr>
+          const subTotal = (item.twd || 0) + ((item.rmb || 0) * exchangeRate);
+          if (catName.includes("大家")) sumCommon += subTotal;
+          else if (catName.includes("家人")) sumFamily += subTotal;
+          else if (catName.includes("YY")) sumYY += subTotal;
+
+          body.innerHTML += `<tr>
               <td style="padding-left:20px;">${item.name}${item.note ? `<small>${item.note}</small>` : ''}</td>
               <td>${item.rmb > 0 ? '¥' + item.rmb : '-'}</td>
               <td>$${subTotal > 0 ? Math.round(subTotal).toLocaleString() : '-'}</td></tr>`;
@@ -1062,15 +1018,15 @@
 
         // 3. 插入小計列 (關鍵修改)
         if (catName.includes("家人")) {
-            const familyTotal = sumCommon + sumFamily;
-            body.innerHTML += `<tr style="background: #fff1f2; font-weight:bold; color:#e11d48;"><td colspan="2" style="text-align:right;">👵 家人總預算 (含共同花費)</td><td>$${Math.round(familyTotal).toLocaleString()}</td></tr>`;
-        } 
-        else if (catName.includes("YY")) {
-            const yyTotal = sumCommon + sumYY;
-            body.innerHTML += `<tr style="background: #eff6ff; font-weight:bold; color:#2563eb;"><td colspan="2" style="text-align:right;">👤 YY 總預算 (含共同花費)</td><td>$${Math.round(yyTotal).toLocaleString()}</td></tr>`;
+          const familyTotal = sumCommon + sumFamily;
+          body.innerHTML += `<tr style="background: #fff1f2; font-weight:bold; color:#e11d48;"><td colspan="2" style="text-align:right;">👵 家人總預算 (含共同花費)</td><td>$${Math.round(familyTotal).toLocaleString()}</td></tr>`;
         }
-    });
-      
+        else if (catName.includes("YY")) {
+          const yyTotal = sumCommon + sumYY;
+          body.innerHTML += `<tr style="background: #eff6ff; font-weight:bold; color:#2563eb;"><td colspan="2" style="text-align:right;">👤 YY 總預算 (含共同花費)</td><td>$${Math.round(yyTotal).toLocaleString()}</td></tr>`;
+        }
+      });
+
 
       // --- 設定準備清單資料 ---
       const todoData = {
