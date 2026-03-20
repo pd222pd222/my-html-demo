@@ -1,490 +1,892 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 China Trip | Full Itinerary</title>
-    <style>
-        :root {
-            --accent: #6c9edf;
-            --text: #444;
-            --card-bg: rgba(255, 255, 255, 0.88);
-            --line: #cbd5e1;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 China Trip | Full Itinerary</title>
+  <style>
+    :root {
+      --accent: #6c9edf;
+      --text: #444;
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --line: #cbd5e1;
+    }
 
-        body {
-            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #fff1f2 100%);
-            background-attachment: fixed;
-            margin: 0;
-            padding-bottom: 50px;
-        }
+    body {
+      font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fff1f2 100%);
+      background-attachment: fixed;
+      margin: 0;
+      padding-bottom: 50px;
+    }
 
-        .nav-bar-container {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        }
+    .nav-bar-container {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-        .nav-bar { display: flex; gap: 10px; padding: 0 15px; overflow-x: auto; }
-        .nav-bar::-webkit-scrollbar { display: none; }
+    .nav-bar {
+      display: flex;
+      gap: 10px;
+      padding: 0 15px;
+      overflow-x: auto;
+    }
 
-        .day-btn {
-            flex: 0 0 auto;
-            border: 1px solid rgba(255,255,255,0.6);
-            background: rgba(255,255,255,0.4);
-            padding: 8px 14px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            text-align: center;
-            line-height: 1.2;
-            transition: 0.3s;
-        }
+    .nav-bar::-webkit-scrollbar {
+      display: none;
+    }
 
-        .day-btn.active {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 5px 15px rgba(108, 158, 223, 0.3);
-            transform: translateY(-2px);
-        }
+    .day-btn {
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.4);
+      padding: 8px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      text-align: center;
+      line-height: 1.2;
+      transition: 0.3s;
+    }
 
-        .main-container { max-width: 620px; margin: 25px auto; padding: 0 18px; }
-        .day-section { display: none; }
-        .day-section.active { display: block; }
+    .day-btn.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 5px 15px rgba(108, 158, 223, 0.3);
+      transform: translateY(-2px);
+    }
 
-        .item-card {
-            display: flex;
-            background: var(--card-bg);
-            border-radius: 25px;
-            padding: 22px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-            border: 1px solid rgba(255,255,255,0.5);
-            gap: 15px;
-            align-items: center;
-        }
+    .main-container {
+      max-width: 620px;
+      margin: 25px auto;
+      padding: 0 18px;
+    }
 
-        .info-side { flex: 1; }
-        .tag-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-        .tag { padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; color: #555; }
-        .time-text { font-size: 0.8rem; color: #888; font-weight: 500; }
+    .day-section {
+      display: none;
+    }
 
-        .spot-name {
-            font-size: 1.45rem;
-            font-weight: 900;
-            margin: 4px 0 8px 0;
-            display: inline-block;
-            position: relative;
-        }
+    .day-section.active {
+      display: block;
+    }
 
-        .spot-name::after {
-            content: "";
-            position: absolute; left: 0; bottom: 3px; width: 100%; height: 8px;
-            background: linear-gradient(90deg, rgba(143, 179, 255, 0.3), rgba(255, 179, 186, 0.3));
-            z-index: -1; border-radius: 4px;
-        }
+    .item-card {
+      display: flex;
+      background: var(--card-bg);
+      border-radius: 25px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      gap: 15px;
+      align-items: center;
+    }
 
-        .extra-info { font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 10px; }
+    .info-side {
+      flex: 1;
+    }
 
-        .img-side {
-            width: 105px; height: 105px; flex-shrink: 0;
-            background: white; padding: 5px; border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transform: rotate(-1.5deg); cursor: pointer; transition: 0.3s;
-        }
-        .img-side:hover { transform: rotate(0deg) scale(1.05); }
-        .img-side img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+    .tag-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
-        .route-connector {
-            margin-left: 40px; border-left: 2px dashed var(--line);
-            padding: 12px 0 12px 25px; position: relative;
-        }
+    .tag {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: #555;
+    }
 
-        .route-info {
-            display: flex; align-items: center; gap: 8px; font-size: 0.8rem;
-            color: #64748b; background: rgba(255,255,255,0.6);
-            padding: 4px 12px; border-radius: 15px; width: fit-content;
-        }
+    .time-text {
+      font-size: 0.8rem;
+      color: #888;
+      font-weight: 500;
+    }
 
-        .nav-link {
-            text-decoration: none; font-size: 0.75rem; color: white;
-            background: var(--accent); padding: 5px 15px; border-radius: 20px;
-            display: inline-block;
-        }
+    .spot-name {
+      font-size: 1.45rem;
+      font-weight: 900;
+      margin: 4px 0 8px 0;
+      display: inline-block;
+      position: relative;
+    }
 
-        /* 親友卡片的專屬樣式 */
-        .family-card {
-            background: rgba(240, 240, 240, 0.6) !important;
-            border: 1px dashed #bbb !important;
-            opacity: 0.85;
-            transform: scale(0.8);
-        }
+    .spot-name::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 3px;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, rgba(143, 179, 255, 0.3), rgba(255, 179, 186, 0.3));
+      z-index: -1;
+      border-radius: 4px;
+    }
 
-        /* 親友標籤樣式 */
-        .tag[style*="#ddd"] { 
-            color: #888; 
-        }
+    .extra-info {
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
 
-        #lightbox {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            z-index: 1000; justify-content: center; align-items: center;
-        }
-        #lightbox img { max-width: 90%; max-height: 80%; border: 8px solid white; border-radius: 10px; }
+    .img-side {
+      width: 105px;
+      height: 105px;
+      flex-shrink: 0;
+      background: white;
+      padding: 5px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: rotate(-1.5deg);
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-	/* 費用標籤基礎樣式 */
-	.price-tag {
-	    font-size: 0.7rem;
-	    padding: 1px 6px;
-	    border-radius: 4px;
-	    margin-left: 5px;
-	    font-weight: 600;
-	}
+    .img-side:hover {
+      transform: rotate(0deg) scale(1.05);
+    }
 
-.price-twd { background: #f0f7ff; color: #4682b4; border: 1px solid #d1e3f8; }
-.price-rmb { background: #fffaf0; color: #cd853f; border: 1px solid #feeace; }
+    .img-side img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
 
-/* 預訂按鈕樣式 */
-.book-link {
-    display: inline-block;
-    margin-top: 8px;
-    margin-left: 10px;
-    padding: 4px 12px;
-    background: #546e7a;
-    color: white;
-    text-decoration: none;
-    border-radius: 15px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: 0.3s;
+    .route-connector {
+      margin-left: 40px;
+      border-left: 2px dashed var(--line);
+      padding: 12px 0 12px 25px;
+      position: relative;
+    }
+
+    .route-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 4px 12px;
+      border-radius: 15px;
+      width: fit-content;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      font-size: 0.75rem;
+      color: white;
+      background: var(--accent);
+      padding: 5px 15px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    /* 親友卡片的專屬樣式 */
+    .family-card {
+      background: rgba(240, 240, 240, 0.6) !important;
+      border: 1px dashed #bbb !important;
+      opacity: 0.85;
+      transform: scale(0.8);
+    }
+
+    /* 親友標籤樣式 */
+    .tag[style*="#ddd"] {
+      color: #888;
+    }
+
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #lightbox img {
+      max-width: 90%;
+      max-height: 80%;
+      border: 8px solid white;
+      border-radius: 10px;
+    }
+
+    /* 費用標籤基礎樣式 */
+    .price-tag {
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 5px;
+      font-weight: 600;
+    }
+
+    .price-twd {
+      background: #f0f7ff;
+      color: #4682b4;
+      border: 1px solid #d1e3f8;
+    }
+
+    .price-rmb {
+      background: #fffaf0;
+      color: #cd853f;
+      border: 1px solid #feeace;
+    }
+
+    /* 預訂按鈕樣式 */
+    .book-link {
+      display: inline-block;
+      margin-top: 8px;
+      margin-left: 10px;
+      padding: 4px 12px;
+      background: #546e7a;
+      color: white;
+      text-decoration: none;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: 0.3s;
+    }
+
+    /* 游標 */
+    .book-link:hover {
+      background: #37474f;
+    }
+
+    /* 分頁切換鈕樣式 */
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      background: white;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tab-btn {
+      padding: 8px 20px;
+      border: none;
+      background: none;
+      font-weight: bold;
+      color: #888;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    /* 記帳表格樣式 */
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .ledger-table th,
+    .ledger-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .ledger-table th {
+      background: #f8fafc;
+      font-size: 0.8rem;
+    }
+
+    .total-row {
+      background: #f0f7ff;
+      font-weight: bold;
+    }
+
+    /* 針對表格中的數字列 (第 2 與 第 3 欄) */
+.ledger-table td:nth-child(2), 
+.ledger-table td:nth-child(3) {
+    font-family: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace; /* 等寬字體 */
+    font-size: 0.85rem;    /* 稍微縮小字體 */
+    color: #475569;        /* 使用深灰色，比純黑更有質感 */
+    text-align: right;     /* 數字靠右對齊 */
+    letter-spacing: -0.5px; /* 縮緊字距 */
 }
 
-.book-link:hover {
-    background: #37474f; 
+/* 讓 RMB 的錢號 (¥) 顏色淡一點，更有層次感 */
+.ledger-table td:nth-child(2) {
+    color: #94a3b8; 
 }
 
+/* 針對小計列的金額 (加粗並稍微放大) */
+.ledger-table tr[style*="font-weight:bold"] td:last-child {
+    font-size: 1rem;       /* 小計金額稍微明顯一點 */
+    letter-spacing: 0px;
+}
 
-    </style>
+    /* 準備清單兩欄佈局 */
+    .todo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .todo-section {
+      background: white;
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .todo-section h4 {
+      margin: 0 0 10px 0;
+      color: #546e7a;
+      border-bottom: 1px solid #eee;
+    }
+
+    .check-item {
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* 針對記帳表格內的備註小字 */
+    .ledger-table td small {
+      display: block;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      line-height: 1.1;
+      margin-top: 2px;
+      font-weight: normal;
+    }
+
+    /* 隱藏分頁 */
+    .page-content {
+      display: none;
+    }
+
+    .page-content.active {
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="nav-bar-container">
-    <div class="nav-bar" id="dayNav"></div>
-</div>
+  <div class="tab-container">
+    <button class="tab-btn active" onclick="switchMainPage('itinerary', this)">🗺️ 行程</button>
+    <button class="tab-btn" onclick="switchMainPage('ledger', this)">💰 記帳</button>
+    <button class="tab-btn" onclick="switchMainPage('todo', this)">📝 準備</button>
+  </div>
 
-<div class="main-container" id="content"></div>
-<div id="lightbox" onclick="this.style.display='none'"><img src="" id="lbImg"></div>
+  <div id="itinerary" class="page-content active">
 
-<script>
+    <div class="nav-bar-container">
+      <div class="nav-bar" id="dayNav"></div>
+    </div>
+
+    <div class="main-container" id="content"></div>
+  </div>
+
+  <div id="ledger" class="page-content main-container">
+    <div class="item-card" style="display:block;">
+      <h3 style="margin-top:0">費用統計 (匯率 4.59)</h3>
+      <table class="ledger-table">
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th>RMB</th>
+            <th>TWD (含換算)</th>
+          </tr>
+        </thead>
+        <tbody id="expenseBody"></tbody>
+        
+      </table>
+    </div>
+  </div>
+
+  <div id="todo" class="page-content main-container">
+    <div class="todo-grid" id="todoList"></div>
+  </div>
+
+  <script>
     const itineraryData = [
-        { date: "06/05", label: "抵達上海", items: [
-            { tag: "交通", time: "17:15", title: "松山T1起飛", info: "TSA -> SHA", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG/500px-%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG", 
-              mapUrl: "https://j.map.baidu.com/bb/J8x",
-              transport: "airplane", duration: "1小時40分",
-              priceTwd: "9,500" },
+      {
+        date: "06/05", label: "抵達上海", items: [
+          {
+            tag: "交通", time: "17:15", title: "松山T1起飛", info: "TSA -> SHA",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG/500px-%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG",
+            mapUrl: "https://j.map.baidu.com/bb/J8x",
+            transport: "airplane", duration: "1小時40分",
+            priceTwd: "9,500"
+          },
 
-            { tag: "交通", time: "18:55", title: "抵達上海虹橋T1", info: "", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg", 
-              mapUrl: "https://j.map.baidu.com/78/hwc",
-              transport: ["subway", "walk"], duration: ["2號線/10站", "2分鐘/190m"] },
-            
-            { tag: "住宿", time: "", title: "漢庭酒店", info: "南京東路地鐵站 | 辦理入住 | 步行至南京路步行街", 
-              img: "https://ak-d.tripcdn.com/images/1mc2g12000rofbjl3C650_R_960_660_R5_D.jpg", 
-              mapUrl: "https://j.map.baidu.com/cd/bAr",
-              transport: "walk", duration: "2分鐘/190m" },
-            
-            { tag: "餐點", time: "晚餐", title: "蟹東來", info: "南京路必吃蟹粉麵", 
-              img: "https://ak-d.tripcdn.com/images/1mi29224x8zmf3ai857D6_W_640_0_R5_Q80.jpg?proc=source/trip",
-              mapUrl: "https://j.map.baidu.com/0f/FIMk",
-              transport: "walk", duration: "5分鐘/290m" },
-            
-            { tag: "景點", time: "", title: "外灘", info: "著名的夜景勝地", 
-              img: "https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/PVG/G0/PVG0000011/PVG0000011_61990.jpg",
-              mapUrl: "https://j.map.baidu.com/0f/FIMk" }
-        ]},
+          {
+            tag: "交通", time: "18:55", title: "抵達上海虹橋T1", info: "",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg",
+            mapUrl: "https://j.map.baidu.com/78/hwc",
+            transport: ["subway", "walk"], duration: ["2號線/10站", "2分鐘/190m"]
+          },
 
-        { date: "06/06", label: "飛往重慶", items: [
-            { tag: "家人", time: "11:15 - 14:40", title: "廈門T3／重慶T3", info: "XMN -> CKG (MF8413)", type: "family", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg/500px-Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg",
-              mapUrl: "https://j.map.baidu.com/47/bYd" },
+          {
+            tag: "住宿", time: "", title: "漢庭酒店", info: "南京東路地鐵站 | 辦理入住 | 步行至南京路步行街",
+            img: "https://ak-d.tripcdn.com/images/1mc2g12000rofbjl3C650_R_960_660_R5_D.jpg",
+            mapUrl: "https://j.map.baidu.com/cd/bAr",
+            transport: "walk", duration: "2分鐘/190m"
+          },
+
+          {
+            tag: "餐點", time: "晚餐", title: "蟹東來", info: "南京路必吃蟹粉麵",
+            img: "https://ak-d.tripcdn.com/images/1mi29224x8zmf3ai857D6_W_640_0_R5_Q80.jpg?proc=source/trip",
+            mapUrl: "https://j.map.baidu.com/0f/FIMk",
+            transport: "walk", duration: "5分鐘/290m"
+          },
+
+          {
+            tag: "景點", time: "", title: "外灘", info: "著名的夜景勝地",
+            img: "https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/PVG/G0/PVG0000011/PVG0000011_61990.jpg",
+            mapUrl: "https://j.map.baidu.com/0f/FIMk"
+          }
+        ]
+      },
+
+      {
+        date: "06/06", label: "飛往重慶", items: [
+          {
+            tag: "家人", time: "11:15 - 14:40", title: "廈門T3／重慶T3", info: "XMN -> CKG (MF8413)", type: "family",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg/500px-Xiamen_Gaoqi_International_Airport_Terminal_4_%2820170121145528%29.jpg",
+            mapUrl: "https://j.map.baidu.com/47/bYd",
+            priceTwd: "9,020",
+            priceRmb: "1,965"
+          },
+
+          {
+            tag: "交通", time: "12:40", title: "上海虹橋T2起飛", info: "SHA -> CKG",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg",
+            mapUrl: "https://j.map.baidu.com/78/hwc",
+            transport: "airplane", duration: "2小時45分"
+          },
+
+          {
+            tag: "交通", time: "18:55", title: "抵達重慶江北T3", info: "",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg",
+            mapUrl: "https://j.map.baidu.com/67/9Mri",
+            transport: "drive", duration: "32分鐘/25.5km/計程車約56元"
+          },
+
+          {
+            tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業",
+            img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+            mapUrl: "https://j.map.baidu.com/ea/zefM",
+            transport: "drive", duration: "選項1：14分鐘/4.7km/計程車約14元；選項2：23分鐘/9.7km/計程車約24元"
+          },
+
+          {
+            tag: "餐點", time: "選項1", title: "三生三味密宗川菜", info: "來福士店 | 觀賞無人機表演",
+            img: "https://ak-d.tripcdn.com/images/1mh5g12000bgx3550F7DF_C_760_506_R5.jpg?proc=source%2ftrip",
+            mapUrl: "https://j.map.baidu.com/16/Rbai"
+          },
+
+          {
+            tag: "餐點", time: "選項2", title: "綠岸山色鳥巢餐酒吧", info: "南濱路江景餐廳 | 觀賞無人機表演",
+            img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/597470313_25944052541854583_1658536766356315965_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=104&ccb=1-7&_nc_sid=e06c5d&_nc_ohc=LjQw7Us1qZQQ7kNvwHZUFf4&_nc_oc=AdoFhLLWuqu9AStytvdmwDtWvN1N_m8t4eRPE1HkxEDn53LLMYGNtQBrCrHzj0UVGsE&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=OwQSREVSGprpApbt0Jbbqg&_nc_ss=8&oh=00_AfzXyE4ufNHCjblM2RL-SIjs3OV7H2ckcKq4MCL86dFZwg&oe=69C166A1",
+            mapUrl: "https://j.map.baidu.com/c2/JodM"
+          }
+        ]
+      },
+
+      {
+        date: "06/07", label: "老街漫步", items: [
+          {
+            tag: "餐點", time: "早餐", title: "酒店早餐", info: "",
+            img: "https://ak-d.tripcdn.com/images/1mc2y12000o8q504g31DF_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+            mapUrl: "https://j.map.baidu.com/ea/zefM",
+            transport: "drive", duration: "24分鐘/9.5km"
+          },
+
+          {
+            tag: "景點", time: "", title: "龍門浩老街", info: "",
+            img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/480710856_1200009498152195_7269813424549274124_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=13d280&_nc_ohc=Y1KMz75II6wQ7kNvwGeTGZb&_nc_oc=AdpyzEsBXutwsix78UEYKfkCc5rxN5V4auc4WaWAZx7_RfbimVn9xCtM5TbOBZ-rmHI&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=prRFSLNcizJGNPvkGN-dYw&_nc_ss=8&oh=00_Afx4TL1FWY7Ycm6l0SSS6TxHhXCLOedBfETNr88JdqPXoQ&oe=69C14726",
+            mapUrl: "https://j.map.baidu.com/4d/KMc",
+            transport: "walk", duration: "6分鐘/320m"
+          },
+
+          {
+            tag: "景點", time: "", title: "下浩里", info: "漫步下浩里歷史街區",
+            img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/481012551_1200009554818856_2208383503050584940_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=13d280&_nc_ohc=ktUUUrX19ocQ7kNvwHgLqzS&_nc_oc=AdrPt-ecSosLs06pPmPDP0BHmfMIb0f74TEFJJzOJVYEg1rKB3b0xvG0zkhvXLeF3rs&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=PCEW0pB2LRnL0Bd6AsYpLQ&_nc_ss=8&oh=00_Afw9HZRTjGmHrX9YCpOezNd46JSt4yqgcx2NXxLog4YfRw&oe=69C147E5",
+            mapUrl: "https://j.map.baidu.com/be/gwK",
+            transport: "walk", duration: ""
+          },
+
+          {
+            tag: "餐點", time: "午餐", title: "福煲砂鍋", info: "下浩里店",
+            img: "https://cloudapp01.ulifestyle.com.hk/post/1024-1024-1281-CR-1-RB-1/post_1767696942617.jpeg",
+            mapUrl: "https://j.map.baidu.com/ff/omdM",
+            transport: "drive", duration: "27分鐘/10.7km"
+          },
+
+          {
+            tag: "景點", time: "", title: "觀音橋步行街", info: "打卡我在重慶",
+            img: "https://ak-d.tripcdn.com/images/0100c12000resyv1qF8C5.jpg",
+            mapUrl: "https://j.map.baidu.com/cd/dOGK",
+            transport: "walk", duration: ""
+          },
+
+          {
+            tag: "餐點", time: "手搖", title: "李若桃", info: "必喝手作酸奶 | 觀音橋好吃街店",
+            img: "https://ak-d.tripcdn.com/images/1mi1312000qf4rhtf2E20_W_640_0_R5_Q80.jpg?proc=source/trip",
+            mapUrl: "https://j.map.baidu.com/8b/TCdM",
+            transport: "drive", duration: "24分鐘/13.8km"
+          },
+
+          {
+            tag: "景點", time: "", title: "光環購物中心", info: "沐光森林室內植物園",
+            img: "https://ak-d.tripcdn.com/images/0102d12000kl2qubc97FD_C_1200_800_Q70.webp?proc=source%2ftrip",
+            mapUrl: "https://j.map.baidu.com/38/R7hJ",
+            transport: "drive", duration: "26分鐘/16.6km"
+          },
+
+          {
+            tag: "餐點", time: "晚餐", title: "慶渝宴", info: "宮廷餐秀",
+            img: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_530616/20250909063452_fbl3u/jpg",
+            mapUrl: "https://j.map.baidu.com/8f/s7Fk",
+            transport: "drive", duration: "15分鐘/7.7km",
+            priceTwd: "2,290",
+            priceRmb: "499",
+            bookUrl: "https://www.klook.com/zh-TW/activity/142214-chongqing-qingyu-banquet-palace-feast-experience/?campaignid=23492310427&adgroupid=&targetid=&matchtype=&device=c&creative=&extensionid=&keyword=&loc_interest_ms=&loc_physical_ms=9197957&network=x&utm_content=campaignid_23492310427_adgroupid_&gad_source=1&gad_campaignid=23482566441&gbraid=0AAAAACa_CWxI7OqkWwrNRxetGogMS2w7U&gclid=Cj0KCQjwve7NBhC-ARIsALZy9HXkYcD8hKK9vEcEefMChV-w3jHc0VHsKViBaKmwYIo-DOYBr2VdvFkaAk3KEALw_wcB"
+          },
+
+          {
+            tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業",
+            img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+            mapUrl: "https://j.map.baidu.com/ea/zefM"
+          }
+        ]
+      },
+
+      {
+        date: "06/08", label: "山城探索", items: [
+          {
+            tag: "餐點", time: "早餐", title: "酒店早餐", info: "",
+            img: "https://ak-d.tripcdn.com/images/1mc2y12000o8q504g31DF_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+            mapUrl: "https://j.map.baidu.com/ea/zefM",
+            transport: "drive", duration: "15分鐘/5.4km"
+          },
+
+          {
+            tag: "景點", time: "", title: "十八梯傳統風貌區", info: "",
+            img: "https://lh5.googleusercontent.com/proxy/ZJ4NQFoOi_N9hBDyPfoDF_BpGeSo-kOWoW6ZJnAAjTjjj0ZCR8_fPPaZdreIVwYDY9AKM-Yqje7imVudWr8UPa2EJlovUVngPOuBWv4z1EzOKvL0am1LuMwkVdboheDWqmu7MA",
+            mapUrl: "https://j.map.baidu.com/e9/Q-Rd",
+            transport: "drive", duration: "16分鐘/4.5km"
+          },
+
+          {
+            tag: "景點", time: "", title: "李子壩站", info: "輕軌2站穿樓體驗",
+            img: "https://imgbdb4.bendibao.com/cqbdb/tour/20238/23/2023823102627_71250.jpg",
+            mapUrl: "https://j.map.baidu.com/fd/lFji",
+            transport: "drive", duration: "27分鐘/12km"
+          },
+
+          {
+            tag: "餐點", time: "午餐選項1", title: "李子壩梁山雞", info: "公園二雞哥店",
+            img: "https://ak-d.tripcdn.com/images/10050v000000k1rv7D5F1_C_760_506_R5.jpg?proc=autoorient",
+            mapUrl: "https://j.map.baidu.com/ef/71o"
+          },
+
+          {
+            tag: "餐點", time: "午餐選項2", title: "茂庄古鎮雞雜", info: "磁器口總店 | 必吃雞雜、毛血旺",
+            img: "https://ak-d.tripcdn.com/images/10030v000000k0zck6C29_C_760_506_R5.jpg?proc=autoorient",
+            mapUrl: "https://j.map.baidu.com/ba/PPYg",
+            transport: "walk", duration: ""
+          },
+
+          {
+            tag: "景點", time: "", title: "磁器口古鎮", info: "轉運樓看川劇變臉 | 必吃陳麻花",
+            img: "https://ak-d.tripcdn.com/images/0106z120008iqyn71AE84_C_1200_800_Q70.webp?proc=source%2ftrip",
+            mapUrl: "https://j.map.baidu.com/d5/rk",
+            transport: "drive", duration: "43分鐘/18.7km"
+          },
+
+          {
+            tag: "景點", time: "", title: "解放碑步行街", info: "",
+            img: "https://ak-d.tripcdn.com/images/1A0a11000000qufky8650_C_1200_800_Q70.webp?proc=source%2ftrip",
+            mapUrl: "https://j.map.baidu.com/91/vl",
+            transport: "walk", duration: ""
+          },
+
+          {
+            tag: "餐點", time: "", title: "巴將軍非遺原味火鍋", info: "解放碑店",
+            img: "https://ak-d.tripcdn.com/images/100613000000ufn3hA40F_C_760_506_R5.jpg?proc=autoorient",
+            mapUrl: "https://j.map.baidu.com/17/XgM",
+            transport: "drive", duration: "9分鐘/1.7km"
+          },
+
+          {
+            tag: "景點", time: "", title: "洪崖洞民俗風貌區", info: "看夜景 | 漢服攝影體驗",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002382.JPG",
+            mapUrl: "https://j.map.baidu.com/9e/zk",
+            transport: "drive", duration: "18分鐘/3.6km"
+          },
+
+          {
+            tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業",
+            img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+            mapUrl: "https://j.map.baidu.com/ea/zefM"
+          }
+        ]
+      },
+
+      {
+        date: "06/09", label: "宜昌登船", items: [
+          {
+            tag: "餐點", time: "早餐", title: "酒店早餐", info: "",
+            img: "https://ak-d.tripcdn.com/images/1mc2y12000o8q504g31DF_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+            mapUrl: "https://j.map.baidu.com/ea/zefM",
+            transport: "drive", duration: "21分鐘/9.8km"
+          },
+
+          {
+            tag: "交通", time: "08:56", title: "重慶北站高鐵", info: "D2244車次",
+            img: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Front_South_Square_of_Chongqingbei_Railway_Station.jpg",
+            mapUrl: "https://j.map.baidu.com/77/v2J",
+            transport: "HSR", duration: "4小時32分鐘"
+          },
+
+          {
+            tag: "交通", time: "13:28", title: "宜昌東站高鐵", info: "",
+            img: "https://upload.wikimedia.org/wikipedia/commons/d/db/Yichang_East_Railway_Station.jpg",
+            mapUrl: "https://j.map.baidu.com/c2/4Rg",
+            transport: "drive", duration: "26分鐘/9.7km"
+          },
+
+          {
+            tag: "景點", time: "", title: "宜昌三峽遊客中心", info: "",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002523.JPG",
+            mapUrl: "https://j.map.baidu.com/e5/Zgh",
+            transport: "walk", duration: "4分鐘/200m"
+          },
+
+          {
+            tag: "餐點", time: "午餐", title: "萬達廣場", info: "買個小東西吃或等船上晚餐",
+            img: "http://www.hb.chinanews.com/2022/0112/U4P1DT20220112094224.png",
+            mapUrl: "https://j.map.baidu.com/c5/YQo",
+            transport: "walk", duration: ""
+          },
+
+          {
+            tag: "住宿", time: "登船", title: "長江攬月遊輪", info: "五星遊輪設施與自助餐",
+            img: "https://gochina.com.tw/wp-content/uploads/2025/11/%E9%95%B7%E6%B1%9F%E8%A1%8C%E6%94%AC%E6%9C%88%E8%99%9F-scaled.jpg",
+            mapUrl: "https://j.map.baidu.com/b7/HXdM"
+          }
+        ]
+      },
+
+      {
+        date: "06/10", label: "三峽大壩", items: [
+          {
+            tag: "景點", time: "早上", title: "三峽大壩景區", info: "世界規模最大的水利工程",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002521.JPG",
+            mapUrl: "https://j.map.baidu.com/e7/frti",
+            transport: "walk", duration: ""
+          },
+
+          {
+            tag: "景點", time: "早上", title: "三鬥坪", info: "眺望壩體全景的重要據點",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002524.JPG",
+            mapUrl: "https://j.map.baidu.com/c5/2hT",
+            transport: "walk", duration: ""
+          },
+
+          {
+            tag: "景點", time: "早上", title: "升船機", info: "體驗巨輪隨平台緩緩升降",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002537.JPG",
+            mapUrl: "https://j.map.baidu.com/2b/pOdM",
+            transport: "ship", duration: "航行中"
+          },
+
+          {
+            tag: "景點", time: "下午", title: "🚢行駛過西陵峽", info: "三峽中最長的一段峽谷",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002526.JPG",
+            mapUrl: "https://j.map.baidu.com/be/h1",
+            transport: "ship", duration: "航行中"
+          },
+
+          {
+            tag: "景點", time: "晚上", title: "巴東雨仙谷(無源洞)", info: "景觀豐富的鐘乳石",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002527.JPG",
+            mapUrl: "https://j.map.baidu.com/89/SxfM"
+          }
+        ]
+      },
+
+      {
+        date: "06/11", label: "神女巫峽", items: [
+          {
+            tag: "景點", time: "早上", title: "🚢行駛過巫峽", info: "巫山十二峰沿江聳立",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002379.JPG",
+            mapUrl: "https://j.map.baidu.com/75/5R_d",
+            transport: "ship", duration: "航行中"
+          },
+
+          {
+            tag: "景點", time: "早上", title: "🚢行駛過瞿塘峽", info: "江面最窄、山勢最險",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002534.JPG",
+            mapUrl: "https://j.map.baidu.com/c0/uKk",
+            transport: "ship", duration: "航行中"
+          },
         
-            { tag: "交通", time: "12:40", title: "上海虹橋T2起飛", info: "SHA -> CKG", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg",
-              mapUrl: "https://j.map.baidu.com/78/hwc",
-              transport: "airplane", duration: "2小時45分" },
-        
-            { tag: "交通", time: "18:55", title: "抵達重慶江北T3", info: "", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
-              mapUrl: "https://j.map.baidu.com/67/9Mri",
-              transport: "drive", duration: "32分鐘/25.5km/計程車約56元" },
+          {
+            tag: "景點", time: "下午", title: "白帝城", info: "劉備託孤地，十元人民幣背景",
+            img: "http://outdoortour.voyage.com.tw/eWeb_outdoortour/IMGDB/000098/000182/00002390.JPG",
+            mapUrl: "https://j.map.baidu.com/c0/uKk"
+          }
+        ]
+      },
 
-            { tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業", 
-              img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
-              mapUrl: "https://j.map.baidu.com/ea/zefM",
-              transport: "drive", duration: "選項1：14分鐘/4.7km/計程車約14元；選項2：23分鐘/9.7km/計程車約24元" },
+      {
+        date: "06/12", label: "工業遺產", items: [
+          {
+            tag: "景點", time: "上午", title: "816工程遺址", info: "",
+            img: "https://ak-d.tripcdn.com/images/1mi1z12000fi47bnt627D_W_640_0_R5_Q80.jpg?proc=source/trip",
+            mapUrl: "https://j.map.baidu.com/17/hJai"
+          }
+        ]
+      },
 
-            { tag: "餐點", time: "選項1", title: "三生三味密宗川菜", info: "來福士店 | 觀賞無人機表演", 
-              img: "https://ak-d.tripcdn.com/images/1mh5g12000bgx3550F7DF_C_760_506_R5.jpg?proc=source%2ftrip",
-              mapUrl: "https://j.map.baidu.com/16/Rbai" },
+      {
+        date: "06/13", label: "重回上海", items: [
+          {
+            tag: "家人", time: "11:30 - 13:30", title: "重慶T3／廈門T3", info: "CKG -> XMN (MF8404)", type: "family",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg",
+            mapUrl: "https://j.map.baidu.com/67/9Mri"
+          },
 
-            { tag: "餐點", time: "選項2", title: "綠岸山色鳥巢餐酒吧", info: "南濱路江景餐廳 | 觀賞無人機表演", 
-              img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/597470313_25944052541854583_1658536766356315965_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=104&ccb=1-7&_nc_sid=e06c5d&_nc_ohc=LjQw7Us1qZQQ7kNvwHZUFf4&_nc_oc=AdoFhLLWuqu9AStytvdmwDtWvN1N_m8t4eRPE1HkxEDn53LLMYGNtQBrCrHzj0UVGsE&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=OwQSREVSGprpApbt0Jbbqg&_nc_ss=8&oh=00_AfzXyE4ufNHCjblM2RL-SIjs3OV7H2ckcKq4MCL86dFZwg&oe=69C166A1",
-              mapUrl: "https://j.map.baidu.com/c2/JodM"}
-        ]},
+          {
+            tag: "交通", time: "09:30", title: "機場寄放行李", info: "用存知己查寄放行李",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg",
+            mapUrl: "https://j.map.baidu.com/67/9Mri",
+            transport: "subway", duration: "8分鐘/江北T2航站樓站 -> 3號線(1站) -> 碧津站"
+          },
 
-        { date: "06/07", label: "老街漫步", items: [
-            { tag: "餐點", time: "早餐", title: "酒店早餐", info: "",
-              img: "https://ak-d.tripcdn.com/images/1mc2y12000o8q504g31DF_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F", 
-              mapUrl: "https://j.map.baidu.com/ea/zefM",
-              transport: "drive", duration: "24分鐘/9.5km"},
-            
-            { tag: "景點", time: "", title: "龍門浩老街", info: "", 
-              img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/480710856_1200009498152195_7269813424549274124_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=13d280&_nc_ohc=Y1KMz75II6wQ7kNvwGeTGZb&_nc_oc=AdpyzEsBXutwsix78UEYKfkCc5rxN5V4auc4WaWAZx7_RfbimVn9xCtM5TbOBZ-rmHI&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=prRFSLNcizJGNPvkGN-dYw&_nc_ss=8&oh=00_Afx4TL1FWY7Ycm6l0SSS6TxHhXCLOedBfETNr88JdqPXoQ&oe=69C14726", 
-              mapUrl: "https://j.map.baidu.com/4d/KMc",
-              transport: "walk", duration: "6分鐘/320m" },
+          {
+            tag: "景點", time: "09:30", title: "碧津公園", info: "",
+            img: "https://ak-d.tripcdn.com/images/0105v120009dde9av5A69_C_670_376_Q70.webp?proc=source%2ftrip",
+            mapUrl: "https://j.map.baidu.com/bd/hp3",
+            transport: "walk", duration: "9分鐘/560m"
+          },
 
-            { tag: "景點", time: "", title: "下浩里", info: "漫步下浩里歷史街區", 
-              img: "https://scontent.ftpe12-1.fna.fbcdn.net/v/t39.30808-6/481012551_1200009554818856_2208383503050584940_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=13d280&_nc_ohc=ktUUUrX19ocQ7kNvwHgLqzS&_nc_oc=AdrPt-ecSosLs06pPmPDP0BHmfMIb0f74TEFJJzOJVYEg1rKB3b0xvG0zkhvXLeF3rs&_nc_zt=23&_nc_ht=scontent.ftpe12-1.fna&_nc_gid=PCEW0pB2LRnL0Bd6AsYpLQ&_nc_ss=8&oh=00_Afw9HZRTjGmHrX9YCpOezNd46JSt4yqgcx2NXxLog4YfRw&oe=69C147E5", 
-              mapUrl: "https://j.map.baidu.com/be/gwK",
-              transport: "walk", duration: "" },
+          {
+            tag: "景點", time: "10:30", title: "金港國際購物中心", info: "逛逛吃午餐",
+            img: "https://fe.cunzj.com/note_img/TX2semhzxpOkq5tDld07.jpg",
+            mapUrl: "https://j.map.baidu.com/dc/x2o",
+            transport: "subway", duration: "16分鐘/渝北廣場站 -> 10號線(2站) -> 江北T3航站樓站"
+          },
 
-            { tag: "餐點", time: "午餐", title: "福煲砂鍋", info: "下浩里店", 
-              img: "https://cloudapp01.ulifestyle.com.hk/post/1024-1024-1281-CR-1-RB-1/post_1767696942617.jpeg", 
-              mapUrl:"https://j.map.baidu.com/ff/omdM",
-              transport: "drive", duration: "27分鐘/10.7km" },
-            
-            { tag: "景點", time: "", title: "觀音橋步行街", info: "打卡我在重慶", 
-              img: "https://ak-d.tripcdn.com/images/0100c12000resyv1qF8C5.jpg", 
-              mapUrl:"https://j.map.baidu.com/cd/dOGK",
-              transport: "walk", duration: "" },
+          {
+            tag: "交通", time: "15:20", title: "重慶江北T3起飛", info: "CKG -> PVG (17:50 抵達)",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg",
+            mapUrl: "https://j.map.baidu.com/67/9Mri",
+            transport: "airplane", duration: "2小時30分鐘"
+          },
 
-            { tag: "餐點", time: "手搖", title: "李若桃", info: "必喝手作酸奶 | 觀音橋好吃街店", 
-              img: "https://ak-d.tripcdn.com/images/1mi1312000qf4rhtf2E20_W_640_0_R5_Q80.jpg?proc=source/trip", 
-              mapUrl:"https://j.map.baidu.com/8b/TCdM",
-              transport: "drive", duration: "24分鐘/13.8km" },
-            
-            { tag: "景點", time: "", title: "光環購物中心", info: "沐光森林室內植物園", 
-              img: "https://ak-d.tripcdn.com/images/0102d12000kl2qubc97FD_C_1200_800_Q70.webp?proc=source%2ftrip",
-              mapUrl:"https://j.map.baidu.com/38/R7hJ",
-              transport: "drive", duration: "26分鐘/16.6km" },
+          {
+            tag: "交通", time: "15:20", title: "抵達上海浦東", info: "",
+            img: "https://www.vietnamairlines.com/content/dam/legacy-site-assets/SEO-images/2025%20SEO/Traffic%20TV/san-bay-quoc-te-pho-dong-thuong-hai/nha-ga-san-bay.jpg",
+            mapUrl: "https://j.map.baidu.com/14/lc",
+            transport: "walk", duration: "2分鐘/150m"
+          },
 
-            { tag: "餐點", time: "晚餐", title: "慶渝宴", info: "宮廷餐秀", 
-              img: "https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_530616/20250909063452_fbl3u/jpg", 
-              mapUrl:"https://j.map.baidu.com/8f/s7Fk",
-              transport: "drive", duration: "15分鐘/7.7km",
-              priceTwd: "2,290",
-	      priceRmb: "499",
-              bookUrl: "https://www.klook.com/zh-TW/activity/142214-chongqing-qingyu-banquet-palace-feast-experience/?campaignid=23492310427&adgroupid=&targetid=&matchtype=&device=c&creative=&extensionid=&keyword=&loc_interest_ms=&loc_physical_ms=9197957&network=x&utm_content=campaignid_23492310427_adgroupid_&gad_source=1&gad_campaignid=23482566441&gbraid=0AAAAACa_CWxI7OqkWwrNRxetGogMS2w7U&gclid=Cj0KCQjwve7NBhC-ARIsALZy9HXkYcD8hKK9vEcEefMChV-w3jHc0VHsKViBaKmwYIo-DOYBr2VdvFkaAk3KEALw_wcB" },
-            
-            { tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業", 
-              img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
-              mapUrl: "https://j.map.baidu.com/ea/zefM" }
-        ]},
+          {
+            tag: "景點", time: "16:20", title: "磁浮列車", info: "體驗8分鐘的磁浮列車",
+            img: "https://dimg04.tripcdn.com/images/1n94m224x8zghxn9z19E7.jpg?proc=format/f_webp",
+            mapUrl: "https://j.map.baidu.com/14/lc",
+            transport: "subway", duration: "51分鐘/龍陽路站 -> 2號線(3站) -> 世紀大道站 -> 9號線(14站) -> 七寶站"
+          },
 
-        { date: "06/08", label: "山城探索", items: [
-            { tag: "餐點", time: "早餐", title: "酒店早餐", info: "",
-              img: "https://ak-d.tripcdn.com/images/1mc2y12000o8q504g31DF_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F", 
-              mapUrl: "https://j.map.baidu.com/ea/zefM",
-              transport: "drive", duration: "15分鐘/5.4km"},    
-        
-            { tag: "景點", time: "", title: "十八梯傳統風貌區", info: "", 
-              img: "https://lh5.googleusercontent.com/proxy/ZJ4NQFoOi_N9hBDyPfoDF_BpGeSo-kOWoW6ZJnAAjTjjj0ZCR8_fPPaZdreIVwYDY9AKM-Yqje7imVudWr8UPa2EJlovUVngPOuBWv4z1EzOKvL0am1LuMwkVdboheDWqmu7MA", 
-              mapUrl:"https://j.map.baidu.com/e9/Q-Rd",
-              transport: "drive", duration: "16分鐘/4.5km" },
+          {
+            tag: "住宿", time: "Check-in", title: "如家商旅飯店", info: "七寶地鐵站店 | 放下行李直衝老街",
+            img: "https://ak-d.tripcdn.com/images/1mc1f12000b9wn8jxD83C_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
+            mapUrl: "https://j.map.baidu.com/7b/NNg",
+            transport: "walk", duration: ""
+          },
 
-            { tag: "景點", time: "", title: "李子壩站", info: "輕軌2站穿樓體驗", 
-              img: "https://imgbdb4.bendibao.com/cqbdb/tour/20238/23/2023823102627_71250.jpg",
-              mapUrl:"https://j.map.baidu.com/fd/lFji", 
-              transport: "drive", duration: "27分鐘/12km" },
+          {
+            tag: "餐點", time: "晚餐", title: "七寶老街美食", info: "臭豆腐、仁壽灌蛋、一品方糕、蔥油餅、湯圓、寶豐海棠糕",
+            img: "https://ak-d.tripcdn.com/images/10051f000001gstoc00B8_C_670_376_Q70.webp?proc=source%2ftrip",
+            transport: "walk", duration: ""
+          },
 
-            { tag: "餐點", time: "午餐選項1", title: "李子壩梁山雞", info: "公園二雞哥店", 
-              img: "https://ak-d.tripcdn.com/images/10050v000000k1rv7D5F1_C_760_506_R5.jpg?proc=autoorient",
-              mapUrl:"https://j.map.baidu.com/ef/71o"},
+          {
+            tag: "餐點", time: "景點", title: "七寶古鎮", info: "",
+            img: "https://cloudapp01.ulifestyle.com.hk/post/600-1024-1279-CR-1-RB-1/post_1741439740353.jpeg"
+          }
+        ]
+      },
 
-            { tag: "餐點", time: "午餐選項2", title: "茂庄古鎮雞雜", info: "磁器口總店 | 必吃雞雜、毛血旺", 
-              img: "https://ak-d.tripcdn.com/images/10030v000000k0zck6C29_C_760_506_R5.jpg?proc=autoorient",
-              mapUrl:"https://j.map.baidu.com/ba/PPYg",
-              transport: "walk", duration: ""},
+      {
+        date: "06/14", label: "回家囉", items: [
+          {
+            tag: "交通", time: "08:15", title: "上海虹橋T1起飛", info: "05:15到機場 | SHA -> TSA",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg",
+            mapUrl: "https://j.map.baidu.com/78/hwc",
+            transport: "airplane", duration: "2小時"
+          },
 
-            { tag: "景點", time: "", title: "磁器口古鎮", info: "轉運樓看川劇變臉 | 必吃陳麻花", 
-              img: "https://ak-d.tripcdn.com/images/0106z120008iqyn71AE84_C_1200_800_Q70.webp?proc=source%2ftrip", 
-              mapUrl:"https://j.map.baidu.com/d5/rk",
-              transport: "drive", duration: "43分鐘/18.7km" },
-
-            { tag: "景點", time: "", title: "解放碑步行街", info: "", 
-              img: "https://ak-d.tripcdn.com/images/1A0a11000000qufky8650_C_1200_800_Q70.webp?proc=source%2ftrip", 
-              mapUrl:"https://j.map.baidu.com/91/vl",
-              transport: "walk", duration: "" },
-
-            { tag: "餐點", time: "", title: "巴將軍非遺原味火鍋", info: "解放碑店", 
-              img: "https://ak-d.tripcdn.com/images/100613000000ufn3hA40F_C_760_506_R5.jpg?proc=autoorient",
-              mapUrl:"https://j.map.baidu.com/17/XgM",
-              transport: "drive", duration: "9分鐘/1.7km" },
-
-            { tag: "景點", time: "", title: "洪崖洞民俗風貌區", info: "看夜景 | 漢服攝影體驗", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/202308_Hongya_Cave_at_night_from_Qiansimen_Bridge.jpg/500px-202308_Hongya_Cave_at_night_from_Qiansimen_Bridge.jpg", 
-              mapUrl:"https://j.map.baidu.com/9e/zk",
-              transport: "drive", duration: "18分鐘/3.6km" },
-            
-            { tag: "住宿", time: "Check-in", title: "福朋喜來登酒店", info: "重慶渝中半島 | 2026新開業", 
-              img: "https://ak-d.tripcdn.com/images/1mc4u12000oa3expmD39E_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F",
-              mapUrl: "https://j.map.baidu.com/ea/zefM" }
-        ]},
-
-        { date: "06/09", label: "宜昌登船", items: [
-            { tag: "餐點", time: "早餐", title: "酒店早餐", info: "",
-              img: "https://ak-d.tripcdn.com/images/1mc2y12000o8q504g31DF_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F", 
-              mapUrl: "https://j.map.baidu.com/ea/zefM",
-              transport: "drive", duration: "21分鐘/9.8km"},    
-                    
-            { tag: "交通", time: "08:56", title: "重慶北站高鐵", info: "D2244車次", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Front_South_Square_of_Chongqingbei_Railway_Station.jpg", 
-              mapUrl:"https://j.map.baidu.com/77/v2J",
-              transport: "HSR", duration: "4小時32分鐘" },
-
-            { tag: "交通", time: "13:28", title: "宜昌東站高鐵", info: "", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/d/db/Yichang_East_Railway_Station.jpg", 
-              mapUrl:"https://j.map.baidu.com/c2/4Rg",
-              transport: "drive", duration: "26分鐘/9.7km" },
-
-            { tag: "景點", time: "", title: "宜昌三峽遊客中心", info: "", 
-              img: "https://x1.cncnimg.cn/p10009/451/ccf5.jpg?v=1694566503", 
-              mapUrl:"https://j.map.baidu.com/e5/Zgh",
-              transport: "walk", duration: "4分鐘/200m" },
-
-            { tag: "餐點", time: "午餐", title: "萬達廣場", info: "買個小東西吃或等船上晚餐",
-              img: "http://www.hb.chinanews.com/2022/0112/U4P1DT20220112094224.png", 
-              mapUrl: "https://j.map.baidu.com/c5/YQo",
-              transport: "walk", duration: ""},      
-
-            { tag: "住宿", time: "登船", title: "長江攬月遊輪", info: "五星遊輪設施與自助餐", 
-              img: "https://gochina.com.tw/wp-content/uploads/2025/11/%E9%95%B7%E6%B1%9F%E8%A1%8C%E6%94%AC%E6%9C%88%E8%99%9F-scaled.jpg",
-              mapUrl:"https://j.map.baidu.com/b7/HXdM" }
-            ]},
-
-        { date: "06/10", label: "三峽大壩", items: [
-            { tag: "景點", time: "早上", title: "三峽大壩景區", info: "體驗世紀工程升船機", 
-              img: "https://images.storm.mg/cloud/5c336f865651711f0afe49e4788432d39e8adab9.jpg?url=s3%3A%2F%2Fnew-storm-public-resource%2Fgallery%2F156095%2F20190709-090728_U1085_M534466_f972.jpg&g=sm&h=675&resize=fill&w=1200&format=jpg", 
-              mapUrl:"https://j.map.baidu.com/e7/frti",
-              transport: "ship", duration: "航行中" },
-
-            { tag: "景點", time: "晚上", title: "巴東無源洞", info: "", 
-              img: "https://ak-d.tripcdn.com/images/0101u120008f1gr2f12EF_C_1200_800_Q70.webp?proc=source%2ftrip",
-              mapUrl:"https://j.map.baidu.com/89/SxfM" }
-        ]},
-
-        { date: "06/11", label: "神女巫峽", items: [
-            { tag: "景點", time: "下午", title: "白帝城", info: "劉備託孤地，十元人民幣背景", 
-              img: "http://www.mct.gov.cn/whzx/tpxw/201111/W020171202504314241261.jpg",
-              mapUrl:"https://j.map.baidu.com/c0/uKk" }
-        ]},
-
-        { date: "06/12", label: "工業遺產", items: [
-            { tag: "景點", time: "上午", title: "816工程遺址", info: "", 
-              img: "https://ak-d.tripcdn.com/images/1mi1z12000fi47bnt627D_W_640_0_R5_Q80.jpg?proc=source/trip", 
-              mapUrl:"https://j.map.baidu.com/17/hJai" }
-        ]},
-
-        { date: "06/13", label: "重回上海", items: [
-            { tag: "家人", time: "11:30 - 13:30", title: "重慶T3／廈門T3", info: "CKG -> XMN (MF8404)", type: "family", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
-              mapUrl: "https://j.map.baidu.com/67/9Mri"},
-
-            { tag: "交通", time: "09:30", title: "機場寄放行李", info: "用存知己查寄放行李", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
-              mapUrl: "https://j.map.baidu.com/67/9Mri",
-              transport: "subway", duration: "江北T2航站樓站 -> 3號線(1站) -> 碧津站" },
-
-            { tag: "景點", time: "09:30", title: "碧津公園", info: "", 
-              img: "https://ak-d.tripcdn.com/images/0105v120009dde9av5A69_C_670_376_Q70.webp?proc=source%2ftrip", 
-              mapUrl: "https://j.map.baidu.com/bd/hp3",
-              transport: "walk", duration: "9分鐘/560m" },
-
-            { tag: "景點", time: "10:30", title: "金港國際購物中心", info: "逛逛吃午餐", 
-              img: "https://fe.cunzj.com/note_img/TX2semhzxpOkq5tDld07.jpg", 
-              mapUrl: "https://j.map.baidu.com/dc/x2o",
-              transport: "subway", duration: "渝北廣場站 -> 10號線(2站) -> 江北T3航站樓站" },
-        
-            { tag: "交通", time: "15:20", title: "重慶江北T3起飛", info: "CKG -> PVG (17:50 抵達)", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Terminal_3_of_Chongqing_Jiangbei_Airport.jpg/500px-Terminal_3_of_Chongqing_Jiangbei_Airport.jpg", 
-              mapUrl: "https://j.map.baidu.com/67/9Mri",
-              transport: "airplane", duration: "2小時30分鐘" },
-
-            { tag: "交通", time: "15:20", title: "抵達上海浦東", info: "", 
-              img: "https://www.vietnamairlines.com/content/dam/legacy-site-assets/SEO-images/2025%20SEO/Traffic%20TV/san-bay-quoc-te-pho-dong-thuong-hai/nha-ga-san-bay.jpg", 
-              mapUrl: "https://j.map.baidu.com/14/lc",
-              transport: "walk", duration: "2分鐘/150m" },
-
-            { tag: "景點", time: "16:20", title: "磁浮列車", info: "浦東航站樓站 -> 龍陽路站", 
-              img: "https://dimg04.tripcdn.com/images/1n94m224x8zghxn9z19E7.jpg?proc=format/f_webp", 
-              mapUrl: "https://j.map.baidu.com/14/lc",
-              transport: "subway", duration: "龍陽路站 -> 2號線(3站) -> 世紀大道站 -> 9號線(14站) -> 七寶站",
-	      priceTwd: "184",
-	      priceRmb: "40",
-	      bookUrl: "http://www.smtdc.com/cn/jszl.html" },
-
-            { tag: "住宿", time: "Check-in", title: "如家商旅飯店", info: "七寶地鐵站店 | 放下行李直衝老街", 
-              img: "https://ak-d.tripcdn.com/images/1mc1f12000b9wn8jxD83C_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F", 
-              mapUrl:"https://j.map.baidu.com/7b/NNg",
-              transport: "walk", duration: "" },
-
-            { tag: "餐點", time: "晚餐", title: "七寶老街美食", info: "臭豆腐、仁壽灌蛋、一品方糕、蔥油餅、湯圓、寶豐海棠糕", 
-              img: "https://ak-d.tripcdn.com/images/10051f000001gstoc00B8_C_670_376_Q70.webp?proc=source%2ftrip",
-              transport: "walk", duration: "" },
-
-            { tag: "餐點", time: "景點", title: "七寶古鎮", info: "", 
-              img: "https://cloudapp01.ulifestyle.com.hk/post/600-1024-1279-CR-1-RB-1/post_1741439740353.jpeg" }
-        ]},
-
-        { date: "06/14", label: "回家囉", items: [
-            { tag: "交通", time: "08:15", title: "上海虹橋T1起飛", info: "05:15到機場 | SHA -> TSA", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Shanghai_Hongqiao_Airport_Terminal_2.jpg/500px-Shanghai_Hongqiao_Airport_Terminal_2.jpg", 
-              mapUrl: "https://j.map.baidu.com/78/hwc", 
-              transport: "airplane", duration: "2小時" },
-
-            { tag: "景點", time: "10:15", title: "抵達松山機場T1", info: "美好的旅程結束！", 
-              img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG/500px-%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG", 
-              mapUrl: "https://j.map.baidu.com/bb/J8x" }
-        ]}
+          {
+            tag: "景點", time: "10:15", title: "抵達松山機場T1", info: "美好的旅程結束！",
+            img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG/500px-%E5%8F%B0%E5%8C%97%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4.JPG",
+            mapUrl: "https://j.map.baidu.com/bb/J8x"
+          }
+        ]
+      }
     ];
 
     const tagColors = { "交通": "#bae1ff", "餐點": "#ffb3ba", "景點": "#ffdfba", "住宿": "#baffc9", "家人": "#ddd" };
-    const transIcons = { "walk": "🚶 步行", "drive": "🚗 車程", "subway": "🚇 地鐵", "ship": "🚢 航行", "airplane": "✈️ 飛行", "HSR": "🚄 高鐵", "Maglev":"🚝 磁浮列車" };
+    const transIcons = { "walk": "🚶 步行", "drive": "🚗 車程", "subway": "🚇 地鐵", "ship": "🚢 航行", "airplane": "✈️ 飛行", "HSR": "🚄 高鐵", "Maglev": "🚝 磁浮列車" };
 
     const nav = document.getElementById('dayNav');
     const content = document.getElementById('content');
 
     itineraryData.forEach((day, i) => {
-        const btn = document.createElement('button');
-        btn.className = `day-btn ${i===0?'active':''}`;
-        btn.innerHTML = `D${i+1}<br>${day.label}`;
-        btn.onclick = () => {
-            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(`day-sec-${i}`).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-        nav.appendChild(btn);
+      const btn = document.createElement('button');
+      btn.className = `day-btn ${i === 0 ? 'active' : ''}`;
+      btn.innerHTML = `D${i + 1}<br>${day.label}`;
+      btn.onclick = () => {
+        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`day-sec-${i}`).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+      nav.appendChild(btn);
 
-        const section = document.createElement('div');
-        section.className = `day-section ${i===0?'active':''}`;
-        section.id = `day-sec-${i}`;
+      const section = document.createElement('div');
+      section.className = `day-section ${i === 0 ? 'active' : ''}`;
+      section.id = `day-sec-${i}`;
 
-        day.items.forEach((item, index) => {
-            const card = document.createElement('div');
-            card.className = `item-card ${item.type==='family'?'family-card':''}`;
+      day.items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = `item-card ${item.type === 'family' ? 'family-card' : ''}`;
 
-            const finalMapUrl = item.mapUrl || `https://map.baidu.com/search/${encodeURIComponent(item.title)}`;
+        const finalMapUrl = item.mapUrl || `https://map.baidu.com/search/${encodeURIComponent(item.title)}`;
 
-            card.innerHTML = `
+        card.innerHTML = `
                 <div class="info-side">
                 <div class="tag-row">
                     <span class="tag" style="background:${tagColors[item.tag] || '#eee'}">${item.tag}</span>
@@ -505,39 +907,153 @@
                 </div>
                 <div class="img-side" onclick="openLightbox('${item.img}')"><img src="${item.img}"></div>
                 `;
-                section.appendChild(card);
+        section.appendChild(card);
 
-            // 處理複合交通顯示
-            if (item.transport && index < day.items.length - 1) {
-                const routeDiv = document.createElement('div');
-                routeDiv.className = "route-connector";
-                let stepsHtml = "";
-    
-            // 如果是陣列（多重交通），就跑循環；如果不是，就直接顯示
-            if (Array.isArray(item.transport)) {
-                item.transport.forEach((t, idx) => {
-                    stepsHtml += `<div class="route-step">${transIcons[t]} ${item.duration[idx]}</div>`;
+        // 處理複合交通顯示
+        if (item.transport && index < day.items.length - 1) {
+          const routeDiv = document.createElement('div');
+          routeDiv.className = "route-connector";
+          let stepsHtml = "";
+
+          // 如果是陣列（多重交通），就跑循環；如果不是，就直接顯示
+          if (Array.isArray(item.transport)) {
+            item.transport.forEach((t, idx) => {
+              stepsHtml += `<div class="route-step">${transIcons[t]} ${item.duration[idx]}</div>`;
             });
-            } 
-            
-            else {
-                stepsHtml = `<div class="route-step">${transIcons[item.transport]} ${item.duration}</div>`;
-            }
-    
-                routeDiv.innerHTML = `<div class="route-info">${stepsHtml}</div>`;
-                section.appendChild(routeDiv);
-            }
-        });
-        content.appendChild(section);
+          }
+
+          else {
+            stepsHtml = `<div class="route-step">${transIcons[item.transport]} ${item.duration}</div>`;
+          }
+
+          routeDiv.innerHTML = `<div class="route-info">${stepsHtml}</div>`;
+          section.appendChild(routeDiv);
+        }
+      });
+      content.appendChild(section);
     });
 
     function openLightbox(src) {
-        document.getElementById('lbImg').src = src;
-        document.getElementById('lightbox').style.display = 'flex';
+      document.getElementById('lbImg').src = src;
+      document.getElementById('lightbox').style.display = 'flex';
     }
 
-    
+    // 切換主分頁邏輯
+    function switchMainPage(pageId, btn) {
+      document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      btn.classList.add('active');
+    }
 
-</script>
+    // 設定匯率與詳細帳目
+    const exchangeRate = 4.59;
+    const expenseCategories = {
+      "🌎 大家共同 (每人)": [
+        { name: "長江攬月包團費", rmb: 5950, twd: 0 },
+        { name: "15座接送車費", rmb: 50, twd: 0 },
+        { name: "D2 晚餐:酒店附近", rmb: 80, twd: 0 },
+        { name: "D3 午餐:下浩里附近", rmb: 80, twd: 0 },
+        { name: "D3 晚餐:慶渝宴宮廷餐", rmb: 499, twd: 0, note: "小程序預訂" },
+        { name: "D4 午餐:磁器口附近", rmb: 40, twd: 0 },
+        { name: "D4 晚餐:解放碑附近", rmb: 120, twd: 0 },
+        { name: "D4 洪崖洞漢服體驗", rmb: 0, twd: 1478, note: "小紅書詢價中" },
+        { name: "D5 午餐:遊客中心附近", rmb: 80, twd: 0 },
+      ],
+      "👨‍👩‍👧‍👦 家人細項 (每人)": [
+        { name: "機票 (XMN-CKG)", rmb: 1625, twd: 0 },
+        { name: "船票費用", rmb: 340, twd: 0 }
+      ],
+      "👤 YY細項 (每人)": [
+        { name: "機票 (TSA-SHA-CKG)", rmb: 0, twd: 9500 },
+        { name: "D1 上海住宿", rmb: 0, twd: 1048 },
+        { name: "D1 虹橋機場-南京東路地鐵", rmb: 5, twd: 0 },
+        { name: "D1 晚餐:蟹東來", rmb: 96, twd: 0 },
+        { name: "D2 南京東路地鐵-虹橋機場", rmb: 5, twd: 0 },
+        { name: "D2 江北機場-酒店打車", rmb: 28, twd: 0 },
+        { name: "D9 機場寄放行李", rmb: 10, twd: 0 },
+        { name: "D9 磁浮列車", rmb: 40, twd: 0 },
+        { name: "D9 龍陽路地鐵-七寶地鐵", rmb: 6, twd: 0 },
+        { name: "D9 上海住宿", rmb: 0, twd: 617 },
+        { name: "D9 晚餐:七寶老街", rmb: 50, twd: 0 },
+        { name: "D10 酒店-虹橋機場打車", rmb: 28, twd: 0 }
+      ]
+    };
+
+    function initExtraPages() {
+    const body = document.getElementById('expenseBody');
+    if (!body) return;
+
+    let sumCommon = 0, sumFamily = 0, sumYY = 0;
+    body.innerHTML = ""; 
+
+    // 取得分類資料
+    const categories = Object.keys(expenseCategories);
+
+    categories.forEach(catName => {
+        const items = expenseCategories[catName];
+        
+        // 1. 插入分類大標題
+        body.innerHTML += `<tr style="background:#f8fafc; font-weight:bold;"><td colspan="3">${catName}</td></tr>`;
+        
+        // 2. 插入該分類的每一行
+        items.forEach(item => {
+            const subTotal = (item.twd || 0) + ((item.rmb || 0) * exchangeRate);
+            if (catName.includes("大家")) sumCommon += subTotal;
+            else if (catName.includes("家人")) sumFamily += subTotal;
+            else if (catName.includes("YY")) sumYY += subTotal;
+            
+            body.innerHTML += `<tr>
+              <td style="padding-left:20px;">${item.name}${item.note ? `<small>${item.note}</small>` : ''}</td>
+              <td>${item.rmb > 0 ? '¥' + item.rmb : '-'}</td>
+              <td>$${subTotal > 0 ? Math.round(subTotal).toLocaleString() : '-'}</td></tr>`;
+        });
+
+        // 3. 插入小計列 (關鍵修改)
+        if (catName.includes("家人")) {
+            const familyTotal = sumCommon + sumFamily;
+            body.innerHTML += `<tr style="background: #fff1f2; font-weight:bold; color:#e11d48;"><td colspan="2" style="text-align:right;">👵 家人總預算 (含共同)</td><td>$${Math.round(familyTotal).toLocaleString()}</td></tr>`;
+        } 
+        else if (catName.includes("YY")) {
+            const yyTotal = sumCommon + sumYY;
+            body.innerHTML += `<tr style="background: #eff6ff; font-weight:bold; color:#2563eb;"><td colspan="2" style="text-align:right;">👤 YY 總預算 (含共同)</td><td>$${Math.round(yyTotal).toLocaleString()}</td></tr>`;
+        }
+    });
+      
+
+      // --- 設定準備清單資料 ---
+      const todoData = {
+        "隨身包包": ["手機", "護照", "台幣", "外幣", "信用卡", "有線耳機", "藍芽耳機", "行動電源", "手機充電線", "衛生紙", "濕紙巾", "雨傘", "牙線", "水"],
+        "記得確認": ["機票", "台胞證", "網路卡/eSim", "海外信用卡啟用", "換外幣", "Netflix下載影片", "拍照容量", "轉接頭", "旅平險"],
+        "梳妝保養": ["防曬", "粉底", "遮瑕", "梳子", "鏡子", "髮圈", "化妝水", "乳液", "護唇膏"],
+        "衣物": ["襪子", "內衣", "內褲", "上衣", "下身", "洋裝", "外套", "睡衣", "鞋子", "拖鞋", "帽子"],
+        "個人用品": ["防曬乳", "墨鏡", "隱形眼鏡", "牙刷", "牙膏", "眼藥水", "止痛藥", "感冒藥", "胃藥", "保健食品", "生理用品", "口罩"],
+        "其他用品": ["小包", "飲料提袋", "環保杯", "夾鏈袋", "橡皮筋", "髒衣袋", "指甲剪", "行李秤"]
+      };
+
+      // --- 渲染準備清單 ---
+      const todoGrid = document.getElementById('todoList');
+      todoGrid.innerHTML = "";
+      for (const [title, list] of Object.entries(todoData)) {
+        let html = `<div class="todo-section"><h4>${title}</h4>`;
+        list.forEach(item => html += `<div class="check-item"><input type="checkbox"> ${item}</div>`);
+        todoGrid.innerHTML += html + `</div>`;
+      }
+    }
+
+    // 切換分頁的功能
+    function switchMainPage(pageId, btn) {
+      document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      btn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    initExtraPages();
+
+
+  </script>
 </body>
+
 </html>
