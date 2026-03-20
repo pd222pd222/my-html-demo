@@ -923,9 +923,7 @@
             ${item.bookUrl ? `<a href="${item.bookUrl}" target="_blank" class="book-link">🔗 連結</a>` : ''}
         </div>
     </div>
-    <div id="lightbox" onclick="this.style.display='none'">
-      <img id="lbImg" src="">
-    </div>
+    
     <div class="img-side" onclick="openLightbox('${item.img}')">
         <img src="${item.img}">
     </div>
@@ -958,10 +956,7 @@
       content.appendChild(section);
     });
 
-    function openLightbox(src) {
-      document.getElementById('lbImg').src = src;
-      document.getElementById('lightbox').style.display = 'flex';
-    }
+
 
     // 設定匯率與詳細帳目
     const exchangeRate = 4.59;
@@ -1076,8 +1071,23 @@
 
     initExtraPages();
 
+    function openLightbox(src) {
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lbImg');
+      if (lb && img) {
+        img.src = src;
+        lb.style.display = 'flex';
+      }
+    }
 
   </script>
+  
+  <div id="lightbox" onclick="this.style.display='none'"
+    style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; cursor: zoom-out;">
+    <img id="lbImg" src=""
+      style="max-width: 90%; max-height: 85%; border: 4px solid white; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+  </div>
+
 </body>
 
 </html>
