@@ -215,11 +215,29 @@
         }
 
         .description {
-            font-size: 0.8em;
-            color: #667788;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            /* --- 調整重點 --- */
+            font-size: 12px;
+            /* 縮小字體 */
+            color: #8899a6;
+            /* 調淡顏色，讓主副資訊有層次感 */
+            margin-top: 4px;
+            /* 與上方主標題保持一點距離 */
             line-height: 1.4;
-            margin-bottom: 10px;
+            /* 適當的行高，閱讀起來更舒服 */
         }
+
+        /* 在電腦版維持分隔線 */
+        .description span:not(:last-child)::after {
+            content: "│";
+            margin-left: 8px;
+            color: #ddd;
+            /* 分隔線顏色再淡一點 */
+        }
+
+
 
         /* 導航按鈕 */
         .map-link {
@@ -333,6 +351,28 @@
             border-radius: 4px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         }
+
+        /* 手機版 (RWD) */
+        @media (max-width: 600px) {
+            .description {
+                flex-direction: column;
+                gap: 3px;
+                /* 手機版行距縮緊 */
+            }
+
+            .description span:not(:last-child)::after {
+                display: none;
+                /* 隱藏直線 */
+            }
+
+            /* 前置小符號也可以縮小 */
+            .description span::before {
+                content: "•";
+                margin-right: 6px;
+                color: var(--ocean-blue);
+                font-weight: bold;
+            }
+        }
     </style>
 </head>
 
@@ -364,7 +404,10 @@
                                 <span class="time-tag">09:45-12:20</span>
                             </div>
                             <h3 class="spot-title">台北 TPE (T1) - 馬尼拉 MNL (T1)</h3>
-                            <p class="description">06:45-07:45集合 │ PR891</p>
+                            <p class="description">
+                                <span>06:45-07:45集合</span>
+                                <span>PR891</span>
+                            </p>
                             <a href="https://maps.app.goo.gl/VJ2ADhH5NQmL4CkZ6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -381,7 +424,8 @@
                                 <span class="time-tag">15:45-17:10</span>
                             </div>
                             <h3 class="spot-title">馬尼拉 MNL (T2) - 薄荷島 TAG</h3>
-                            <p class="description">12:20-15:45轉機等待 │ 領取行李並重新託運 │ PR2777</p>
+                            <p class="description"><span>12:20-15:45轉機等待</span><span>領取行李並重新託運</span><span>PR2777</span>
+                            </p>
                             <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -397,7 +441,7 @@
                             <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">19:00</span>
                             </div>
                             <h3 class="spot-title">Oasis Restaurant & Beach Club</h3>
-                            <p class="description">Alona Beach 晚餐</p>
+                            <p class="description"><span>Alona Beach 晚餐</span></p>
                             <a href="https://maps.app.goo.gl/2AQeDR7DATYbBFvp6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -413,7 +457,7 @@
                             <div class="time-row"><span class="tag-sm">住宿</span><span class="time-tag"></span>
                             </div>
                             <h3 class="spot-title">Quest Villa</h3>
-                            <p class="description">Trip已訂</p>
+                            <p class="description"><span>Trip已訂</span></p>
                             <a href="https://maps.app.goo.gl/ARjShHC7eHfnyLNH9" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -433,7 +477,7 @@
                             <div class="time-row"><span class="tag-sm">行程</span><span class="time-tag">08:00</span>
                             </div>
                             <h3 class="spot-title">巧克力山</h3>
-                            <p class="description">薄荷島奇景巡禮 │ 08:00飯店接駁 │ KKDAY已訂</p>
+                            <p class="description"><span>08:00飯店接駁</span><span>KKDAY已訂</span></p>
                             <a href="https://maps.app.goo.gl/k8oUahEsQjhGrybc6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -495,7 +539,7 @@
                             <div class="time-row"><span class="tag-sm">行程</span><span class="time-tag">13:30</span>
                             </div>
                             <h3 class="spot-title">羅伯克生態旅遊冒險樂園</h3>
-                            <p class="description">可自費體驗滑索、纜車 │ 16:00回程</p>
+                            <p class="description"><span>可自費體驗滑索、纜車</span><span>16:00回程</span></p>
                             <a href="https://maps.app.goo.gl/T2qL1e2TPZsH98MK8" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -511,7 +555,7 @@
                             <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">17:00</span>
                             </div>
                             <h3 class="spot-title">Panglao Island Sunset View Boulevard</h3>
-                            <p class="description">可租機車前往 │ 日落景點 │ 17:55-18:05日落</p>
+                            <p class="description"><span>可租機車前往</span><span>日落景點</span><span>17:55-18:05日落</span></p>
                             <a href="https://maps.app.goo.gl/sxUvdjbhGG3cn9Gp9" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -526,7 +570,7 @@
                             <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">18:00</span>
                             </div>
                             <h3 class="spot-title">Ubeco</h3>
-                            <p class="description">已訂</p>
+                            <p class="description"><span>已訂</span></p>
                             <a href="https://maps.app.goo.gl/CCdoqY7LJas7AKLb9" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -546,7 +590,7 @@
                                     class="time-tag">09:00-10:00</span>
                             </div>
                             <h3 class="spot-title">Napaling 沙丁魚風暴 - 水肺</h3>
-                            <p class="description">08:30於Quest Villa接駁 │ KLOOK已訂</p>
+                            <p class="description"><span>08:30於Quest Villa接駁</span><span>KLOOK已訂</span></p>
                             <a href="https://maps.app.goo.gl/dKdpGJG5PX1Dy2hAA" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -562,7 +606,8 @@
                             <div class="time-row"><span class="tag-sm">行程2</span><span class="time-tag">09:30</span>
                             </div>
                             <h3 class="spot-title">Napaling 沙丁魚風暴 - 浮潛</h3>
-                            <p class="description">09:30於Freedive Academy Panglao集合 │ 需自行前往 │ KLOOK已訂</p>
+                            <p class="description"><span>09:30於Freedive Academy
+                                    Panglao集合</span><span>需自行前往</span><span>KLOOK已訂</span></p>
                             <a href="https://maps.app.goo.gl/zT2XADqgLG39viKaA" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -578,7 +623,7 @@
                             <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">10:30</span>
                             </div>
                             <h3 class="spot-title">Hinagdanan Cave</h3>
-                            <p class="description">洞穴小探險 │ 可游泳 │ 11:30回飯店換裝</p>
+                            <p class="description"><span>洞穴小探險</span><span>可游泳</span><span>11:30回飯店換裝</span></p>
                             <a href="https://maps.app.goo.gl/txnu5TSMqjFstSb38" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -594,7 +639,7 @@
                             <div class="time-row"><span class="tag-sm">午餐</span><span class="time-tag">12:30</span>
                             </div>
                             <h3 class="spot-title">Island City Mall</h3>
-                            <p class="description">午餐自理 │ 購物逛街</p>
+                            <p class="description"><span>午餐自理</span><span>購物逛街</span></p>
                             <a href="https://maps.app.goo.gl/ht4DLGC1XmYHihcd8" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -610,7 +655,7 @@
                             <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">15:00</span>
                             </div>
                             <h3 class="spot-title">巴卡容教堂</h3>
-                            <p class="description">08:30-11:30 │ 13:30-16:30</p>
+                            <p class="description"><span>早上開放08:30-11:30</span><span>下午開放13:30-16:30</span></p>
                             <a href="https://maps.app.goo.gl/3Sf2BKGaKZw1bJv89" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -642,7 +687,7 @@
                             <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">17:00</span>
                             </div>
                             <h3 class="spot-title">Dumaluan Beach</h3>
-                            <p class="description">杜馬陸安海灘 │ 人比較少的海灘</p>
+                            <p class="description"><span>杜馬陸安海灘</span><span>人比較少的海灘</span></p>
                             <a href="https://maps.app.goo.gl/65xPmh4M9JQDCtVN9" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -658,7 +703,7 @@
                             <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">18:00</span>
                             </div>
                             <h3 class="spot-title">Agotata BBC</h3>
-                            <p class="description">已訂 │ 已選餐</p>
+                            <p class="description"><span>已訂(已選餐)</span></p>
                             <a href="https://maps.app.goo.gl/3ATztUaBoLiEs9UB6" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -676,7 +721,7 @@
                             <div class="time-row"><span class="tag-sm">早午餐</span><span class="time-tag">10:30</span>
                             </div>
                             <h3 class="spot-title">Bohol Bee Farm</h3>
-                            <p class="description">吃早午餐看海岸懸崖 │ 寫信詢問中</p>
+                            <p class="description"><span>吃早午餐看海岸懸崖</span><span>寫信詢問中</span></p>
                             <a href="https://maps.app.goo.gl/YrXt6eTqXJGLUUJT6" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -691,7 +736,8 @@
                             <div class="time-row"><span class="tag-sm">超市</span><span class="time-tag">12:30</span>
                             </div>
                             <h3 class="spot-title">Alturas Panglao Supermarket</h3>
-                            <p class="description">買伴手禮 │ 08:00-20:00 │ 買好要回飯店整理去處女島的裝備</p>
+                            <p class="description">
+                                <span>買伴手禮</span><span>營業時間08:00-20:00</span><span>買好要回飯店整理去處女島的裝備</span></p>
                             <a href="https://maps.app.goo.gl/RTN6arhfaByyDomk7" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -724,7 +770,8 @@
                                     class="time-tag">15:00-18:30</span>
                             </div>
                             <h3 class="spot-title">Virgin Island Sand Bar</h3>
-                            <p class="description">處女島夕陽之旅 │ Abraham Bohol - Resort集合 │ 業者直洽已訂</p>
+                            <p class="description"><span>處女島夕陽之旅</span><span>Abraham Bohol -
+                                    Resort集合</span><span>業者直洽已訂</span></p>
                             <a href="https://maps.app.goo.gl/U6G93kUmZAwDLiKa8" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -743,7 +790,7 @@
                                 <span class="time-tag">07:25-08:45</span>
                             </div>
                             <h3 class="spot-title">薄荷島 TAG - 馬尼拉 MNL (T2)</h3>
-                            <p class="description">05:40-06:00 check-out</p>
+                            <p class="description"><span>05:40-06:00 Check-out</span></p>
                             <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -760,7 +807,7 @@
                                 <span class="time-tag">15:45-17:10</span>
                             </div>
                             <h3 class="spot-title">馬尼拉 MNL (T1) - 台北 TPE (T1)</h3>
-                            <p class="description">08:45-12:35轉機等待 │ 行李直掛但要換航廈</p>
+                            <p class="description"><span>08:45-12:35轉機等待</span><span>行李直掛但要換航廈</span></p>
                             <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -779,7 +826,8 @@
                                 <span class="time-tag">18:00-19:30</span>
                             </div>
                             <h3 class="spot-title">薄荷島 TAG - 馬尼拉 MNL (T2)</h3>
-                            <p class="description">11:00-11:20 check-out │ 15:30-16:00 前往機場 │ PR2778</p>
+                            <p class="description"><span>11:00-11:20 Check-out</span>15:30-16:00 前往機場<span>PR2778</span>
+                            </p>
                             <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -796,7 +844,7 @@
                                 <span class="time-tag">20:30</span>
                             </div>
                             <h3 class="spot-title">Grand Westside Manila Bay</h3>
-                            <p class="description">Check-in</p>
+                            <p class="description"><span>Check-in</span></p>
                             <a href="https://maps.app.goo.gl/5hhJ77nWNXBWoj4V8" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -813,7 +861,7 @@
                                 <span class="time-tag">21:00</span>
                             </div>
                             <h3 class="spot-title">馬尼拉新濠天地</h3>
-                            <p class="description">賭場夜生活</p>
+                            <p class="description"><span>賭場夜生活</span></p>
                             <a href="https://maps.app.goo.gl/TwcPi3r6vxvk6Ruu5" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -831,7 +879,7 @@
                                 <span class="time-tag">12:35-15:05</span>
                             </div>
                             <h3 class="spot-title">馬尼拉 MNL (T1) - 台北 TPE (T1)</h3>
-                            <p class="description">PR896</p>
+                            <p class="description"><span>PR896</span></p>
                             <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
