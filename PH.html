@@ -18,7 +18,13 @@
             --polaroid-bg: #ffffff;
         }
 
+        /* 強制保留滾動條 */
+        html {
+            overflow-y: scroll;
+        }
+
         body {
+            scrollbar-gutter: stable;
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #EBF2F2;
             margin: 0;
@@ -57,27 +63,29 @@
             border-bottom: 3px solid var(--primary-mint);
         }
 
-        /* 天數導覽列 */
         .day-nav {
             display: flex;
-            justify-content: center;
-            gap: 6px;
+            justify-content: space-between;
+            gap: 4px;
             margin-bottom: 25px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap !important;
+            overflow-x: hidden;
+            padding: 0 2px;
         }
 
         .day-btn {
-            padding: 4px 10px;
+            flex: 1;
+            padding: 6px 0 !important;
             border: 1.2px solid var(--primary-mint);
             background: white;
             border-radius: 20px;
             cursor: pointer;
             font-family: 'Mochiy Pop One', sans-serif;
             color: var(--ocean-blue);
-
-            /* --- 字體縮小優化 --- */
             font-size: 10px;
-            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            min-width: 0;
             transition: 0.2s;
         }
 
@@ -118,14 +126,12 @@
 
         .todo-grid {
             column-count: 2;
-            /* 自動分成兩欄 */
             column-gap: 15px;
         }
 
         .todo-item {
             display: block;
             break-inside: avoid;
-            /* 防止項目被切斷 */
             font-size: 11px;
             padding: 4px 0;
             border-bottom: 1px solid #f0f4f4;
@@ -218,15 +224,10 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            /* --- 調整重點 --- */
             font-size: 12px;
-            /* 縮小字體 */
             color: #8899a6;
-            /* 調淡顏色，讓主副資訊有層次感 */
             margin-top: 4px;
-            /* 與上方主標題保持一點距離 */
             line-height: 1.4;
-            /* 適當的行高，閱讀起來更舒服 */
         }
 
         /* 在電腦版維持分隔線 */
@@ -234,9 +235,7 @@
             content: "│";
             margin-left: 8px;
             color: #ddd;
-            /* 分隔線顏色再淡一點 */
         }
-
 
 
         /* 導航按鈕 */
@@ -357,15 +356,13 @@
             .description {
                 flex-direction: column;
                 gap: 3px;
-                /* 手機版行距縮緊 */
             }
 
             .description span:not(:last-child)::after {
                 display: none;
-                /* 隱藏直線 */
             }
 
-            /* 前置小符號也可以縮小 */
+            /* 前置小符號 */
             .description span::before {
                 content: "•";
                 margin-right: 6px;
@@ -403,7 +400,7 @@
                             <div class="time-row"><span class="tag-sm">交通</span>
                                 <span class="time-tag">09:45-12:20</span>
                             </div>
-                            <h3 class="spot-title">台北 TPE (T1) - 馬尼拉 MNL (T1)</h3>
+                            <h3 class="spot-title">TPE (T1) - MNL (T1)</h3>
                             <p class="description">
                                 <span>06:45-07:45集合</span>
                                 <span>PR891</span>
@@ -423,7 +420,7 @@
                             <div class="time-row"><span class="tag-sm">交通</span>
                                 <span class="time-tag">15:45-17:10</span>
                             </div>
-                            <h3 class="spot-title">馬尼拉 MNL (T2) - 薄荷島 TAG</h3>
+                            <h3 class="spot-title">MNL (T2) - TAG</h3>
                             <p class="description"><span>12:20-15:45轉機等待</span><span>領取行李並重新託運</span><span>PR2777</span>
                             </p>
                             <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
@@ -737,7 +734,8 @@
                             </div>
                             <h3 class="spot-title">Alturas Panglao Supermarket</h3>
                             <p class="description">
-                                <span>買伴手禮</span><span>營業時間08:00-20:00</span><span>買好要回飯店整理去處女島的裝備</span></p>
+                                <span>買伴手禮</span><span>營業時間08:00-20:00</span><span>買好要回飯店整理去處女島的裝備</span>
+                            </p>
                             <a href="https://maps.app.goo.gl/RTN6arhfaByyDomk7" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -789,7 +787,7 @@
                             <div class="time-row"><span class="tag-sm">交通</span>
                                 <span class="time-tag">07:25-08:45</span>
                             </div>
-                            <h3 class="spot-title">薄荷島 TAG - 馬尼拉 MNL (T2)</h3>
+                            <h3 class="spot-title">TAG - MNL (T2)</h3>
                             <p class="description"><span>05:40-06:00 Check-out</span></p>
                             <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
                                 class="map-link">📍導航</a>
@@ -806,7 +804,7 @@
                             <div class="time-row"><span class="tag-sm">交通</span>
                                 <span class="time-tag">15:45-17:10</span>
                             </div>
-                            <h3 class="spot-title">馬尼拉 MNL (T1) - 台北 TPE (T1)</h3>
+                            <h3 class="spot-title">MNL (T1) - TPE (T1)</h3>
                             <p class="description"><span>08:45-12:35轉機等待</span><span>行李直掛但要換航廈</span></p>
                             <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
                                 class="map-link">📍導航</a>
@@ -825,7 +823,7 @@
                             <div class="time-row"><span class="tag-sm">交通</span>
                                 <span class="time-tag">18:00-19:30</span>
                             </div>
-                            <h3 class="spot-title">薄荷島 TAG - 馬尼拉 MNL (T2)</h3>
+                            <h3 class="spot-title">TAG - MNL (T2)</h3>
                             <p class="description"><span>11:00-11:20 Check-out</span>15:30-16:00 前往機場<span>PR2778</span>
                             </p>
                             <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
@@ -878,7 +876,7 @@
                             <div class="time-row"><span class="tag-sm">交通</span>
                                 <span class="time-tag">12:35-15:05</span>
                             </div>
-                            <h3 class="spot-title">馬尼拉 MNL (T1) - 台北 TPE (T1)</h3>
+                            <h3 class="spot-title">MNL (T1) - TPE (T1)</h3>
                             <p class="description"><span>PR896</span></p>
                             <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
                                 class="map-link">📍導航</a>
