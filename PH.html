@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bohol Trip 2026</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+TC:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-mint: #A7D8D8;
+            --ocean-blue: #5885AF;
+            --sand-white: #F8F9F9;
+            --line-color: #E0E7E7;
+            --btn-bg: #f0f7f7;
+            --polaroid-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #EBF2F2;
+            margin: 0;
+            padding: 20px;
+            color: #445566;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        /* 主導覽列 */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--line-color);
+        }
+
+        .main-btn {
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: 'Mochiy Pop One', sans-serif;
+            color: #99abbd;
+            font-size: 1.05em;
+            font-weight: 300;
+            transition: 0.3s;
+        }
+
+        .main-btn.active {
+            color: var(--ocean-blue);
+            border-bottom: 3px solid var(--primary-mint);
+        }
+
+        /* 天數導覽列 */
+        .day-nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .day-btn {
+            padding: 4px 10px;
+            border: 1.2px solid var(--primary-mint);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Mochiy Pop One', sans-serif;
+            color: var(--ocean-blue);
+
+            /* --- 字體縮小優化 --- */
+            font-size: 10px;
+            font-weight: 400;
+            transition: 0.2s;
+        }
+
+        .day-btn.active {
+            background: var(--ocean-blue);
+            color: white;
+            border-color: var(--ocean-blue);
+        }
+
+        /* 顯示邏輯 */
+        .section,
+        .day-pane {
+            display: none;
+        }
+
+        .section.active,
+        .day-pane.active {
+            display: block !important;
+        }
+
+        /* 準備清單的雙欄容器 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            align-items: start;
+        }
+
+
+        /* 讓內容自動分兩欄，且不中斷項目 */
+        .prep-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .todo-grid {
+            column-count: 2;
+            /* 自動分成兩欄 */
+            column-gap: 15px;
+        }
+
+        .todo-item {
+            display: block;
+            break-inside: avoid;
+            /* 防止項目被切斷 */
+            font-size: 11px;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0f4f4;
+            color: #445566;
+            cursor: pointer;
+        }
+
+        .todo-item input {
+            margin-right: 5px;
+            transform: scale(0.8);
+        }
+
+
+        /* 行程卡片樣式 */
+        .timeline-container {
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 10px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background: var(--line-color);
+        }
+
+        .spot-item {
+            position: relative;
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .spot-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 25px;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-mint);
+            border: 3px solid white;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .info-content {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .time-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .tag-sm {
+            background: #E0F2F1;
+            color: var(--ocean-blue);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .time-tag {
+            font-size: 0.75em;
+            color: var(--ocean-blue);
+            font-weight: 500;
+        }
+
+        .spot-title {
+            font-size: 1.15em;
+            margin: 0 0 4px 0;
+            color: #2C3E50;
+            font-weight: 700;
+        }
+
+        .description {
+            font-size: 0.8em;
+            color: #667788;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        /* 導航按鈕 */
+        .map-link {
+            display: inline-flex;
+            align-items: center;
+            background: var(--btn-bg);
+            color: var(--ocean-blue);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75em;
+            text-decoration: none;
+            border: 1px solid var(--primary-mint);
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .map-link:hover {
+            background: var(--primary-mint);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* 圖片 */
+        .photo-box {
+            width: 100px;
+            height: 80px;
+            flex-shrink: 0;
+            background-color: var(--polaroid-bg);
+            padding: 6px 6px 18px 6px;
+            border-radius: 2px;
+            cursor: pointer;
+            box-shadow: 3px 5px 15px rgba(0, 0, 0, 0.08);
+            transform: rotate(3deg);
+            transition: 0.4s ease;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #eee;
+            box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #f0f0f0;
+        }
+
+        .photo-box:hover {
+            transform: rotate(0deg) scale(1.1);
+            box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        /* 清單與記帳 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .prep-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f4f4;
+            font-size: 0.9em;
+        }
+
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .expense-table th {
+            background: var(--ocean-blue);
+            color: white;
+            padding: 12px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .expense-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        /* 燈箱 */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border: 5px solid white;
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="main-nav">
+            <button class="main-btn active" onclick="switchSection(event, 'itinerary')">行程安排</button>
+            <button class="main-btn" onclick="switchSection(event, 'prep')">準備清單</button>
+            <button class="main-btn" onclick="switchSection(event, 'cost')">記帳預算</button>
+        </div>
+
+        <div id="itinerary" class="section active">
+            <div class="day-nav">
+                <button class="day-btn active" onclick="switchDay(event, 'd1')">Day 1</br>04/02</button>
+                <button class="day-btn" onclick="switchDay(event, 'd2')">Day 2</br>04/03</button>
+                <button class="day-btn" onclick="switchDay(event, 'd3')">Day 3</br>04/04</button>
+                <button class="day-btn" onclick="switchDay(event, 'd4')">Day 4</br>04/05</button>
+                <button class="day-btn" onclick="switchDay(event, 'd5-1')">Day 5(1)</br>04/06</button>
+                <button class="day-btn" onclick="switchDay(event, 'd5-2')">Day 5(2)</br>04/06</button>
+                <button class="day-btn" onclick="switchDay(event, 'd6')">Day 6</br>04/07</button>
+            </div>
+
+            <div class="timeline-container">
+                <div id="d1" class="day-pane active">
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">交通</span>
+                                <span class="time-tag">09:45-12:20</span>
+                            </div>
+                            <h3 class="spot-title">台北 TPE (T1) - 馬尼拉 MNL (T1)</h3>
+                            <p class="description">06:45-07:45集合 │ PR891</p>
+                            <a href="https://maps.app.goo.gl/VJ2ADhH5NQmL4CkZ6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Taoyuan_International_Airport.jpg/1920px-Taoyuan_International_Airport.jpg')">
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Taoyuan_International_Airport.jpg/400px-Taoyuan_International_Airport.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">交通</span>
+                                <span class="time-tag">15:45-17:10</span>
+                            </div>
+                            <h3 class="spot-title">馬尼拉 MNL (T2) - 薄荷島 TAG</h3>
+                            <p class="description">12:20-15:45轉機等待 │ 領取行李並重新託運 │ PR2777</p>
+                            <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BKK/K0/BKK0000605/BKK0000605_62616.jpg')">
+                            <img
+                                src="https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BKK/K0/BKK0000605/BKK0000605_62616.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">19:00</span>
+                            </div>
+                            <h3 class="spot-title">Oasis Restaurant & Beach Club</h3>
+                            <p class="description">Alona Beach 晚餐</p>
+                            <a href="https://maps.app.goo.gl/2AQeDR7DATYbBFvp6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/20/b3/1a/oasis-resort-restaurant.jpg?w=2000&h=-1&s=1')">
+                            <img
+                                src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/20/b3/1a/oasis-resort-restaurant.jpg?w=2000&h=-1&s=1">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">住宿</span><span class="time-tag"></span>
+                            </div>
+                            <h3 class="spot-title">Quest Villa</h3>
+                            <p class="description">Trip已訂</p>
+                            <a href="https://maps.app.goo.gl/ARjShHC7eHfnyLNH9" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://ak-d.tripcdn.com/images/0200c120008pkvwzc2F61_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F')">
+                            <img
+                                src="https://ak-d.tripcdn.com/images/0200c120008pkvwzc2F61_W_1280_853_R5.webp?proc=watermark/image_trip1,l_ne,x_16,y_16,w_67,h_16;digimark/t_image,logo_tripbinary;ignoredefaultwm,1A8F">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div id="d2" class="day-pane">
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">行程</span><span class="time-tag">08:00</span>
+                            </div>
+                            <h3 class="spot-title">巧克力山</h3>
+                            <p class="description">薄荷島奇景巡禮 │ 08:00飯店接駁 │ KKDAY已訂</p>
+                            <a href="https://maps.app.goo.gl/k8oUahEsQjhGrybc6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://image.cdn-eztravel.com.tw/PmwDSF8DTDow_SdUdLt-7_gyLawzP82orDm28hX5dlA/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvUEhfNzMyNjM3NzguanBn.jpg')">
+                            <img
+                                src="https://image.cdn-eztravel.com.tw/PmwDSF8DTDow_SdUdLt-7_gyLawzP82orDm28hX5dlA/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvUEhfNzMyNjM3NzguanBn.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">行程</span><span class="time-tag">09:30</span>
+                            </div>
+                            <h3 class="spot-title">ATV 體驗</h3>
+                            <p class="description"></p>
+                            <a href="https://maps.app.goo.gl/k8oUahEsQjhGrybc6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_142224/20230414023724_1xx9M/jpg')">
+                            <img
+                                src="https://image.kkday.com/v2/image/get/c_fit%2Cq_55%2Ct_webp%2Cw_960/s1.kkday.com/product_142224/20230414023724_1xx9M/jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">11:00</span>
+                            </div>
+                            <h3 class="spot-title">眼鏡猴保護區</h3>
+                            <p class="description"></p>
+                            <a href="https://maps.app.goo.gl/iZtsJRQbMwheiKoL9" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://www.bring-you.info/imgs/2022/07/tarsier.jpg')">
+                            <img src="https://www.bring-you.info/imgs/2022/07/tarsier.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">午餐</span><span class="time-tag">12:00</span>
+                            </div>
+                            <h3 class="spot-title">羅伯克水上餐廳</h3>
+                            <p class="description"></p>
+                            <a href="https://maps.app.goo.gl/Ez1qMNxrMiiEzMiP6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://www.bring-you.info/imgs/2025/01/Loboc-River-Cebu-17.jpg')">
+                            <img src="https://www.bring-you.info/imgs/2025/01/Loboc-River-Cebu-17.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">行程</span><span class="time-tag">13:30</span>
+                            </div>
+                            <h3 class="spot-title">羅伯克生態旅遊冒險樂園</h3>
+                            <p class="description">可自費體驗滑索、纜車 │ 16:00回程</p>
+                            <a href="https://maps.app.goo.gl/T2qL1e2TPZsH98MK8" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://twobunny.tw/wp-content/uploads/2023/03/2023-0201-Loboc-Ecotourism-Adventure-Park-21.jpg')">
+                            <img
+                                src="https://twobunny.tw/wp-content/uploads/2023/03/2023-0201-Loboc-Ecotourism-Adventure-Park-21.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">17:00</span>
+                            </div>
+                            <h3 class="spot-title">Panglao Island Sunset View Boulevard</h3>
+                            <p class="description">可租機車前往 │ 日落景點 │ 17:55-18:05日落</p>
+                            <a href="https://maps.app.goo.gl/sxUvdjbhGG3cn9Gp9" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://live.staticflickr.com/65535/52639261784_46f70af4ff.jpg')">
+                            <img src="https://live.staticflickr.com/65535/52639261784_46f70af4ff.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">18:00</span>
+                            </div>
+                            <h3 class="spot-title">Ubeco</h3>
+                            <p class="description">已訂</p>
+                            <a href="https://maps.app.goo.gl/CCdoqY7LJas7AKLb9" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://lh3.googleusercontent.com/gps-cs-s/AHVAweqd6Z0IlmZnrBR3ejSqqGxPXvLm02H2y_CDMm03o69PiIyAX89qD0OvNgvrjb_FaRTRLrTiVXRfdzvEfXqdZR4X_xu3yMGydg2gZy_XR0qzIr7iggW7le3vT2QWUMLKdHDDdCFRWBMPLN5w=s1360-w1360-h1020-rw')">
+                            <img
+                                src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweqd6Z0IlmZnrBR3ejSqqGxPXvLm02H2y_CDMm03o69PiIyAX89qD0OvNgvrjb_FaRTRLrTiVXRfdzvEfXqdZR4X_xu3yMGydg2gZy_XR0qzIr7iggW7le3vT2QWUMLKdHDDdCFRWBMPLN5w=s1360-w1360-h1020-rw">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="d3" class="day-pane">
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">行程1</span><span
+                                    class="time-tag">09:00-10:00</span>
+                            </div>
+                            <h3 class="spot-title">Napaling 沙丁魚風暴 - 水肺</h3>
+                            <p class="description">08:30於Quest Villa接駁 │ KLOOK已訂</p>
+                            <a href="https://maps.app.goo.gl/dKdpGJG5PX1Dy2hAA" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://ak-d.tripcdn.com/images//0580s12000nog5e67ED49_C_1080_607.jpg_.webp?_fr=wc')">
+                            <img
+                                src="https://ak-d.tripcdn.com/images//0580s12000nog5e67ED49_C_1080_607.jpg_.webp?_fr=wc">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">行程2</span><span class="time-tag">09:30</span>
+                            </div>
+                            <h3 class="spot-title">Napaling 沙丁魚風暴 - 浮潛</h3>
+                            <p class="description">09:30於Freedive Academy Panglao集合 │ 需自行前往 │ KLOOK已訂</p>
+                            <a href="https://maps.app.goo.gl/zT2XADqgLG39viKaA" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://ak-d.tripcdn.com/images//0585512000nodysnf9356_C_1080_607.jpg_.webp?_fr=wc')">
+                            <img
+                                src="https://ak-d.tripcdn.com/images//0585512000nodysnf9356_C_1080_607.jpg_.webp?_fr=wc">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">10:30</span>
+                            </div>
+                            <h3 class="spot-title">Hinagdanan Cave</h3>
+                            <p class="description">洞穴小探險 │ 可游泳 │ 11:30回飯店換裝</p>
+                            <a href="https://maps.app.goo.gl/txnu5TSMqjFstSb38" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://image.kkday.com/v2/image/get/h_650%2Cc_fit/s1.kkday.com/product_144236/20230518133533_r7KAE/jpg')">
+                            <img
+                                src="https://image.kkday.com/v2/image/get/h_650%2Cc_fit/s1.kkday.com/product_144236/20230518133533_r7KAE/jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">午餐</span><span class="time-tag">12:30</span>
+                            </div>
+                            <h3 class="spot-title">Island City Mall</h3>
+                            <p class="description">午餐自理 │ 購物逛街</p>
+                            <a href="https://maps.app.goo.gl/ht4DLGC1XmYHihcd8" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Front_View_of_Island_City_Mall_Bohol_Philippines.jpg/1280px-Front_View_of_Island_City_Mall_Bohol_Philippines.jpg?_=20130629032525')">
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Front_View_of_Island_City_Mall_Bohol_Philippines.jpg/1280px-Front_View_of_Island_City_Mall_Bohol_Philippines.jpg?_=20130629032525">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">15:00</span>
+                            </div>
+                            <h3 class="spot-title">巴卡容教堂</h3>
+                            <p class="description">08:30-11:30 │ 13:30-16:30</p>
+                            <a href="https://maps.app.goo.gl/3Sf2BKGaKZw1bJv89" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/29/b4/54/photo1jpg.jpg?w=2000&h=-1&s=1')">
+                            <img
+                                src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/29/b4/54/photo1jpg.jpg?w=2000&h=-1&s=1">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">16:00</span>
+                            </div>
+                            <h3 class="spot-title">歃血為盟紀念碑</h3>
+                            <p class="description"></p>
+                            <a href="https://maps.app.goo.gl/Fxn5RnjkT2YV7soE6" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BHL/L0/BHL0000009/BHL0000009_153187.jpg')">
+                            <img
+                                src="https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BHL/L0/BHL0000009/BHL0000009_153187.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">17:00</span>
+                            </div>
+                            <h3 class="spot-title">Dumaluan Beach</h3>
+                            <p class="description">杜馬陸安海灘 │ 人比較少的海灘</p>
+                            <a href="https://maps.app.goo.gl/65xPmh4M9JQDCtVN9" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://images.trvl-media.com/lodging/7000000/6670000/6660100/6660053/f8f18508.jpg?impolicy=resizecrop&rw=1200&ra=fit')">
+                            <img
+                                src="https://images.trvl-media.com/lodging/7000000/6670000/6660100/6660053/f8f18508.jpg?impolicy=resizecrop&rw=1200&ra=fit">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">18:00</span>
+                            </div>
+                            <h3 class="spot-title">Agotata BBC</h3>
+                            <p class="description">已訂 │ 已選餐</p>
+                            <a href="https://maps.app.goo.gl/3ATztUaBoLiEs9UB6" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://lh3.googleusercontent.com/gps-cs-s/AHVAweoLj17PwSWC1S_iY5Vnfu5hVWUXx0GRASryhceOD0WodjYcDl8b-lE04qg2mD4N7VKP3oGyQSB9eTr795Gg23-SqJgZoJv80cZ-BrXkbJPY5IyL1M9C8u1_PVCqhQA5FQBTqBF3F_m0PGZq=s1360-w1360-h1020-rw')">
+                            <img
+                                src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweoLj17PwSWC1S_iY5Vnfu5hVWUXx0GRASryhceOD0WodjYcDl8b-lE04qg2mD4N7VKP3oGyQSB9eTr795Gg23-SqJgZoJv80cZ-BrXkbJPY5IyL1M9C8u1_PVCqhQA5FQBTqBF3F_m0PGZq=s1360-w1360-h1020-rw">
+                        </div>
+                    </div>
+
+                </div>
+                <div id="d4" class="day-pane">
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">早午餐</span><span class="time-tag">10:30</span>
+                            </div>
+                            <h3 class="spot-title">Bohol Bee Farm</h3>
+                            <p class="description">吃早午餐看海岸懸崖 │ 寫信詢問中</p>
+                            <a href="https://maps.app.goo.gl/YrXt6eTqXJGLUUJT6" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://images.mindtrip.ai/attractions/43af/0c09/f140/590a/fb49/927a/4ae7/0759')">
+                            <img src="https://images.mindtrip.ai/attractions/43af/0c09/f140/590a/fb49/927a/4ae7/0759">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">超市</span><span class="time-tag">12:30</span>
+                            </div>
+                            <h3 class="spot-title">Alturas Panglao Supermarket</h3>
+                            <p class="description">買伴手禮 │ 08:00-20:00 │ 買好要回飯店整理去處女島的裝備</p>
+                            <a href="https://maps.app.goo.gl/RTN6arhfaByyDomk7" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://lh3.googleusercontent.com/gps-cs-s/AHVAwerhJjoqRKOksp2e3FOjYl9y9dE-4_OcGOOXMLQChG66_wsELDLbEIbKviJcQlPInV8-G0NNWYWD-BvaejViOEHMsuS4GwcbD5ijPxQPLzyAnoFs5GJRrBrqtpTPAfvJmZB-9zQ=s1360-w1360-h1020-rw')">
+                            <img
+                                src="https://lh3.googleusercontent.com/gps-cs-s/AHVAwerhJjoqRKOksp2e3FOjYl9y9dE-4_OcGOOXMLQChG66_wsELDLbEIbKviJcQlPInV8-G0NNWYWD-BvaejViOEHMsuS4GwcbD5ijPxQPLzyAnoFs5GJRrBrqtpTPAfvJmZB-9zQ=s1360-w1360-h1020-rw">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">下午茶</span><span class="time-tag">13:30</span>
+                            </div>
+                            <h3 class="spot-title">CRAZE Artisan Cafe & bar</h3>
+                            <p class="description"></p>
+                            <a href="https://maps.app.goo.gl/jkH3oJTgaLEJX1LS7" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://scontent.ftpe12-2.fna.fbcdn.net/v/t39.30808-6/653874415_952321911077910_9219905762663483349_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=tvsSYX0tGp0Q7kNvwGMgybo&_nc_oc=Ado1WVlTsGYBTq1s0TkDsRrQGg6ZGueD50XHGfSY6cukkPhHoPH_MSw8h7f3nJGI92o&_nc_zt=23&_nc_ht=scontent.ftpe12-2.fna&_nc_gid=RIlrynEFJPVCT_W--4_8YQ&_nc_ss=7a32e&oh=00_AfzVNZRDV0FEMAgUOm3Mv1aLD0FpXdr0g-q6IPUTnUWyzg&oe=69C80B65')">
+                            <img
+                                src="https://scontent.ftpe12-2.fna.fbcdn.net/v/t39.30808-6/653874415_952321911077910_9219905762663483349_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=tvsSYX0tGp0Q7kNvwGMgybo&_nc_oc=Ado1WVlTsGYBTq1s0TkDsRrQGg6ZGueD50XHGfSY6cukkPhHoPH_MSw8h7f3nJGI92o&_nc_zt=23&_nc_ht=scontent.ftpe12-2.fna&_nc_gid=RIlrynEFJPVCT_W--4_8YQ&_nc_ss=7a32e&oh=00_AfzVNZRDV0FEMAgUOm3Mv1aLD0FpXdr0g-q6IPUTnUWyzg&oe=69C80B65">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">行程</span><span
+                                    class="time-tag">15:00-18:30</span>
+                            </div>
+                            <h3 class="spot-title">Virgin Island Sand Bar</h3>
+                            <p class="description">處女島夕陽之旅 │ Abraham Bohol - Resort集合 │ 業者直洽已訂</p>
+                            <a href="https://maps.app.goo.gl/U6G93kUmZAwDLiKa8" target="_blank" class="map-link">📍
+                                導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://res.klook.com/image/upload/w_1265,h_791,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/tohc5flkbnkvzu0ygca7.webp')">
+                            <img
+                                src="https://res.klook.com/image/upload/w_1265,h_791,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/tohc5flkbnkvzu0ygca7.webp">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="d5-1" class="day-pane">
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">交通</span>
+                                <span class="time-tag">07:25-08:45</span>
+                            </div>
+                            <h3 class="spot-title">薄荷島 TAG - 馬尼拉 MNL (T2)</h3>
+                            <p class="description">05:40-06:00 check-out</p>
+                            <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://www.airport-technology.com/wp-content/uploads/sites/14/2019/01/1-Image-Bohol-Panglao-International-Airport.jpg')">
+                            <img
+                                src="https://www.airport-technology.com/wp-content/uploads/sites/14/2019/01/1-Image-Bohol-Panglao-International-Airport.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">交通</span>
+                                <span class="time-tag">15:45-17:10</span>
+                            </div>
+                            <h3 class="spot-title">馬尼拉 MNL (T1) - 台北 TPE (T1)</h3>
+                            <p class="description">08:45-12:35轉機等待 │ 行李直掛但要換航廈</p>
+                            <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BKK/K0/BKK0000605/BKK0000605_62616.jpg')">
+                            <img
+                                src="https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BKK/K0/BKK0000605/BKK0000605_62616.jpg">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="d5-2" class="day-pane">
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">交通</span>
+                                <span class="time-tag">18:00-19:30</span>
+                            </div>
+                            <h3 class="spot-title">薄荷島 TAG - 馬尼拉 MNL (T2)</h3>
+                            <p class="description">11:00-11:20 check-out │ 15:30-16:00 前往機場 │ PR2778</p>
+                            <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://www.airport-technology.com/wp-content/uploads/sites/14/2019/01/1-Image-Bohol-Panglao-International-Airport.jpg')">
+                            <img
+                                src="https://www.airport-technology.com/wp-content/uploads/sites/14/2019/01/1-Image-Bohol-Panglao-International-Airport.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">住宿</span>
+                                <span class="time-tag">20:30</span>
+                            </div>
+                            <h3 class="spot-title">Grand Westside Manila Bay</h3>
+                            <p class="description">Check-in</p>
+                            <a href="https://maps.app.goo.gl/5hhJ77nWNXBWoj4V8" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://lh3.googleusercontent.com/p/AF1QipNIl51PynGMz-bG38w97edE0s9-wwCcIsMct0XZ=s1360-w1360-h1020-rw')">
+                            <img
+                                src="https://lh3.googleusercontent.com/p/AF1QipNIl51PynGMz-bG38w97edE0s9-wwCcIsMct0XZ=s1360-w1360-h1020-rw">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span>
+                                <span class="time-tag">21:00</span>
+                            </div>
+                            <h3 class="spot-title">馬尼拉新濠天地</h3>
+                            <p class="description">賭場夜生活</p>
+                            <a href="https://maps.app.goo.gl/TwcPi3r6vxvk6Ruu5" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://www.melco-resorts.com/zh/imgs/manila/1.jpg')">
+                            <img src="https://www.melco-resorts.com/zh/imgs/manila/1.jpg">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="d6" class="day-pane">
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">交通</span>
+                                <span class="time-tag">12:35-15:05</span>
+                            </div>
+                            <h3 class="spot-title">馬尼拉 MNL (T1) - 台北 TPE (T1)</h3>
+                            <p class="description">PR896</p>
+                            <a href="https://maps.app.goo.gl/1XdVxJnBip5RvBRW6" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BKK/K0/BKK0000605/BKK0000605_62616.jpg')">
+                            <img
+                                src="https://photo.settour.com.tw/900x600/https://www.settour.com.tw/ss_img/info/location/BKK/K0/BKK0000605/BKK0000605_62616.jpg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="prep" class="section">
+            <div id="prep-list-container"></div>
+        </div>
+
+
+
+        <div id="cost" class="section">
+            <div class="card" style="padding:0; overflow:hidden;">
+                <table class="expense-table" style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:var(--ocean-blue); color:white;">
+                            <th style="padding:10px 5px;">選</th>
+                            <th style="text-align:left; padding:10px 5px;">項目</th>
+                            <th style="padding:10px 5px;">USD</th>
+                            <th style="padding:10px 5px;">PHP</th>
+                            <th style="padding:10px 5px;">TWD</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expense-body">
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">✈️ 機票</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>8413</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">🏨 住宿-豪華套房</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>3738</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">🏨 住宿-泳池景房</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>1827</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">4/3 巧克力山一日遊</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>1891</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">4/4 沙丁魚風暴-水肺</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>2960</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">4/4 沙丁魚風暴-浮潛</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>952</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">4/5 處女島夕陽團</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>600</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">🍽️ 餐費(預估約10餐)</td>
+                            <td>100</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">🍻 酒水點心(預估)</td>
+                            <td>100</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="exp-check" onchange="calc()"></td>
+                            <td style="text-align:left;">💆 按摩(預估約3次)</td>
+                            <td>60</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="padding:15px; text-align:right; border-top:1px solid #eee; background:#fcfdfd;">
+                    <b style="color:var(--ocean-blue);">預估總額：NT$ <span id="total-twd">0</span></b>
+                </div>
+            </div>
+        </div>
+
+        <div id="lightbox" onclick="this.style.display='none'">
+            <img id="lightbox-img" src="">
+        </div>
+
+        <script>
+            function switchSection(e, sectionId) {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.main-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+                e.currentTarget.classList.add('active');
+            }
+
+            function switchDay(e, dayId) {
+                document.querySelectorAll('.day-pane').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById(dayId).classList.add('active');
+                e.currentTarget.classList.add('active');
+            }
+
+            // 設定匯率基準
+            const rateUSD = 32.5;
+            const ratePHP = 0.58;
+
+            // 1. 自動填入每一行的台幣顯示
+            function updateAllRowTwd() {
+                document.querySelectorAll('#expense-body tr').forEach(row => {
+                    const usdVal = parseFloat(row.cells[2].innerText) || 0;
+                    const phpVal = parseFloat(row.cells[3].innerText) || 0;
+                    const twdCell = row.cells[4];
+
+                    // 如果台幣欄位原本是空的或是破折號，才進行自動換算顯示
+                    if (twdCell.innerText === '-' || twdCell.innerText === '' || twdCell.getAttribute('data-auto') === 'true') {
+                        let calculatedTwd = 0;
+                        if (usdVal > 0) {
+                            calculatedTwd = Math.round(usdVal * rateUSD);
+                        } else if (phpVal > 0) {
+                            calculatedTwd = Math.round(phpVal * ratePHP);
+                        }
+
+                        if (calculatedTwd > 0) {
+                            twdCell.innerText = calculatedTwd.toLocaleString();
+                            twdCell.setAttribute('data-auto', 'true'); // 標記這是自動算出來的
+                            twdCell.style.color = '#888'; // 用灰色表示這是自動換算的參考值
+                        }
+                    }
+                });
+            }
+
+            // 2. 計算勾選總和
+            function calc() {
+                let total = 0;
+                document.querySelectorAll('.exp-check:checked').forEach(box => {
+                    const row = box.closest('tr');
+                    const twdVal = parseFloat(row.cells[4].innerText.replace(/,/g, '')) || 0;
+                    total += twdVal;
+                });
+                document.getElementById('total-twd').innerText = Math.round(total).toLocaleString();
+            }
+
+            // 頁面載入後自動執行一次換算
+            window.addEventListener('load', updateAllRowTwd);
+
+            // 燈箱容器
+            function openLightbox(url) {
+                document.getElementById('lightbox-img').src = url;
+                document.getElementById('lightbox').style.display = 'flex';
+            }
+
+
+            // 準備清單
+            const todoData = {
+                "🎒隨身包包": ["手機", "護照", "台幣", "外幣", "信用卡", "有線耳機", "藍芽耳機", "行動電源", "手機充電線", "衛生紙", "濕紙巾", "雨傘", "牙線", "水"],
+                "✅記得確認": ["機票", "台胞證", "網路卡/eSim", "海外信用卡啟用", "換外幣", "Netflix下載影片", "拍照容量", "轉接頭", "旅平險"],
+                "💄梳妝保養": ["防曬", "粉底", "遮瑕", "梳子", "鏡子", "髮圈", "化妝水", "乳液", "護唇膏"],
+                "👕個人衣物": ["襪子", "內衣", "內褲", "上衣", "下身", "洋裝", "外套", "睡衣", "鞋子", "拖鞋", "帽子"],
+                "🧴個人用品": ["防曬乳", "墨鏡", "隱形眼鏡", "牙刷", "牙膏", "眼藥水", "止痛藥", "感冒藥", "胃藥", "保健食品", "生理用品", "口罩"],
+                "📦其他用品": ["小包", "飲料提袋", "環保杯", "夾鏈袋", "橡皮筋", "髒衣袋", "指甲剪", "行李秤"]
+            };
+
+            function renderPrepList() {
+                const container = document.getElementById('prep-list-container');
+                let html = '';
+
+                for (const category in todoData) {
+                    html += `
+            <div class="prep-card">
+                <h4 style="margin:0 0 10px 0; color:var(--ocean-blue); font-size:0.9em;">${category}</h4>
+                <div class="todo-grid">
+                    ${todoData[category].map(item => `
+                        <label class="todo-item">
+                            <input type="checkbox"> ${item}
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+                }
+                container.innerHTML = html;
+            }
+
+
+            window.onload = function () {
+                renderPrepList();
+            };
+        </script>
+
+</body>
+
+</html>
