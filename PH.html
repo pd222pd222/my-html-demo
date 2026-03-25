@@ -351,6 +351,155 @@
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         }
 
+        /* 指南頁面容器 */
+        #guide {
+            padding: 10px 15px 100px 15px;
+        }
+
+        /* 頂部膠囊導覽 */
+        .guide-nav-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 0;
+            padding: 15px 0;
+            z-index: 100;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .guide-btn {
+            padding: 6px 16px;
+            border: 1.2px solid var(--primary-mint);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 11px;
+            color: var(--ocean-blue);
+        }
+
+        .guide-btn.active {
+            background: var(--ocean-blue) !important;
+            color: white !important;
+            border-color: var(--ocean-blue) !important;
+        }
+
+        /* 卡片設計 */
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            position: relative;
+        }
+
+        /* 右上角地圖按鈕 */
+        .map-btn-abs {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 18px;
+            text-decoration: none;
+            z-index: 5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .map-btn-abs:active {
+            transform: scale(1.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-right: 30px;
+        }
+
+        .card-num {
+            color: #eee;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            color: #333;
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .card-rating {
+            font-size: 11px;
+            color: #ffb400;
+            font-weight: bold;
+        }
+
+        .card-tag-mini {
+            font-size: 10px;
+            background: #f0f8f7;
+            color: #5bb7aa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: #777;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        /* 資訊小列 */
+        .card-meta {
+            background: #f9fbfb;
+            border-radius: 8px;
+            padding: 12px;
+            border: 0.5px solid #edf5f4;
+            margin-top: 10px;
+        }
+
+        .meta-item {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .meta-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .meta-item .label {
+            color: #aaa;
+            width: 40px;
+            flex-shrink: 0;
+            font-size: 11px;
+        }
+
+        /* 回頂部按鈕維持不變 */
+        #backToTop {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: var(--ocean-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 22px;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
         /* 手機版 (RWD) */
         @media (max-width: 600px) {
             .description {
@@ -380,6 +529,7 @@
             <button class="main-btn active" onclick="switchSection(event, 'itinerary')">行程安排</button>
             <button class="main-btn" onclick="switchSection(event, 'prep')">準備清單</button>
             <button class="main-btn" onclick="switchSection(event, 'cost')">記帳預算</button>
+            <button class="main-btn" onclick="switchSection(event, 'guide')">地點指南</button>
         </div>
 
         <div id="itinerary" class="section active">
@@ -586,7 +736,9 @@
                             <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">18:00</span>
                             </div>
                             <h3 class="spot-title">Ubeco</h3>
-                            <p class="description"><<span>✓ 已訂</span></p>
+                            <p class="description">
+                                <<span>✓ 已訂</span>
+                            </p>
                             <a href="https://maps.app.goo.gl/CCdoqY7LJas7AKLb9" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -770,7 +922,8 @@
                                     class="time-tag">15:00-18:30</span>
                             </div>
                             <h3 class="spot-title">Virgin Island Sand Bar</h3>
-                            <p class="description"><span>✓ 已訂</span><span>處女島夕陽之旅</span><span>於Quest Villa接駁</span><span>自己帶毛巾、水</span></p>
+                            <p class="description"><span>✓ 已訂</span><span>處女島夕陽之旅</span><span>於Quest
+                                    Villa接駁</span><span>自己帶毛巾、水</span></p>
                             <a href="https://maps.app.goo.gl/U6G93kUmZAwDLiKa8" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -825,7 +978,8 @@
                                 <span class="time-tag">18:00-19:30</span>
                             </div>
                             <h3 class="spot-title">TAG-MNL(T2)</h3>
-                            <p class="description"><span>11:00-11:20 Check-out</span><span>15:30-16:00 前往機場</span><span>PR2778</span><span>飛行時間1小時30分</span>
+                            <p class="description"><span>11:00-11:20 Check-out</span><span>15:30-16:00
+                                    前往機場</span><span>PR2778</span><span>飛行時間1小時30分</span>
                             </p>
                             <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
                                 class="map-link">📍導航</a>
@@ -996,6 +1150,215 @@
             </div>
         </div>
 
+        <div id="guide" class="section">
+            <div class="guide-nav-wrapper">
+                <div class="guide-btn active" onclick="switchGuide('money')">換匯所</div>
+                <div class="guide-btn" onclick="switchGuide('food')">餐廳</div>
+                <div class="guide-btn" onclick="switchGuide('spa')">按摩</div>
+            </div>
+
+            <div class="guide-container">
+                <div id="guide-money" class="guide-content" style="display: block;">
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/gMdGFw5VrvoNNbmo6" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">01</span>
+                            <span class="card-title">M Lhuillier - Tawala Panglao</span>
+                            <span class="card-rating">3.5⭐</span>
+                        </div>
+                        <div class="card-desc">主街連鎖店 │ 匯率穩定且安全 │ 適合大額換匯</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>一到六 07:30-19:30 / 日 08:00-17:00</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/xptdZN4fGB5yVeQE7" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">02</span>
+                            <span class="card-title">Palawan Pawnshop</span>
+                            <span class="card-tag-mini">在地老牌</span>
+                            <span class="card-rating">4.0⭐</span>
+                        </div>
+                        <div class="card-desc">Cherry's Home 附近 │ 在地人常用的換匯點</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>08:00-17:30</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/zHC6qPFSN9ivaCwB6" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">03</span>
+                            <span class="card-title">IM EXCHANGE 환전소</span>
+                            <span class="card-rating">4.7⭐</span>
+                        </div>
+                        <div class="card-desc">韓系換匯所 │ 環境明亮 │ 匯率透明</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>10:00-22:00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="guide-food" class="guide-content" style="display: none;">
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/KfwpkmSvPoZzgG1K6" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">01</span>
+                            <span class="card-title">Oasis Restaurant & Beach Club</span>
+                            <span class="card-rating">4.7⭐</span>
+                        </div>
+                        <div class="card-desc">多國料理 │ 靠海灘 │ 適合喝酒</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>07:00-22:30</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/1qu27GCn8MnKdAGDA" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">02</span>
+                            <span class="card-title">Napoleat Panglao</span>
+                            <span class="card-rating">4.6⭐</span>
+                        </div>
+                        <div class="card-desc">義式料理 │ 披薩、義大利麵</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>11:00-22:30</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/v2uFYVXNFUpM3ugc8" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">03</span>
+                            <span class="card-title">Toto e Peppino</span>
+                            <span class="card-rating">4.2⭐</span>
+                        </div>
+                        <div class="card-desc">義式窯烤披薩 │ 離換匯區近</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>10:00-22:30</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/RqgVsE38Q8MEeaTB6" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">04</span>
+                            <span class="card-title">No.1 Seafood Restaurant</span>
+                            <span class="card-rating">4.8⭐</span>
+                        </div>
+                        <div class="card-desc">海鮮料理 │ 離換匯街頗近</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>10:00-22:00</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/T5EsEEgrRxcCG9ds8" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">05</span>
+                            <span class="card-title">Moonlit</span>
+                            <span class="card-rating">4.8⭐</span>
+                        </div>
+                        <div class="card-desc">在換匯地區 │ 一樓冷氣 │ 二樓美景高腳椅但會熱</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>12:00-16:00 / 17:00-00:00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="guide-spa" class="guide-content" style="display: none;">
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/FP4es4Tbfp19dMrGA" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">01</span>
+                            <span class="card-title">Thé Stoné Massagé Spa</span>
+                            <span class="card-tag-mini">熱石專賣店</span>
+                            <span class="card-rating">4.9⭐</span>
+                        </div>
+                        <div class="card-desc">環境安靜 │ 氛圍感很好</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>11:00-23:00</div>
+                            <div class="meta-item"><span class="label">距離</span>飯店2.2km</div>
+                            <div class="meta-item"><span class="label">價錢</span>傳統菲式(60min) 750 / 熱石(90min) 1200-1400 /
+                                足部(60min) 600 PHP</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/BmTt1QaKxebTBLHx8" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">02</span>
+                            <span class="card-title">Luna Tiger Spa & Massage 타이거 스파 마사지</span>
+                            <span class="card-tag-mini">總店</span>
+                            <span class="card-rating">4.8⭐</span>
+                        </div>
+                        <div class="card-desc">裝潢現代乾淨 │ 特定區域免費接送</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>13:00-23:00</div>
+                            <div class="meta-item"><span class="label">距離</span>飯店2.7km</div>
+                            <div class="meta-item"><span class="label">價錢</span>泰式指壓(60min) 700 / 瑞典式油(60min) 800 /
+                                精油(90min) 1100 / 熱石 1300 PHP</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/BrKSgvxs8Vgfp7wT8" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">03</span>
+                            <span class="card-title">Luna Tiger Spa Alona Branch</span>
+                            <span class="card-tag-mini">Alona店</span>
+                            <span class="card-rating">4.9⭐</span>
+                        </div>
+                        <div class="card-desc">Alona店可步行至海灘</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>13:00-23:00</div>
+                            <div class="meta-item"><span class="label">距離</span>飯店2.5km</div>
+                            <div class="meta-item"><span class="label">價錢</span>泰式指壓(60min) 700 / 瑞典式油(60min) 800 /
+                                精油(90min) 1100 / 熱石 1300 PHP</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/LcjkkQiqAtGMdjX19" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">04</span>
+                            <span class="card-title">카와스파 (Kawa spa & Massage in Bohol)</span>
+                            <span class="card-tag-mini">大鍋煮</span>
+                            <span class="card-rating">5.0⭐</span>
+                        </div>
+                        <div class="card-desc">特色「大鍋煮」浴 │ 建議傍晚去比較不熱 │ 適合拍照打卡</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>12:00-00:00</div>
+                            <div class="meta-item"><span class="label">距離</span>飯店1.8km</div>
+                            <div class="meta-item"><span class="label">價錢</span>大鍋浴(45min) 600 / 全身(60min) 700 /
+                                組合套餐(最熱門) 1099-1200 PHP</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <a href="https://maps.app.goo.gl/pzgygZj1cMZghp1fA" target="_blank" class="map-btn-abs">📍</a>
+                        <div class="card-header">
+                            <span class="card-num">05</span>
+                            <span class="card-title">The Thai Massage and Spa</span>
+                            <span class="card-tag-mini">正宗泰式</span>
+                            <span class="card-rating">4.8⭐</span>
+                        </div>
+                        <div class="card-desc">手法偏硬 │ 適合緩解痠痛</div>
+                        <div class="card-meta">
+                            <div class="meta-item"><span class="label">時間</span>11:00-00:00</div>
+                            <div class="meta-item"><span class="label">距離</span>飯店1.4km</div>
+                            <div class="meta-item"><span class="label">價錢</span>乾壓(60min) 600 / 油壓(60min) 700 /
+                                背部肩頸(30min) 350 / 綜合(90min) 950 PHP</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <button id="backToTop" onclick="scrollToTop()">↑</button>
+
         <div id="lightbox" onclick="this.style.display='none'">
             <img id="lightbox-img" src="">
         </div>
@@ -1100,6 +1463,54 @@
             window.onload = function () {
                 renderPrepList();
             };
+
+
+
+            // 指南切換功能
+            function switchGuide(type) {
+                // 1. 隱藏所有內容
+                const contents = document.querySelectorAll('.guide-content');
+                contents.forEach(content => {
+                    content.style.display = 'none';
+                });
+
+                // 2. 移除所有按鈕 active 狀態
+                const buttons = document.querySelectorAll('.guide-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // 3. 顯示目標內容
+                const targetId = 'guide-' + type;
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.style.display = 'block';
+                }
+
+                // 4. 高亮被點擊的按鈕
+                if (event && event.currentTarget) {
+                    event.currentTarget.classList.add('active');
+                }
+
+                // 5. 自動置頂
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // 捲動顯示回頂部按鈕
+            window.addEventListener('scroll', function () {
+                let btn = document.getElementById("backToTop");
+                if (!btn) return;
+                if (window.pageYOffset > 400) {
+                    btn.style.display = "block";
+                } else {
+                    btn.style.display = "none";
+                }
+            });
+
+            function scrollToTop() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
         </script>
 
 </body>
