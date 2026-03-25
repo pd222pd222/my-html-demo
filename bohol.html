@@ -511,7 +511,25 @@
             width: 40px;
             flex-shrink: 0;
             font-size: 11px;
+            align-items: center;
+            font-weight: bold;
+            text-align: center;
         }
+
+        /* 價錢項目橫向排列 */
+        .price-group {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        /* 價錢的分隔線 */
+        .price-group span:not(:last-child)::after {
+            content: "/";
+            margin-left: 5px;
+            color: #ccc;
+        }
+
 
         /* 回頂部按鈕 */
         #backToTop {
@@ -532,6 +550,8 @@
 
         /* 手機版 (RWD) */
         @media (max-width: 600px) {
+
+            /* 行程區塊說明 */
             .description {
                 flex-direction: column;
                 gap: 3px;
@@ -541,8 +561,29 @@
                 display: none;
             }
 
-            /* 前置小符號 */
+            /* 行程區塊前置小符號 */
             .description span::before {
+                content: "•";
+                margin-right: 6px;
+                color: var(--ocean-blue);
+                font-weight: bold;
+            }
+
+            /* 指南-按摩價錢區塊 */
+            .price-group {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                margin-top: 5px;
+                padding-left: 42px;
+            }
+
+            .price-group span:not(:last-child)::after {
+                display: none;
+            }
+
+            /* 指南-按摩價錢區塊前置小符號 */
+            .price-group span::before {
                 content: "•";
                 margin-right: 6px;
                 color: var(--ocean-blue);
@@ -688,7 +729,8 @@
                             <div class="time-row"><span class="tag-sm">行程</span><span class="time-tag">09:30</span>
                             </div>
                             <h3 class="spot-title">巧克力山ATV體驗</h3>
-                            <p class="description"></p>
+                            <p class="description">
+                                <span>穿著舒適且不怕髒的衣物和鞋子</span><span>墨鏡、帽子、防曬</span><span>可給司機小費，最小面額為P20鈔票</span></p>
                             <a href="https://maps.app.goo.gl/k8oUahEsQjhGrybc6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -704,7 +746,7 @@
                             <div class="time-row"><span class="tag-sm">景點</span><span class="time-tag">11:00</span>
                             </div>
                             <h3 class="spot-title">眼鏡猴保護區</h3>
-                            <p class="description"></p>
+                            <p class="description"><span>相機不要開閃光</span></p>
                             <a href="https://maps.app.goo.gl/iZtsJRQbMwheiKoL9" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -719,7 +761,7 @@
                             <div class="time-row"><span class="tag-sm">午餐</span><span class="time-tag">12:00</span>
                             </div>
                             <h3 class="spot-title">羅伯克水上餐廳</h3>
-                            <p class="description"></p>
+                            <p class="description"><span>漂流竹筏體驗</span></p>
                             <a href="https://maps.app.goo.gl/Ez1qMNxrMiiEzMiP6" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -765,7 +807,7 @@
                             <div class="time-row"><span class="tag-sm">晚餐</span><span class="time-tag">18:00</span>
                             </div>
                             <h3 class="spot-title">Ubeco</h3>
-                            <p class="description"><span>✓已訂</span></p>
+                            <p class="description"><span>✓ 已訂</span></p>
                             <a href="https://maps.app.goo.gl/CCdoqY7LJas7AKLb9" target="_blank"
                                 class="map-link">📍導航</a>
                         </div>
@@ -784,8 +826,9 @@
                             <div class="time-row"><span class="tag-sm">行程1</span><span
                                     class="time-tag">09:00-10:00</span>
                             </div>
-                            <h3 class="spot-title">Napaling 沙丁魚風暴 - 水肺</h3>
-                            <p class="description"><span>✓ KLOOK已訂</span><span>08:30於Quest Villa接駁</span><span>報名：僑爸、Dolly</span></p>
+                            <h3 class="spot-title">沙丁魚風暴－水肺</h3>
+                            <p class="description"><span>✓ KLOOK已訂</span><span>08:30於Quest
+                                    Villa接駁</span><span>報名：僑爸、Dolly</span></p>
                             <a href="https://maps.app.goo.gl/dKdpGJG5PX1Dy2hAA" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -800,7 +843,7 @@
                         <div class="info-content">
                             <div class="time-row"><span class="tag-sm">行程2</span><span class="time-tag">09:30</span>
                             </div>
-                            <h3 class="spot-title">Napaling 沙丁魚風暴 - 浮潛</h3>
+                            <h3 class="spot-title">沙丁魚風暴－浮潛</h3>
                             <p class="description"><span>✓ KLOOK已訂</span><span>09:30於Freedive Academy
                                     Panglao集合</span><span>需自行前往</span><span>報名：柏安、菖哥、阿布、晨聞、Henry、潘帥、青青</span></p>
                             <a href="https://maps.app.goo.gl/zT2XADqgLG39viKaA" target="_blank" class="map-link">📍
@@ -916,7 +959,7 @@
                             <div class="time-row"><span class="tag-sm">早午餐</span><span class="time-tag">10:30</span>
                             </div>
                             <h3 class="spot-title">Bohol Bee Farm</h3>
-                            <p class="description"><span>吃早午餐看海岸懸崖</span><span>寫信詢問中</span></p>
+                            <p class="description"><span>吃早午餐看海岸懸崖</span><span>JO團已訂</span></p>
                             <a href="https://maps.app.goo.gl/YrXt6eTqXJGLUUJT6" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -932,7 +975,7 @@
                             </div>
                             <h3 class="spot-title">Alturas Panglao Supermarket</h3>
                             <p class="description">
-                                <span>買伴手禮</span><span>營業時間08:00-20:00</span><span>回飯店整理去處女島的裝備</span>
+                                <span>營業時間08:00-20:00</span><span>買伴手禮回飯店放</span><span>整理去處女島的裝備</span>
                             </p>
                             <a href="https://maps.app.goo.gl/RTN6arhfaByyDomk7" target="_blank" class="map-link">📍
                                 導航</a>
@@ -966,7 +1009,8 @@
                                     class="time-tag">15:00-18:30</span>
                             </div>
                             <h3 class="spot-title">Virgin Island Sand Bar</h3>
-                            <p class="description"><span>✓已訂</span><span>處女島夕陽之旅</span><span>Villa Sima來回接送</span><span>自己帶毛巾、水</span></p>
+                            <p class="description"><span>✓已訂</span><span>處女島夕陽之旅</span><span>Villa
+                                    Sima來回接送</span><span>自己帶毛巾、水</span></p>
                             <a href="https://maps.app.goo.gl/U6G93kUmZAwDLiKa8" target="_blank" class="map-link">📍
                                 導航</a>
                         </div>
@@ -978,7 +1022,7 @@
                     </div>
                 </div>
 
-                
+
                 <div id="d5" class="day-pane">
                     <div class="spot-item">
                         <div class="info-content">
@@ -986,7 +1030,8 @@
                                 <span class="time-tag">18:00-19:30</span>
                             </div>
                             <h3 class="spot-title">TAG-MNL(T2)</h3>
-                            <p class="description"><span>11:00 Check-out</span><span>15:30-16:00 前往機場</span><span>PR2778</span><span>飛行時間1小時30分</span>
+                            <p class="description"><span>11:00 Check-out</span><span>15:30-16:00
+                                    前往機場</span><span>PR2778</span><span>飛行時間1小時30分</span>
                             </p>
                             <a href="https://maps.app.goo.gl/C6D68Chzp3V7P1BC8" target="_blank"
                                 class="map-link">📍導航</a>
@@ -1019,6 +1064,23 @@
                         <div class="info-content">
                             <div class="time-row"><span class="tag-sm">景點</span>
                                 <span class="time-tag">21:00</span>
+                            </div>
+                            <h3 class="spot-title">SM Mall of Asia</h3>
+                            <p class="description"><span>營業時間10:00-22:00</span></p>
+                            <a href="https://maps.app.goo.gl/PCeW2PBiWW6cUS717" target="_blank"
+                                class="map-link">📍導航</a>
+                        </div>
+                        <div class="photo-box"
+                            onclick="openLightbox('https://upload.wikimedia.org/wikipedia/commons/9/94/Aerial_view_SM_Mall_of_Asia_showing_the_MOA_Sky.jpg')">
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/9/94/Aerial_view_SM_Mall_of_Asia_showing_the_MOA_Sky.jpg">
+                        </div>
+                    </div>
+
+                    <div class="spot-item">
+                        <div class="info-content">
+                            <div class="time-row"><span class="tag-sm">景點</span>
+                                <span class="time-tag">22:00</span>
                             </div>
                             <h3 class="spot-title">馬尼拉新濠天地</h3>
                             <p class="description"><span>賭場夜生活</span></p>
@@ -1150,7 +1212,7 @@
             </div>
         </div>
 
-<div id="guide" class="section">
+        <div id="guide" class="section">
             <div class="guide-nav-wrapper">
                 <div class="guide-btn active" onclick="switchGuide('money')">換匯所</div>
                 <div class="guide-btn" onclick="switchGuide('food')">餐廳</div>
@@ -1169,7 +1231,7 @@
                             <span class="card-num">01</span>
                             <span class="card-title">M Lhuillier - Tawala Panglao</span>
                         </div>
-                        <div class="card-desc">主街連鎖店 │ 匯率穩定且安全 │ 適合大額換匯</div>
+                        <div class="card-desc">像賣彩券的地方 │ 要早點來，晚來就換不到 │ 導遊推薦</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>一到六 07:30-19:30 / 日 08:00-17:00</div>
                         </div>
@@ -1177,14 +1239,15 @@
 
                     <div class="info-card">
                         <div class="status-group">
-                            <a href="https://maps.app.goo.gl/xptdZN4fGB5yVeQE7" target="_blank" class="map-btn-abs">📍</a>
+                            <a href="https://maps.app.goo.gl/xptdZN4fGB5yVeQE7" target="_blank"
+                                class="map-btn-abs">📍</a>
                             <span class="card-rating">4.0⭐</span>
-                        </div>                        
+                        </div>
                         <div class="card-header">
                             <span class="card-num">02</span>
-                            <span class="card-title">Palawan Pawnshop</span>
+                            <span class="card-title">Palawan Pawnshop - Cherry's Home Branch</span>
                         </div>
-                        <div class="card-desc">Cherry's Home 附近 │ 在地人常用的換匯點</div>
+                        <div class="card-desc">需要護照 │ 告訴店員要換貨幣才能加速</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>08:00-17:30</div>
                         </div>
@@ -1201,7 +1264,7 @@
                             <span class="card-num">03</span>
                             <span class="card-title">IM EXCHANGE 환전소</span>
                         </div>
-                        <div class="card-desc">韓系換匯所 │ 環境明亮 │ 匯率透明</div>
+                        <div class="card-desc">需要護照</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>10:00-22:00</div>
                         </div>
@@ -1285,7 +1348,7 @@
                             <span class="card-num">05</span>
                             <span class="card-title">Moonlit</span>
                         </div>
-                        <div class="card-desc">在換匯地區 │ 一樓冷氣 │ 二樓美景高腳椅但會熱</div>
+                        <div class="card-desc">一樓冷氣 │ 二樓美景高腳椅但會熱</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>12:00-16:00 / 17:00-00:00</div>
                         </div>
@@ -1306,8 +1369,13 @@
                         <div class="card-desc">熱石專賣店 │ 環境安靜 │ 氛圍感很好</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>11:00-23:00</div>
-                            <div class="meta-item"><span class="label">價錢</span>傳統菲式(60min) 750 / 熱石(90min) 1200-1400 /
-                                足部(60min) 600 PHP</div>
+                            <div class="meta-item"><span class="label">價錢</span>
+                                <div class="price-group">
+                                    <span>傳統菲式(60分) 750</span>
+                                    <span>熱石(90分) 1200-1400</span>
+                                    <span>足部(60分) 600</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1324,8 +1392,14 @@
                         <div class="card-desc">裝潢現代乾淨 │ 特定區域免費接送</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>13:00-23:00</div>
-                            <div class="meta-item"><span class="label">價錢</span>泰式指壓(60min) 700 / 瑞典式油(60min) 800 /
-                                精油(90min) 1100 / 熱石 1300 PHP</div>
+                            <div class="meta-item"><span class="label">價錢</span>
+                                <div class="price-group">
+                                    <span>泰式指壓(60分) 700</span>
+                                    <span>瑞典式油(60分) 800</span>
+                                    <span>精油(90分) 1100</span>
+                                    <span>熱石(90分) 1300</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1342,8 +1416,14 @@
                         <div class="card-desc">Alona店可步行至海灘</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>13:00-23:00</div>
-                            <div class="meta-item"><span class="label">價錢</span>泰式指壓(60min) 700 / 瑞典式油(60min) 800 /
-                                精油(90min) 1100 / 熱石 1300 PHP</div>
+                            <div class="meta-item"><span class="label">價錢</span>
+                                <div class="price-group">
+                                    <span>泰式指壓(60分) 700</span>
+                                    <span>瑞典式油(60分) 800</span>
+                                    <span>精油(90分) 1100</span>
+                                    <span>熱石(90分) 1300</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1357,11 +1437,16 @@
                             <span class="card-num">04</span>
                             <span class="card-title">카와스파 (Kawa spa & Massage in Bohol)</span>
                         </div>
-                        <div class="card-desc">特色「大鍋煮」浴 │ 建議傍晚去比較不熱 │ 適合拍照打卡</div>
+                        <div class="card-desc">特色大鍋煮浴 │ 傍晚去比較不熱 │ 適合拍照打卡</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>12:00-00:00</div>
-                            <div class="meta-item"><span class="label">價錢</span>大鍋浴(45min) 600 / 全身(60min) 700 /
-                                組合套餐(最熱門) 1099-1200 PHP</div>
+                            <div class="meta-item"><span class="label">價錢</span>
+                                <div class="price-group">
+                                    <span>大鍋浴(45分) 600</span>
+                                    <span>全身(60分) 700</span>
+                                    <span>組合套餐(最熱門) 1099-1200</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1378,8 +1463,14 @@
                         <div class="card-desc">正宗泰式 │ 手法偏硬 │ 適合緩解痠痛</div>
                         <div class="card-meta">
                             <div class="meta-item"><span class="label">時間</span>11:00-00:00</div>
-                            <div class="meta-item"><span class="label">價錢</span>乾壓(60min) 600 / 油壓(60min) 700 /
-                                背部肩頸(30min) 350 / 綜合(90min) 950 PHP</div>
+                            <div class="meta-item"><span class="label">價錢</span>
+                            <div class="price-group">
+                                    <span>乾壓(60分) 600</span>
+                                    <span>油壓(60分) 700</span>
+                                    <span>背部肩頸(30分) 350</span>
+                                    <span>綜合(90分) 950</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1495,7 +1586,7 @@
             };
 
 
- // 指南切換功能
+            // 指南切換功能
             function switchGuide(type) {
                 // 1. 隱藏所有內容
                 const contents = document.querySelectorAll('.guide-content');
