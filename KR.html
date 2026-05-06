@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>釜山跨年・海色之旅 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ocean-blue: #a2d2ff;
+            --sunset-orange: #ffafbd;
+            --crayon-yellow: #fdf6b2;
+            --glass: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-dark: #4a4a4a;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #e0f2fe 0%, #ffedfa 100%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/p6.png');
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px dashed var(--ocean-blue);
+        }
+
+        h1 {
+            font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 2.2rem;
+            color: #5fa8d3;
+            margin: 0;
+            text-shadow: 2px 2px 0px white;
+        }
+
+        .day-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .day-btn {
+            padding: 10px 18px;
+            border-radius: 50px;
+            border: 2px solid var(--ocean-blue);
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 3px 3px 0px var(--ocean-blue);
+        }
+
+        .day-btn.active {
+            background: var(--ocean-blue);
+            color: white;
+            transform: translateY(3px);
+            box-shadow: 0px 0px 0px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .day-content {
+            display: none;
+        }
+
+        .day-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-body {
+            flex: 1;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            background: var(--crayon-yellow);
+            width: fit-content;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 5px 0;
+            color: #3d5a80;
+        }
+
+        .time-box {
+            color: #777;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .img-wrapper {
+            width: 100px;
+            aspect-ratio: 1 / 1;
+            border-radius: 18px;
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: zoom-in;
+            border: 3px solid white;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .desc {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #555;
+            border-left: 3px solid var(--sunset-orange);
+            padding-left: 10px;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #5fa8d3;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px solid #5fa8d3;
+            width: fit-content;
+        }
+
+        #lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .img-wrapper {
+                width: 85px;
+            }
+
+            .title {
+                font-size: 1rem;
+            }
+
+            .card {
+                gap: 15px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🌊 釜山・冬之海跨年</h1>
+        <div class="day-selector">
+            <button class="day-btn active" onclick="switchDay(1)">12/30</button>
+            <button class="day-btn" onclick="switchDay(2)">12/31</button>
+            <button class="day-btn" onclick="switchDay(3)">01/01</button>
+            <button class="day-btn" onclick="switchDay(4)">01/02</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Day 1 -->
+        <div id="day1" class="day-content active">
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">交通</span>
+                    <div class="title">抵達金海機場</div>
+                    <div class="time-box">⏰ 17:40</div>
+                    <div class="desc">下機後搭乘輕軌或計程車前往廣安里住宿</div>
+                    <a href="https://maps.google.com/?q=Gimhae+Airport" class="btn-nav" target="_blank">🗺️ 開啟導航</a>
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://www.settour.com.tw/ss_img/info/location/PUS/S0/PUS0000287/PUS0000287_57324.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">晚餐</span>
+                    <div class="title">수변최고돼지국밥 본점</div>
+                    <div class="time-box">⏰ 20:00</div>
+                    <div class="desc">當地必吃豬肉湯飯，營業時間24H</div>
+                    <a href="google.com/maps/place/Subyeon+Chwego+Dwaeji+Gukbap+(Main+Branch)/@35.1567627,129.1317041,17z/data=!4m6!3m5!1s0x356892b59d2067df:0x9b884b4768b21944!8m2!3d35.1567627!4d129.134279!16s%2Fg%2F1tgz3br8?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D" class="btn-nav" target="_blank">🗺️ 開啟導航</a>
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://img.siksinhot.com/place/1618529743949627.jpeg?w=640&h=840&c=Y">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">廣安大橋</div>
+                    <div class="time-box">⏰ </div>
+                    <div class="desc">買啤酒在海灘散步看夜景</div>
+                    <a href="https://www.google.com/maps/place/%E5%BB%A3%E5%AE%89%E5%A4%A7%E6%A9%8B/@35.147551,129.1276339,17z/data=!3m1!4b1!4m6!3m5!1s0x3568ed398bb5ba9b:0x6729727408f74eb0!8m2!3d35.147551!4d129.1302088!16zL20vMDh2OGNx?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D" class="btn-nav" target="_blank">🗺️ 開啟導航</a>
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://www.visitbusan.net/uploadImgs/files/cntnts/20200101173020944_wufrotr">
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div id="day2" class="day-content">
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">體驗</span>
+                    <div class="title">藍線公園 尾浦→青沙浦</div>
+                    <div class="time-box">⏰ 10:00</div>
+                    <div class="desc">務必提前2週官網預約膠囊列車</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://asiayo.com/_next/image/?url=https%3A%2F%2Fimage-store.asiayo.com%2Fbnb%2F49364%2F960xauto%2Fdesc_Oajwq5UNn574Uk.webp&w=1080&q=75">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">青沙浦天空步道</div>
+                    <div class="time-box">⏰ 11:00</div>
+                    <div class="desc">走在透明玻璃上看海&紅白雙子燈塔，開放時間09:00-18:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://carolblog.tw/wp-content/uploads/2024/12/cheongsapo-daritdol-observatory_4.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">午餐</span>
+                    <div class="title">道熙家海鮮</div>
+                    <div class="time-box">⏰ 12:30</div>
+                    <div class="desc">青沙浦附近，營業時間10:00-01:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://live.staticflickr.com/65535/52766186654_609bd5dbfe_b.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">海東龍宮寺</div>
+                    <div class="time-box">⏰ 14:30</div>
+                    <div class="desc">海邊寺廟，開放時間04:30-19:20</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://image.cdn-eztravel.com.tw/mavIrx5BfHr6f3tdJstGwD7sNYgUShfnNBSXi6RC4Jc/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvS1JfMjAwMDEzMjYzLmpwZw.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">X the SKY 展望台</div>
+                    <div class="time-box">⏰ 16:30</div>
+                    <div class="desc">從100樓俯瞰2026最後夕陽，開放時間10:00-21:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://yukigo.tw/wp-content/uploads/2024/10/busan-x-the-sky.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">晚餐</span>
+                    <div class="title">海雲台母牛肋排家(米其林)</div>
+                    <div class="time-box">⏰ 18:30</div>
+                    <div class="desc">一早先掃碼預約，營業時間11:30-14:00/17:00-22:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://live.staticflickr.com/65535/54536886798_9ff91f09fc_b.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">廣安里無人機煙火</div>
+                    <div class="time-box">⏰ 21:00</div>
+                    <div class="desc">回住宿處準備跨年</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://tong.visitkorea.or.kr/cms/resource/53/3025253_image2_1.jpg">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Day 3 -->
+        <div id="day3" class="day-content">
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">甘川洞文化村</div>
+                    <div class="time-box">⏰ 10:00</div>
+                    <div class="desc">韓國馬丘比丘&彩色小屋</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://www.settour.com.tw/ss_img/info/location/PUS/S0/PUS0000072/PUS0000072_136913.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">體驗</span>
+                    <div class="title">松島海上纜車</div>
+                    <div class="time-box">⏰ 12:00</div>
+                    <div class="desc">搭乘水晶車廂橫跨海面</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://photo.paine0602.com/2025/01/songdo-cablecar-62.webp">
+                </div>
+            </div>
+
+<div class="card">
+                <div class="card-body">
+                    <span class="badge">午餐</span>
+                    <div class="title">海底貝殼王國</div>
+                    <div class="time-box">⏰ 13:00</div>
+                    <div class="desc">松島纜車站附近，營業時間11:00-00:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://photo.paine0602.com/2025/02/undersea-clam-kingdom-10.webp">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">白淺灘文化村</div>
+                    <div class="time-box">⏰ 15:30</div>
+                    <div class="desc">影島版聖托里尼，超美海邊步道</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://tong.visitkorea.or.kr/cms/resource/87/3343187_image2_1.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">下午茶</span>
+                    <div class="title">Aether 咖啡廳</div>
+                    <div class="time-box">⏰ 16:30</div>
+                    <div class="desc">絕美咖啡廳看日落，營業時間10:00-21:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://supertaste.tvbs.com.tw/_next/image?url=https%3A%2F%2Fcc.tvbs.com.tw%2Fimg%2Fprogram%2Fupload%2F2024%2F05%2F13%2F20240513145513-3ee3d0b6.jpg&w=768&q=75">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">晚餐</span>
+                    <div class="title">豆田裡豆腐鍋</div>
+                    <div class="time-box">⏰ 18:30</div>
+                    <div class="desc">南浦洞附近，營業時間10:30-21:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://www.jumpman.tw/wp-content/uploads/2020/01/20190331-DSC08311.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">景點</span>
+                    <div class="title">The Bay 101</div>
+                    <div class="time-box">⏰ 20:00</div>
+                    <div class="desc">曼哈頓高樓倒影夜景，開放時間09:00-22:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://image.cdn-eztravel.com.tw/-LIbMAgsX3gwx0con4XB8WpE5tcJRfyXN2dfrPG_fiw/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvS1JfMTE5ODIzMzA3MC5qcGc.jpg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div id="day4" class="day-content">
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">早午餐</span>
+                    <div class="title">Nasari食堂나사리식당광안점</div>
+                    <div class="time-box">⏰ 11:00</div>
+                    <div class="desc">海鮮刀削麵，營業時間10:00-23:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://mamahuhu.blog/wp-content/uploads/2025/01/nasari-sigdang-food-1.jpeg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">體驗</span>
+                    <div class="title">SPA LAND</div>
+                    <div class="time-box">⏰ 13:00</div>
+                    <div class="desc">五星級汗蒸幕，營業時間09:00-22:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://debbiechien.com/wp-content/uploads/2024/10/spaland-entrance-1536x1152.jpg">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">購物</span>
+                    <div class="title">新世界百貨</div>
+                    <div class="time-box">⏰ 16:00</div>
+                    <div class="desc">伴手禮最後採購，營業時間10:30-21:00</div>
+                    
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://www.visitbusan.net/uploadImgs/files/cntnts/20200205165858664">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <span class="badge">回程</span>
+                    <div class="title">17:00 準備前往機場</div>
+                    <div class="time-box">⏰ 18:30報到</div>
+                    <div class="desc">搭乘21:00班機</div>
+                </div>
+                <div class="img-wrapper" onclick="zoomImg(this)">
+                    <img src="https://www.settour.com.tw/ss_img/info/location/PUS/S0/PUS0000287/PUS0000287_57324.jpg">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img src="" id="lightbox-img">
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('reveal');
+            });
+        }, { threshold: 0.1 });
+
+        function init() {
+            document.querySelectorAll('.card').forEach(card => observer.observe(card));
+        }
+
+        function switchDay(dayNum) {
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.day-content').forEach(content => content.classList.remove('active'));
+            const activeDay = document.getElementById('day' + dayNum);
+            activeDay.classList.add('active');
+            activeDay.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('reveal');
+                setTimeout(() => card.classList.add('reveal'), 50);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function zoomImg(wrapper) {
+            const imgSrc = wrapper.querySelector('img').src;
+            document.getElementById('lightbox-img').src = imgSrc;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        init();
+    </script>
+
+</body>
+
+</html>
