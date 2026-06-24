@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraAudio // 極簡當談樂理學院</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700&family=Noto+Sans+TC:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #c5a059;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(197, 160, 89, 0.15);
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+
+        body {
+            margin: 0; padding: 0;
+            background: radial-gradient(circle at 50% 0%, #1a2333 0%, #090d16 70%);
+            color: #f8fafc;
+            font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        header {
+            text-align: center; margin: 80px 0 40px 0;
+            opacity: 0; transform: translateY(-20px); animation: loadIn 1s 0.2s forwards;
+        }
+        header h1 { font-size: 42px; font-weight: 200; letter-spacing: 8px; margin: 0; color: #fff; }
+        header p { font-size: 13px; letter-spacing: 4px; color: var(--primary); margin-top: 10px; font-weight: 300; }
+
+        .main-container { max-width: 900px; width: 90%; margin-bottom: 100px; }
+
+        /* 滾動動畫目標 (Intersection Observer) */
+        .observe-section {
+            opacity: 0; transform: translateY(40px);
+            margin-bottom: 60px;
+        }
+        .observe-section.is-visible {
+            opacity: 1; transform: translateY(0);
+        }
+
+        /* 玻璃擬態卡片樣式 (Glassmorphism) */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+        .glass-card:hover { border-color: rgba(197, 160, 89, 0.3); box-shadow: 0 30px 60px var(--glow); }
+
+        h2 { font-size: 22px; font-weight: 500; margin: 0 0 20px 0; letter-spacing: 2px; border-left: 3px solid var(--primary); padding-left: 15px; }
+        .desc-text { color: #94a3b8; font-size: 14px; line-height: 1.8; margin-bottom: 30px; font-weight: 300; }
+
+        /* 教學區 RWD 網格 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .teach-item {
+            background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .teach-item:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+        .teach-name { font-size: 16px; font-weight: 500; margin-bottom: 5px; }
+        .teach-desc { font-size: 12px; color: #64748b; margin-bottom: 15px; line-height: 1.5; }
+
+        /* 按鈕樣式 */
+        .btn {
+            background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff;
+            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; letter-spacing: 1px;
+        }
+        .btn:hover { background: #fff; color: #000; border-color: #fff; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #a37f3d); color: #000;
+            border: none; padding: 18px; border-radius: 14px; font-size: 16px; font-weight: 700;
+            width: 100%; cursor: pointer; letter-spacing: 2px; margin-bottom: 30px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--glow); }
+
+        /* 考試設定選取區 */
+        .scope-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 30px;
+        }
+        .cb-label {
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);
+            padding: 12px; border-radius: 10px; font-size: 13px; display: flex; align-items: center; gap: 8px; cursor: pointer;
+        }
+        .cb-label input { accent-color: var(--primary); }
+
+        /* 答題按鈕 RWD */
+        .ans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 30px; }
+
+        /* Canvas 與控制面板 */
+        .panel-flex { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        @media (max-width: 768px) {
+            .panel-flex { grid-template-columns: 1fr; }
+            .ans-grid, .scope-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .ans-grid, .scope-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        #visual-canvas {
+            width: 100%; height: 200px; background: rgba(0,0,0,0.4); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .status-box {
+            display: flex; flex-direction: column; justify-content: center; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px;
+        }
+        #status-title { font-size: 16px; letter-spacing: 1px; font-weight: 500; margin-bottom: 10px; color: #94a3b8; }
+        #exp-text { font-size: 13px; color: #64748b; line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+
+        @keyframes loadIn { to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AURA AUDIO</h1>
+    <p>INTELLIGENT MUSIC THEORY LAB</p>
+</header>
+
+<div class="main-container">
+    
+    <section class="observe-section glass-card" id="section-teach">
+        <h2>01 / 樂理視聽感知區</h2>
+        <div class="desc-text">音程（Interval）是音樂的幾何學。在進入評測前，請先透過下方由聲音純淨度分類的模塊，建立耳朵的基底感知。</div>
+        <div class="grid-container" id="teach-container"></div>
+    </section>
+
+    <section class="observe-section glass-card" id="section-quiz">
+        <h2>02 / 智能自訂評測區</h2>
+        <div class="desc-text">設定今日考驗範圍（預設全選），系統將透過演算法即時生成波形頻率。</div>
+        
+        <div class="scope-grid" id="scope-container"></div>
+
+        <button class="btn-primary" onclick="generateQuestion()">🔊 觸發演算音頻題目</button>
+
+        <div class="ans-grid" id="ans-container"></div>
+
+        <div class="panel-flex">
+            <canvas id="visual-canvas"></canvas>
+            <div class="status-box">
+                <div id="status-title">// SYSTEM STANDBY</div>
+                <div id="exp-text">等待音頻信號觸發...作答後此處將動態解析幾何音程數據。</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // 1. 初始化音訊環境與 Canvas 數據擷取器 (Analyser)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const baseFreq = 261.63; // C4
+    
+    // 完整 12 音程結構
+    const dataset = [
+        { name: "純一度", steps: 0, desc: "完美融合，頻率完全相同" },
+        { name: "小二度", steps: 1, desc: "極度緊繃，恐怖片經典不和諧音" },
+        { name: "大二度", steps: 2, desc: "鄰近音級，帶有微幅摩擦張力" },
+        { name: "小三度", steps: 3, desc: "帶有憂鬱、黯淡的小調色彩" },
+        { name: "大三度", steps: 4, desc: "溫暖、明亮的大調核心" },
+        { name: "純四度", steps: 5, desc: "古代音樂核心，聽感空靈融合" },
+        { name: "三度音程", steps: 6, desc: "惡魔之音，極度詭譎且不穩定" },
+        { name: "純五度", steps: 7, desc: "極度穩定、空心的純淨和聲" },
+        { name: "小六度", steps: 8, desc: "充滿情感起伏的古典感和聲" },
+        { name: "大六度", steps: 9, desc: "寬廣、明亮的高級和聲音色" },
+        { name: "小七度", steps: 10, desc: "爵士樂核心，充滿期待感的張力" },
+        { name: "大七度", steps: 11, desc: "強烈撕裂感，渴望解決到八度" },
+        { name: "純八度", steps: 12, desc: "頻率剛好翻倍，完美共鳴" }
+    ];
+
+    let currentCorrect = null;
+    let f1 = 0, f2 = 0;
+
+    window.onload = function() {
+        renderViews();
+        initCanvas();
+        initScrollAnimation();
+    };
+
+    // 渲染 UI
+    function renderViews() {
+        const tContainer = document.getElementById("teach-container");
+        const sContainer = document.getElementById("scope-container");
+        const aContainer = document.getElementById("ans-container");
+
+        tContainer.innerHTML = dataset.map(item => `
+            <div class="teach-item">
+                <div>
+                    <div class="teach-name">${item.name}</div>
+                    <div class="teach-desc">${item.desc}</div>
+                </div>
+                <button class="btn" onclick="playTonePair(${baseFreq}, ${baseFreq * Math.pow(2, item.steps/12)})">🔊 監聽</button>
+            </div>
+        `).join('');
+
+        sContainer.innerHTML = dataset.map(item => `
+            <label class="cb-label">
+                <input type="checkbox" value="${item.name}" checked class="scope-cb">
+                <span>${item.name}</span>
+            </label>
+        `).join('');
+
+        aContainer.innerHTML = dataset.map(item => `
+            <button class="btn" style="padding:12px; font-size:13px;" onclick="submitAnswer('${item.name}')">${item.name}</button>
+        `).join('');
+    }
+
+    // 發聲引擎（串接 Analyser 擷取器以便 Canvas 畫圖）
+    function createOsc(freq, start, duration) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.12, start);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        
+        osc.connect(gain);
+        gain.connect(analyser); // 先進到擷取器
+        analyser.connect(audioCtx.destination); // 再到喇叭
+        
+        osc.start(start);
+        osc.stop(start + duration);
+    }
+
+    function playTonePair(freq1, freq2) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        createOsc(freq1, now, 0.4);
+        createOsc(freq2, now + 0.4, 0.4);
+        createOsc(freq1, now + 1.0, 0.8);
+        createOsc(freq2, now + 1.0, 0.8);
+    }
+
+    // 產生考題
+    function generateQuestion() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        document.getElementById("exp-text").style.display = "none";
+        
+        const activeBoxes = document.querySelectorAll('.scope-cb:checked');
+        const activeNames = Array.from(activeBoxes).map(cb => cb.value);
+        
+        if (activeNames.length === 0) {
+            document.getElementById("status-title").innerText = "// ERROR: 請至少勾選一種音程";
+            document.getElementById("status-title").style.color = "#ef4444";
+            return;
+        }
+
+        const pool = dataset.filter(item => activeNames.includes(item.name));
+        currentCorrect = pool[Math.floor(Math.random() * pool.length)];
+
+        const rootIndex = Math.floor(Math.random() * 12);
+        f1 = baseFreq * Math.pow(2, rootIndex / 12);
+        f2 = baseFreq * Math.pow(2, (rootIndex + currentCorrect.steps) / 12);
+
+        document.getElementById("status-title").innerText = "// LOADING AUDIO SIGNAL...";
+        document.getElementById("status-title").style.color = "#c5a059";
+
+        playTonePair(f1, f2);
+
+        setTimeout(() => {
+            document.getElementById("status-title").innerText = "// INPUT WAITING // 請選擇答案";
+            document.getElementById("status-title").style.color = "#94a3b8";
+        }, 1800);
+    }
+
+    // 判定答案
+    function submitAnswer(userAns) {
+        if (!currentCorrect) return;
+        const title = document.getElementById("status-title");
+        const exp = document.getElementById("exp-text");
+
+        if (userAns === currentCorrect.name) {
+            title.innerText = "✓ PASSED // 演算匹配成功";
+            title.style.color = "#10b981";
+        } else {
+            title.innerText = `𐄂 FAILED // 正確答案是: ${currentCorrect.name}`;
+            title.style.color = "#ef4444";
+        }
+
+        exp.style.display = "block";
+        exp.innerHTML = `
+            <strong>音訊分析數據：</strong><br>
+            • 基音頻率：${Math.round(f1)} Hz<br>
+            • 對位頻率：${Math.round(f2)} Hz<br>
+            • 物理跨度：相差 ${currentCorrect.steps} 個半音律動。<br>
+            • 聽感屬性：${currentCorrect.desc}
+        `;
+    }
+
+    // 2. Canvas 動態繪圖演算法 (即時音頻波形)
+    function initCanvas() {
+        const canvas = document.getElementById("visual-canvas");
+        const ctx = canvas.getContext("2d");
+        
+        // 解決高解析度模糊問題
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        function draw() {
+            requestAnimationFrame(draw);
+            analyser.getByteFrequencyData(dataArray);
+
+            ctx.fillStyle = "rgba(9, 13, 22, 0.3)"; // 留下一點殘影效果
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 畫出藝術幾何圓圈
+            let sum = 0;
+            for(let i=0; i<bufferLength; i++) { sum += dataArray[i]; }
+            let avgEnergy = sum / bufferLength;
+
+            ctx.beginPath();
+            ctx.arc(canvas.width/2, canvas.height/2, avgEnergy * 0.6 + 10, 0, 2 * Math.PI);
+            ctx.strokeStyle = `rgba(197, 160, 89, ${avgEnergy/150})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 畫出粒子波形條
+            const barWidth = (canvas.width / bufferLength) * 1.5;
+            let barHeight;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                barHeight = dataArray[i] * 0.7;
+                ctx.fillStyle = `rgba(197, 160, 89, ${dataArray[i]/255})`;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+                x += barWidth;
+            }
+        }
+        draw();
+    }
+
+    // 3. 滾動淡入動畫演算法 (Intersection Observer)
+    function initScrollAnimation() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.observe-section').forEach(section => {
+            observer.observe(section);
+        });
+    }
+</script>
+
+</div>
+</body>
+</html>
