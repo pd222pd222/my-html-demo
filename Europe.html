@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>歐洲浪漫手札 Itinerary</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --bg-color: #fdfaf4;
@@ -79,10 +82,12 @@
         .day-nav::-webkit-scrollbar {
             height: 6px;
         }
+
         .day-nav::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.03);
+            background: rgba(0, 0, 0, 0.03);
             border-radius: 10px;
         }
+
         .day-nav::-webkit-scrollbar-thumb {
             background: rgba(74, 63, 53, 0.2);
             border-radius: 10px;
@@ -102,7 +107,8 @@
             backdrop-filter: blur(5px);
         }
 
-        .day-btn.active, .day-btn:hover {
+        .day-btn.active,
+        .day-btn:hover {
             background: var(--crayon-orange);
             color: white;
             border-color: transparent;
@@ -119,6 +125,7 @@
         .day-content {
             display: none;
         }
+
         .day-content.active {
             display: block;
         }
@@ -183,11 +190,26 @@
             font-weight: 600;
             color: #fff;
         }
-        .tag.tag-attraction { background-color: #6a994e; }
-        .tag.tag-food { background-color: #e63946; }
-        .tag.tag-transport { background-color: #457b9d; }
-        .tag.tag-hotel { background-color: #8338ec; }
-        .tag.tag-tips { background-color: #f4a261; }
+
+        .tag.tag-attraction {
+            background-color: #6a994e;
+        }
+
+        .tag.tag-food {
+            background-color: #e63946;
+        }
+
+        .tag.tag-transport {
+            background-color: #457b9d;
+        }
+
+        .tag.tag-hotel {
+            background-color: #8338ec;
+        }
+
+        .tag.tag-tips {
+            background-color: #f4a261;
+        }
 
         /* 第二列：下方內容區（雙欄佈局） */
         .item-body {
@@ -227,7 +249,7 @@
         .info-row {
             font-size: 0.85rem;
             color: #7c6e60;
-            background: rgba(0,0,0,0.03);
+            background: rgba(0, 0, 0, 0.03);
             padding: 6px 12px;
             border-radius: 10px;
             margin-bottom: 15px;
@@ -248,10 +270,11 @@
             object-fit: cover;
             border-radius: 18px;
             border: 3px solid #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
             cursor: pointer;
             transition: transform 0.2s ease;
         }
+
         .item-img:hover {
             transform: scale(1.05) rotate(1deg);
         }
@@ -272,6 +295,7 @@
             transition: all 0.15s ease;
             cursor: pointer;
         }
+
         .nav-btn:hover {
             transform: translate(1px, 1px);
             box-shadow: 1px 1px 0px var(--text-dark);
@@ -295,33 +319,59 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
+
         .lightbox.active {
             opacity: 1;
             pointer-events: auto;
         }
+
         .lightbox img {
             max-width: 90%;
             max-height: 85%;
             border-radius: 12px;
             border: 5px solid #fff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transform: scale(0.9);
             transition: transform 0.3s ease;
         }
+
         .lightbox.active img {
             transform: scale(1);
         }
 
         @media(max-width: 650px) {
-            body { padding: 12px; }
-            header h1 { font-size: 1.8rem; }
-            .timeline-item { padding: 18px; border-radius: 20px; gap: 12px; }
-            .item-body { grid-template-columns: 1fr; gap: 15px; }
-            .item-right { order: -1; justify-content: flex-start; }
-            .item-img { width: 100%; height: 180px; }
+            body {
+                padding: 12px;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .timeline-item {
+                padding: 18px;
+                border-radius: 20px;
+                gap: 12px;
+            }
+
+            .item-body {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .item-right {
+                order: -1;
+                justify-content: flex-start;
+            }
+
+            .item-img {
+                width: 100%;
+                height: 180px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -399,13 +449,14 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">02:40 - 08:40</span>
-                    <div class="tag-container"><span class="tag tag-transport">交通</span><span class="tag tag-food">美食</span></div>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span><span
+                            class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">長榮航空 BR061 (BKK > VIE T3)</h3>
                         <p class="item-description">✈️ 第二段航程：11小時
-                        【機上餐點】享用飛機餐。</p>
+                            【機上餐點】享用飛機餐。</p>
                     </div>
                 </div>
             </div>
@@ -419,7 +470,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">FlixBus：維也納機場 > 布達佩斯</h3>
-                        <p class="item-description">出關後前往機場巴士站搭乘 FlixBus 跨國巴士，直達布達佩斯（Budapest Keleti）。</br>車程約 3 小時，可在機場超商買瓶溫熱或常溫瓶裝水帶上車。</p>
+                        <p class="item-description">出關後前往機場巴士站搭乘 FlixBus 跨國巴士，直達布達佩斯（Budapest Keleti）。</br>車程約 3
+                            小時，可在機場超商買瓶溫熱或常溫瓶裝水帶上車。</p>
                         <a href="https://global.flixbus.com/bus-routes" target="_blank" class="nav-btn">🎟️ 線上購票</a>
                     </div>
                 </div>
@@ -447,8 +499,9 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">Budapest Keleti 車站 > 住宿</h3>
-                        <p class="item-description">🚇地鐵 M2 [ 往 Déli pályaudvar ] </br>　Keleti pályaudvar > Blaha Lujza tér</br>🚋輕軌 4 [ 往 Széll Kálmán tér M ] </br>　Blaha Lujza tér M > Jászai Mari tér</p>
-                        
+                        <p class="item-description">🚇地鐵 M2 [ 往 Déli pályaudvar ] </br>　Keleti pályaudvar > Blaha Lujza
+                            tér</br>🚋輕軌 4 [ 往 Széll Kálmán tér M ] </br>　Blaha Lujza tér M > Jászai Mari tér</p>
+
                     </div>
                 </div>
             </div>
@@ -462,11 +515,13 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">Little Americas Alaska Apartment 入住</h3>
-                        <p class="item-description">15:00 - 23:30 辦理入住</br>抵達布達佩斯後前往公寓辦理 Check-in、卸下行李。</br>【暖胃小點】放完行李後可以順便到民宿旁的「Mütyür Kürtőskalács」買現烤、熱呼呼的經典肉桂煙囪捲，暖心又充飢！</p>
+                        <p class="item-description">15:00 - 23:30 辦理入住</br>抵達布達佩斯後前往公寓辦理
+                            Check-in、卸下行李。</br>【暖胃小點】放完行李後可以順便到民宿旁的「Mütyür Kürtőskalács」買現烤、熱呼呼的經典肉桂煙囪捲，暖心又充飢！</p>
                         <a href="https://maps.app.goo.gl/aghq8RT4Vo4jLJXC9" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN-1AojB6OZek0Ej0fCDwqEVG6cFBmsX-JfUTG_ctENQ&s" alt="民宿" class="item-img">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN-1AojB6OZek0Ej0fCDwqEVG6cFBmsX-JfUTG_ctENQ&s"
+                            alt="民宿" class="item-img">
                     </div>
                 </div>
             </div>
@@ -484,7 +539,8 @@
                         <a href="https://maps.app.goo.gl/61RnsPmikMzjX16x5" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://carolblog.tw/wp-content/uploads/2025/02/St-Stephens-Basilica_4.jpg" alt="聖殿" class="item-img">
+                        <img src="https://carolblog.tw/wp-content/uploads/2025/02/St-Stephens-Basilica_4.jpg" alt="聖殿"
+                            class="item-img">
                     </div>
                 </div>
             </div>
@@ -496,9 +552,9 @@
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">點心：Gelarto Rosa 玫瑰冰淇淋</h3>
+                        <h3 class="item-title">點心：Gelarto Rosa Grande 玫瑰冰淇淋</h3>
                         <p class="item-description"></p>
-                        <a href="https://maps.app.goo.gl/ZZsQFvJunhdCeec5A" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <a href="https://maps.app.goo.gl/xfdG3eeTBwSE12Kt8" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
@@ -512,11 +568,14 @@
                     <div class="item-left">
                         <div class="info-row"></div>
                         <h3 class="item-title">多瑙河畔散步</h3>
-                        <p class="item-description">漫步經典路線：</br>📍弗洛斯馬提廣場 Vörösmarty tér</br>📍瓦采街 Fashion street Budapest</br>📍塞切尼鏈橋 Széchenyi Lánchíd</br>📍多瑙河岸的鞋子 Cipők a Duna-parton</br>📍自由廣場 Szabadság tér</br>📍匈牙利國會大廈 Országház</p>
+                        <p class="item-description">※弗洛斯馬提廣場旁有 Fashion Street 可逛</br>漫步經典路線：</br>📍弗洛斯馬提廣場 Vörösmarty
+                            tér</br>📍瓦采街 Fashion street Budapest</br>📍塞切尼鏈橋 Széchenyi Lánchíd</br>📍多瑙河岸的鞋子 Cipők a
+                            Duna-parton</br>📍自由廣場 Szabadság tér</br>📍匈牙利國會大廈 Országház</p>
                         <a href="https://maps.app.goo.gl/nN3QUtcbcX2D2Ubv8" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://yeshappytravel.com/wp-content/uploads/2023/08/%E5%B8%83%E9%81%94%E4%BD%A9%E6%96%AF-%E6%95%A3%E6%AD%A5%E5%9C%B0%E5%9C%96-%E5%A4%8F%E5%A4%9C%E7%89%88.jpg" class="item-img">
+                        <img src="https://yeshappytravel.com/wp-content/uploads/2023/08/%E5%B8%83%E9%81%94%E4%BD%A9%E6%96%AF-%E6%95%A3%E6%AD%A5%E5%9C%B0%E5%9C%96-%E5%A4%8F%E5%A4%9C%E7%89%88.jpg"
+                            class="item-img">
                     </div>
                 </div>
             </div>
@@ -528,10 +587,23 @@
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">晚餐：Retró Lángos Budapesta</h3>
-                        <p class="item-description">享用匈牙利傳統傳統街頭美食「Lángos」（炸油餅）。高溫現點現炸、熱騰騰的餅皮，上方鋪滿濃郁酸奶與厚厚起司（可選經典大蒜起司口味）。
-                        【超市採購】回民宿前，順道至附近的 SPAR 超市採購常溫純水、100% 密封果汁，以及匈牙利著名的 Tokaji 貴腐甜白酒，在公寓愜意小酌。</p>
+                        <h3 class="item-title">晚餐：Két Szerecsen Bisztró</h3>
+                        <p class="item-description">老牌餐酒館，氣氛極佳。</p>
                         <a href="https://maps.app.goo.gl/s73ojwuUqUQdnvis6" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">21:00</span>
+                    <div class="tag-container"><span class="tag tag-food">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">SPAR 超市</h3>
+                        <p class="item-description">回民宿前，順道至附近的超市採購常溫純水、100% 密封果汁，以及匈牙利著名的 Tokaji 貴腐甜白酒，在公寓愜意小酌。</p>
+
                     </div>
                 </div>
             </div>
@@ -546,10 +618,24 @@
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">早餐：紐約咖啡館 New York Cafe</h3>
-                        <p class="item-description">【極致奢華】在世界最美咖啡館享用早餐。
-                        【推薦】建議單點「現做熱歐姆蛋卷 (Omelette) 搭配熟培根與熱吐司」，或單點熱拿鐵配熱可頌。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <h3 class="item-title">早餐：Budapest Baristas</h3>
+                        <p class="item-description"></p>
+                        <a href="https://maps.app.goo.gl/1jf7hu2G1T8LCfqb6" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">17 分鐘</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 布達佩斯中央市場</h3>
+                        <p class="item-description">🚋輕軌 23 / 2B / 2</br>　Jászai Mari tér > Fővám tér M</p>
+
                     </div>
                 </div>
             </div>
@@ -557,18 +643,164 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">10:30 - 13:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span><span class="tag tag-food">美食</span></div>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body">
                     <div class="item-left">
                         <div class="info-row">⏱️ 週六市場營業：06:00 - 16:00</div>
                         <h3 class="item-title">布達佩斯中央市場 ＆ 中午熟食街</h3>
                         <p class="item-description">逛逛一樓色彩繽紛的乾貨攤。
-                        【午餐直奔二樓】二樓是熱騰騰的熟食天堂。請認明大鐵鍋裡熬煮、滾燙的「匈牙利牛肉湯 (Goulash)」搭配麵疙瘩，或是「現烤大雞腿、高麗菜捲」。全熟熱食讓人超安心，輕鬆略過鵝肝醬（內臟類）等冷盤。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                            【推薦】二樓是熱騰騰的熟食天堂。請認明大鐵鍋裡熬煮、滾燙的「匈牙利牛肉湯
+                            (Goulash)」搭配麵疙瘩，或是「現烤大雞腿、高麗菜捲」。全熟熱食讓人超安心，輕鬆略過鵝肝醬（內臟類）等冷盤。</p>
+                        <a href="https://maps.app.goo.gl/Ra51CnKiMb2xH5w2A" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=300&q=80" alt="市場" class="item-img">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4EMxIoVkHUFUvlOTwZiQy4SAjuxYMg102hLuEqjzCqg&s=10"
+                            alt="市場" class="item-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">13:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">16 分鐘</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">布達佩斯中央市場 > 紐約宮殿咖啡館</h3>
+                        <p class="item-description">🚇地鐵 M4</br>　Fővám tér > Rákóczi tér </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">13:15 - 14:30</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body">
+                    <div class="item-left">
+                        <div class="info-row">營業時間 07:00 - 13:00</div>
+                        <h3 class="item-title">紐約宮殿咖啡館</h3>
+                        <p class="item-description"></p>
+                        <a href="https://maps.app.goo.gl/YbBauVmyHqEJFJfg6" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                    <div class="item-right">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwwvtHOV9Zw-G7YtMYKE3sbDFSw9YE0DliLN-Jy8E8AQ&s=10"
+                            alt="咖啡館" class="item-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">14:30 - 15:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">24 分鐘含走路</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">紐約宮殿咖啡館 > 英雄廣場</h3>
+                        <p class="item-description">🚋輕軌 4 [ 往 Széll Kálmán tér M ]</br>　Blaha Lujza tér M > Oktogon
+                            M</br>🚇地鐵 M1 [ 往 Mexikói út ]</br>　Oktogon > Hősök tere</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">15:10</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">英雄廣場 Heroes' Square</h3>
+                        <p class="item-description">周邊景點：</br>📍沃伊達奇城堡 (17:00 closed, 約 €6.5)</br>📍匈牙利音樂之家 (18:00
+                            closed, 1F免費)</br>📍布達佩斯美術博物館 (18:00 closed, 約 €17.5)</br>📍塞切尼溫泉浴場 (20:00 closed, 約 €38)
+                        </p>
+                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">18:30 - 20:30</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">晚餐：Menza Étterem és Kávézó</h3>
+                        <p class="item-description">【經典餐館】極具人氣的摩登復古風熱門餐廳（建議提前網上訂位）。
+                            【推薦】酥炸鴨腿、維也納炸豬排、洋蔥頂級沙朗牛排（Hagymás rostélyos）、松露野菇燉飯。</p>
+                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">20:30 - 21:00</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">恐怖之屋</h3>
+                        <p class="item-description">可去可不去</p>
+                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">20:30 - 21:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">€79</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">塞切尼溫泉浴場</h3>
+                        <p class="item-description">📍Sparty - 終極深夜水療派對</p>
+                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <a href="https://www.getyourguide.com/en-gb/budapest-l29/budapest-the-ultimate-late-night-spa-party-ticket-t386559/?ranking_uuid=55133953-0fb1-425f-a1fc-b72b74bbe6e0"
+                            target="_blank" class="nav-btn">🎟️ 線上購票</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">23:30 - 00:00</span>
+                    
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">塞切尼溫泉浴場 > 住宿</h3>
+                        <p class="item-description">🚇地鐵 M1 [ 往 Vörösmarty tér ]</br>　Széchenyi fürdő > Oktogon</br>🚋輕軌 6 [ 往 Széll Kálmán tér M ]</br>　Oktogon M > Jászai Mari tér</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================== D3 ==================== -->
+        <div id="d3" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">09:00 - 10:00</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">早餐：Csendes Társ</h3>
+                        <p class="item-description">【悠閒文青】隱身在小公園旁的迷人咖啡廳。
+                            【推薦】點杯熱瑪奇朵，配上手工烤蘋果派或熱壓三明治。內餡全熟，簡單卻充滿儀式感。</p>
+                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
@@ -589,53 +821,6 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">18:30 - 20:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">晚餐：Menza Étterem és Kávézó</h3>
-                        <p class="item-description">【經典餐館】極具人氣的摩登復古風熱門餐廳（建議提前網上訂位）。
-                        【推薦】極力推薦「鴨胸佐燉洋梨」或「外皮酥脆的煎豬肘」。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== D3 ==================== -->
-        <div id="d3" class="day-content">
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">09:00 - 10:00</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">早餐：Csendes Társ</h3>
-                        <p class="item-description">【悠閒文青】隱身在小公園旁的迷人咖啡廳。
-                        【推薦】點杯熱瑪奇朵，配上手工烤蘋果派或熱壓三明治。內餡全熟，簡單卻充滿儀式感。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">10:30 - 13:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">英雄廣場 ＆ 城市公園 ＆ 塞切尼溫泉</h3>
-                        <p class="item-description">搭乘歷史悠久的 M1 地鐵前往英雄廣場。可在城市公園漫步，並參觀宏偉的塞切尼溫泉外觀（若想泡湯，記得自備泳衣與防滑拖鞋）。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
                     <span class="time-box">13:15 - 15:00</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
@@ -643,7 +828,7 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Paprika Vendéglő</h3>
                         <p class="item-description">【傳統獵人小屋】裝潢充滿鄉村風格的道地匈牙利餐館。
-                        【推薦】點他們的「大蒜烤排骨」或「紅椒燉雞肉 (Chicken Paprikash) 配手工麵疙瘩」。</p>
+                            【推薦】點他們的「大蒜烤排骨」或「紅椒燉雞肉 (Chicken Paprikash) 配手工麵疙瘩」。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -671,7 +856,7 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：Szimpla Kert 廢墟酒吧</h3>
                         <p class="item-description">【潮流夜生活】拜訪全布達佩斯最著名的廢墟酒吧，感受迷幻復古的裝潢與歡樂氣氛。
-                        【推薦】酒吧內的餐點以酒水為主。食物部分可以單點熱呼呼的「現炸薯條、美式烤熱狗或全熟牛肉漢堡」。</p>
+                            【推薦】酒吧內的餐點以酒水為主。食物部分可以單點熱呼呼的「現炸薯條、美式烤熱狗或全熟牛肉漢堡」。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -688,7 +873,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">早餐：民宿自製熱食 或 火車月台麵包店</h3>
-                        <p class="item-description">【打包出發】利用公寓廚房煎顆全熟蛋和熱德式香腸，或在布達佩斯東站（Keleti）的麵包店單點剛出爐的現烤香腸捲、熱黑咖啡，輕鬆帶上火車吃。</p>
+                        <p class="item-description">
+                            【打包出發】利用公寓廚房煎顆全熟蛋和熱德式香腸，或在布達佩斯東站（Keleti）的麵包店單點剛出爐的現烤香腸捲、熱黑咖啡，輕鬆帶上火車吃。</p>
                     </div>
                 </div>
             </div>
@@ -728,7 +914,8 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Slovak Pub</h3>
                         <p class="item-description">【斯洛伐克鄉村風】當地極受歡迎的傳統木造風餐廳。
-                        【推薦】必點斯洛伐克國菜「Bryndzové Halušky」（羊起司培根麵疙瘩），口感濃郁綿密。或是點「大蒜奶油濃湯（盛裝在挖空的精神麵包碗裡）」，每一口都是滾燙全熟、極度滋補，完全無生食內臟蹤影。</p>
+                            【推薦】必點斯洛伐克國菜「Bryndzové
+                            Halušky」（羊起司培根麵疙瘩），口感濃郁綿密。或是點「大蒜奶油濃湯（盛裝在挖空的精神麵包碗裡）」，每一口都是滾燙全熟、極度滋補，完全無生食內臟蹤影。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -742,11 +929,13 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">老城區快閃：尋找工作中的男人 ＆ 藍色教堂</h3>
-                        <p class="item-description">漫步景點：📍羅蘭噴泉 ➡️ 📍偷看下水道工人雕像 (Čumil) ➡️ 📍聖馬丁大教堂 ➡️ 夢幻粉藍的 📍聖伊麗莎白教堂 (藍色教堂)。最後返回火車站取行李。</p>
+                        <p class="item-description">漫步景點：📍羅蘭噴泉 ➡️ 📍偷看下水道工人雕像 (Čumil) ➡️ 📍聖馬丁大教堂 ➡️ 夢幻粉藍的 📍聖伊麗莎白教堂
+                            (藍色教堂)。最後返回火車站取行李。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1573151603173-030252119020?auto=format&fit=crop&w=300&q=80" alt="老城" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1573151603173-030252119020?auto=format&fit=crop&w=300&q=80"
+                            alt="老城" class="item-img">
                     </div>
                 </div>
             </div>
@@ -754,13 +943,15 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">18:00 - 22:00</span>
-                    <div class="tag-container"><span class="tag tag-transport">交通</span><span class="tag tag-food">美食</span></div>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span><span
+                            class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">火車：布拉提斯拉瓦 > 布拉格 ＆ 火車晚點心</h3>
                         <p class="item-description">搭乘大都會號 (Metropolitan) 跨國火車前往捷克布拉格（Prague hl.n.），車程約 4 小時。
-                        【火車餐車驚喜】可以去火車附設的餐車，單點熱騰騰的「捷克燉牛肉佐麵包片」或熱茶，餐車食物都是微波或烹調全熟，安全又平價。抵達布拉格後，直接搭乘計程車或地鐵前往下榻處 Check-in 休息。</p>
+                            【火車餐車驚喜】可以去火車附設的餐車，單點熱騰騰的「捷克燉牛肉佐麵包片」或熱茶，餐車食物都是微波或烹調全熟，安全又平價。抵達布拉格後，直接搭乘計程車或地鐵前往下榻處 Check-in
+                            休息。</p>
                     </div>
                 </div>
             </div>
@@ -777,7 +968,7 @@
                     <div class="item-left">
                         <h3 class="item-title">早餐：Cafe Louvre 羅浮咖啡館</h3>
                         <p class="item-description">【百年歷史】追隨卡夫卡與愛因斯坦的足跡。
-                        【推薦】強烈建議單點「法式歐姆蛋包拼盤（要求熟培根）」或現烤熱鬆餅，配上一杯招牌熱可可。略過冷燻肉品與生菜葉，兼顧優雅與腸胃健康。</p>
+                            【推薦】強烈建議單點「法式歐姆蛋包拼盤（要求熟培根）」或現烤熱鬆餅，配上一杯招牌熱可可。略過冷燻肉品與生菜葉，兼顧優雅與腸胃健康。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -796,7 +987,8 @@
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1599946347371-68eb71b16afc?auto=format&fit=crop&w=300&q=80" alt="天文鐘" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1599946347371-68eb71b16afc?auto=format&fit=crop&w=300&q=80"
+                            alt="天文鐘" class="item-img">
                     </div>
                 </div>
             </div>
@@ -810,7 +1002,8 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Mlejnice</h3>
                         <p class="item-description">【經典捷克小酒館】隱身在舊城巷弄中的溫馨老店。
-                        【推薦】必點裝在純手工麵包碗裡的「捷克傳統啤酒燉牛肉湯 (Goulash in bread bowl)」，外皮香脆、湯頭濃郁。或是點「香烤全熟大豬肋排」，肉質一撕即開，絕對不帶任何血水、無內臟雜質。</p>
+                            【推薦】必點裝在純手工麵包碗裡的「捷克傳統啤酒燉牛肉湯 (Goulash in bread
+                            bowl)」，外皮香脆、湯頭濃郁。或是點「香烤全熟大豬肋排」，肉質一撕即開，絕對不帶任何血水、無內臟雜質。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -824,7 +1017,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">查理大橋漫步 ➡️ 康帕島 ➡️ 列儂牆</h3>
-                        <p class="item-description">步行穿過宏偉的📍查理大橋，摸摸聖約翰雕像許願。隨後走下橋前往大橋下方的📍康帕島，參觀充滿文青藝術氣息的📍列儂牆（約翰藍儂牆）。</p>
+                        <p class="item-description">步行穿過宏偉的📍查理大橋，摸摸聖約翰雕像許願。隨後走下橋前往大橋下方的📍康帕島，參觀充滿文青藝術氣息的📍列儂牆（約翰藍儂牆）。
+                        </p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -839,9 +1033,9 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：Kantýna 屠夫肉品現烤餐廳</h3>
                         <p class="item-description">【無肉不歡】布拉格極受歡迎的現點現烤肉品名店。
-                        【推薦】進店後在大理石櫃檯點餐。請直接選擇現切「香烤全熟厚切豬五花 (Roasted Pork Belly)」、「慢燉大牛胸肉」或「烤馬鈴薯泥」。
-                        ⚠️ 這裡非常有名的「韃靼生牛肉 (Steak Tartare)」是全生牛肉加生蛋黃，不吃生食不要點！點烤肉時可以再次向店員確認要 "Well done"（全熟）。
-                        【超市補貨】餐後到 Albert 超市買密封常溫水及紙盒包裝果汁。</p>
+                            【推薦】進店後在大理石櫃檯點餐。請直接選擇現切「香烤全熟厚切豬五花 (Roasted Pork Belly)」、「慢燉大牛胸肉」或「烤馬鈴薯泥」。
+                            ⚠️ 這裡非常有名的「韃靼生牛肉 (Steak Tartare)」是全生牛肉加生蛋黃，不吃生食不要點！點烤肉時可以再次向店員確認要 "Well done"（全熟）。
+                            【超市補貨】餐後到 Albert 超市買密封常溫水及紙盒包裝果汁。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -859,7 +1053,7 @@
                     <div class="item-left">
                         <h3 class="item-title">早餐：Cafe Imperial 帝國咖啡館</h3>
                         <p class="item-description">【世界十美】擁有華麗精緻陶瓷浮雕牆面的頂級咖啡館（建議提前官網預約）。
-                        【推薦】傳統熱美式早餐（包含全熟煎雙蛋、全熟熱熱炒菇、熟德式香腸與烤土司）。</p>
+                            【推薦】傳統熱美式早餐（包含全熟煎雙蛋、全熟熱熱炒菇、熟德式香腸與烤土司）。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -868,17 +1062,20 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">10:00 - 14:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span><span class="tag tag-food">美食</span></div>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span><span
+                            class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">布拉格城堡區深度遊 ＆ 城堡內快餐</h3>
                         <p class="item-description">搭乘 22 號路面電車直達城堡山上。深度參觀：📍聖維特大教堂 ➡️ 📍舊皇宮 ➡️ 📍黃金巷（卡夫卡小屋）。
-                        【城堡區午餐】城堡區範圍大，中午可直接在城堡山上的輕食咖啡廳或廣場路邊攤，單點「現烤熱熱的捷克煙囪捲（不加冰淇淋，純肉桂原味）」或「熱烤德式大香腸夾麵包（芥末醬與番茄醬均安全）」，既保暖又能快速補充體力。</p>
+                            【城堡區午餐】城堡區範圍大，中午可直接在城堡山上的輕食咖啡廳或廣場路邊攤，單點「現烤熱熱的捷克煙囪捲（不加冰淇淋，純肉桂原味）」或「熱烤德式大香腸夾麵包（芥末醬與番茄醬均安全）」，既保暖又能快速補充體力。
+                        </p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?auto=format&fit=crop&w=300&q=80" alt="城堡" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?auto=format&fit=crop&w=300&q=80"
+                            alt="城堡" class="item-img">
                     </div>
                 </div>
             </div>
@@ -891,7 +1088,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">小城區漫步 ➡️ 華倫斯坦花園 ➡️ 佩特任山夜景</h3>
-                        <p class="item-description">步行下山經過📍小城區，參觀免費且精緻的📍華倫斯坦花園（看巨大的孔雀群與巴洛克雕像）。傍晚可選擇搭乘纜車登上📍佩特任山，俯瞰夜晚點燈的金色城堡全景。</p>
+                        <p class="item-description">
+                            步行下山經過📍小城區，參觀免費且精緻的📍華倫斯坦花園（看巨大的孔雀群與巴洛克雕像）。傍晚可選擇搭乘纜車登上📍佩特任山，俯瞰夜晚點燈的金色城堡全景。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -906,7 +1104,8 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：U Parlamentu</h3>
                         <p class="item-description">【在地老牌餐館】深受布拉格當地居民喜愛、價格實惠的道地餐館。
-                        【推薦】必點經典「捷克烤豬肉佐酸菜與麵包丸子 (Vepřo-knedlo-zelo)」或「香煎全熟雞排（Chicken Schnitzel）」。捷克酸菜是高溫熬煮的，非生菜沙拉，暖胃又解膩，完全不帶任何內臟成分。</p>
+                            【推薦】必點經典「捷克烤豬肉佐酸菜與麵包丸子 (Vepřo-knedlo-zelo)」或「香煎全熟雞排（Chicken
+                            Schnitzel）」。捷克酸菜是高溫熬煮的，非生菜沙拉，暖胃又解膩，完全不帶任何內臟成分。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -924,7 +1123,7 @@
                     <div class="item-left">
                         <h3 class="item-title">早餐：Smetana Q Cafe</h3>
                         <p class="item-description">【河畔河景】位於多瑙河（伏爾塔瓦河）畔，採光極佳的現代文青咖啡廳。
-                        【推薦】單點現點現做的「熱壓火腿起司三明治 (Toastie) 搭配熱燕麥拿鐵」。經過高溫熱壓，內部起司完全融化且火腿全熟，安全又美味。</p>
+                            【推薦】單點現點現做的「熱壓火腿起司三明治 (Toastie) 搭配熱燕麥拿鐵」。經過高溫熱壓，內部起司完全融化且火腿全熟，安全又美味。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -938,7 +1137,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">斯特拉霍夫修道院神學圖書館 ➡️ 跳舞房子</h3>
-                        <p class="item-description">搭乘電車前往📍斯特拉霍夫修道院，參觀被譽為世界最美圖書館的神學與哲學大廳。隨後搭車沿著河岸前往參觀外觀奇特的當代經典建築📍跳舞房子。</p>
+                        <p class="item-description">搭乘電車前往📍斯特拉霍夫修道院，參觀被譽為世界最美圖書館的神學與哲學大廳。隨後搭車沿著河岸前往參觀外觀奇特的當代經典建築📍跳舞房子。
+                        </p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -953,7 +1153,8 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：U Medvídků 百年啤酒館</h3>
                         <p class="item-description">【歷史悠久】擁有數百年歷史的經典大型布拉格啤酒餐館。
-                        【推薦】點他們的經典「老捷克香烤大豬腳 (Roasted Pork Knuckle)」，分量十足，外皮酥脆到像餅乾，內部肉質呈全熟且富有彈性。可搭配熱熱的馬鈴薯球。徹底遠離生食與內臟危害。</p>
+                            【推薦】點他們的經典「老捷克香烤大豬腳 (Roasted Pork
+                            Knuckle)」，分量十足，外皮酥脆到像餅乾，內部肉質呈全熟且富有彈性。可搭配熱熱的馬鈴薯球。徹底遠離生食與內臟危害。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -967,7 +1168,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">新城區 ➡️ 瓦茨拉夫廣場 ➡️ 菠丹妮採購</h3>
-                        <p class="item-description">漫步於繁華的商業中心📍瓦茨拉夫廣場。隨後可以前往舊城廣場後方的📍Botanicus (菠丹妮) 或 📍Manufaktura (蔓菲蘿) 總店，採購經典的手工死海泥皂、護手霜等精美伴手禮。</p>
+                        <p class="item-description">漫步於繁華的商業中心📍瓦茨拉夫廣場。隨後可以前往舊城廣場後方的📍Botanicus (菠丹妮) 或 📍Manufaktura
+                            (蔓菲蘿) 總店，採購經典的手工死海泥皂、護手霜等精美伴手禮。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -982,7 +1184,8 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：Lokál Dlouhááá</h3>
                         <p class="item-description">【在地熱鬧酒館】超長一條延伸的熱鬧酒館，以提供極致新鮮的捷克生啤酒與傳統家常熟食聞名。
-                        【推薦】除了烤豬肉，必點他們的網紅招牌菜「現炸起司塊 (Fried Cheese / Smažený sýr)」，厚實的起司裹粉高溫油炸到牽絲，熱氣騰騰，絕對全熟且超級療癒！搭配一杯常溫密封軟飲料，完美享受最後一晚的布拉格風情。</p>
+                            【推薦】除了烤豬肉，必點他們的網紅招牌菜「現炸起司塊 (Fried Cheese / Smažený
+                            sýr)」，厚實的起司裹粉高溫油炸到牽絲，熱氣騰騰，絕對全熟且超級療癒！搭配一杯常溫密封軟飲料，完美享受最後一晚的布拉格風情。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1012,7 +1215,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">RegioJet 巴士：布拉格 > 克魯姆洛夫 (CK小鎮)</h3>
-                        <p class="item-description">搭乘黃色 RegioJet 奢華大巴前往世界最美童話小鎮庫倫洛夫（Český Krumlov）。車程約 2 小時 50 分鐘，大巴提供免費熱飲（可選熱美式咖啡或熱茶，皆安全全熟）。</p>
+                        <p class="item-description">搭乘黃色 RegioJet 奢華大巴前往世界最美童話小鎮庫倫洛夫（Český Krumlov）。車程約 2 小時 50
+                            分鐘，大巴提供免費熱飲（可選熱美式咖啡或熱茶，皆安全全熟）。</p>
                     </div>
                 </div>
             </div>
@@ -1025,7 +1229,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">CK小鎮民宿 Check-in / 寄放行李</h3>
-                        <p class="item-description">抵達小鎮巴士站（建议在 Český Krumlov - Špičák 下車步行較平坦），拖行李至古城內的童話風民宿辦理手續、安頓行李。</p>
+                        <p class="item-description">抵達小鎮巴士站（建议在 Český Krumlov - Špičák 下車步行較平坦），拖行李至古城內的童話風民宿辦理手續、安頓行李。
+                        </p>
                     </div>
                 </div>
             </div>
@@ -1039,7 +1244,7 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Papa's Living Restaurant</h3>
                         <p class="item-description">【河畔河景】緊鄰伏爾塔瓦河畔、風景絕佳的老牌西餐廳。
-                        【推薦】可點他們的「現烤全熟香料烤雞胸肉」或熱騰騰的「茄汁海鮮義大利麵（確保蛤蜊皆全熟開殼）」。伴著波光粼粼的河水享用全熟美味。</p>
+                            【推薦】可點他們的「現烤全熟香料烤雞胸肉」或熱騰騰的「茄汁海鮮義大利麵（確保蛤蜊皆全熟開殼）」。伴著波光粼粼的河水享用全熟美味。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1053,11 +1258,13 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">庫倫洛夫城堡區 ➡️ 彩繪塔 ➡️ 斗篷橋</h3>
-                        <p class="item-description">漫步童話般的石板路小鎮。攀登小鎮地標📍彩繪塔俯瞰 S 型河道。步行穿過宏偉的石造📍斗篷橋，在城堡花園居高臨下拍攝如明信片般的風景。</p>
+                        <p class="item-description">漫步童話般的石板路小鎮。攀登小鎮地標📍彩繪塔俯瞰 S 型河道。步行穿過宏偉的石造📍斗篷橋，在城堡花園居高臨下拍攝如明信片般的風景。
+                        </p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1541849546-2165af35934b?auto=format&fit=crop&w=300&q=80" alt="CK小鎮" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1541849546-2165af35934b?auto=format&fit=crop&w=300&q=80"
+                            alt="CK小鎮" class="item-img">
                     </div>
                 </div>
             </div>
@@ -1071,8 +1278,8 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：Krčma v Šatlavské ulici 地窖炙烤餐廳</h3>
                         <p class="item-description">【中世紀地窖烤肉】人氣極高的篝火地窖餐廳（強烈建議提前幾週寫信或官網預訂）。
-                        【推薦】店內中央是巨大的開放式炭火烤爐，所有肉品都是高溫炭烤至全熟。必點「綜合炙烤肉盤 (Mixed Grill Plate)」，包含烤雞肉、烤豬肉。多汁且全熟。
-                        ⚠️ 點餐時請直接告訴服務員不要血水（Please make it well done）。</p>
+                            【推薦】店內中央是巨大的開放式炭火烤爐，所有肉品都是高溫炭烤至全熟。必點「綜合炙烤肉盤 (Mixed Grill Plate)」，包含烤雞肉、烤豬肉。多汁且全熟。
+                            ⚠️ 點餐時請直接告訴服務員不要血水（Please make it well done）。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1102,7 +1309,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">CK Shuttle 跨國接駁：CK小鎮 > 薩爾茲堡</h3>
-                        <p class="item-description">搭乘預約好的 CK Shuttle 廂型車（車對車接送），直接跨越捷克與奧地利國境，直達奧地利音樂之都薩爾茲堡下榻飯店。車程約 3 小時，省去頻繁轉車的勞累。</p>
+                        <p class="item-description">搭乘預約好的 CK Shuttle 廂型車（車對車接送），直接跨越捷克與奧地利國境，直達奧地利音樂之都薩爾茲堡下榻飯店。車程約 3
+                            小時，省去頻繁轉車的勞累。</p>
                     </div>
                 </div>
             </div>
@@ -1129,7 +1337,8 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Bärenwirt 奧地利百年老店</h3>
                         <p class="item-description">【奧地利脆皮炸雞】自 1663 年營業至今的傳統經典老字號餐館。
-                        【推薦】一定要點他們的招牌「奧地利正宗炸雞 (Austrian Fried Chicken / Backhendl)」，外皮金黃酥脆，內部雞肉鮮嫩多汁且百分之百全熟。亦可單點「熱燉牛肉湯」，濃郁可口，無任何生食與內臟隱憂。</p>
+                            【推薦】一定要點他們的招牌「奧地利正宗炸雞 (Austrian Fried Chicken /
+                            Backhendl)」，外皮金黃酥脆，內部雞肉鮮嫩多汁且百分之百全熟。亦可單點「熱燉牛肉湯」，濃郁可口，無任何生食與內臟隱憂。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1143,11 +1352,13 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">米拉貝爾宮花園 ➡️ 糧食胡同 ➡️ 莫札特故居</h3>
-                        <p class="item-description">遊覽電影《真善美》經典拍攝地📍米拉貝爾宮花園。穿過巴亞河前往📍糧食胡同（Getreidegasse），欣賞兩旁精緻的古典鑄鐵招牌，並參觀📍莫札特出生地黃色小屋。</p>
+                        <p class="item-description">
+                            遊覽電影《真善美》經典拍攝地📍米拉貝爾宮花園。穿過巴亞河前往📍糧食胡同（Getreidegasse），欣賞兩旁精緻的古典鑄鐵招牌，並參觀📍莫札特出生地黃色小屋。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?auto=format&fit=crop&w=300&q=80" alt="薩爾茲堡" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?auto=format&fit=crop&w=300&q=80"
+                            alt="薩爾茲堡" class="item-img">
                     </div>
                 </div>
             </div>
@@ -1161,8 +1372,9 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：St. Peter Stiftskulinarium（或老城酒館）</h3>
                         <p class="item-description">【歐洲最古老餐廳】創立於西元 803 年、藏在修道院旁的傳奇老店（需提前網上預約，亦可挑選老城內其他溫馨餐館）。
-                        【推薦】建議點奧地利國菜「維也納炸豬排 (Wiener Schnitzel vom Schwein)」，肉片敲得薄薄的酥炸，搭配高溫烘烤的馬鈴薯塊。甜點可選在地特色熱甜點「薩爾茲堡舒芙蕾 (Salzburger Nockerl)」，口感如雲朵般綿密且全熟，非常暖胃。
-                        【超商補給】晚上可至 Billa 超市買罐密封常溫純水。</p>
+                            【推薦】建議點奧地利國菜「維也納炸豬排 (Wiener Schnitzel vom
+                            Schwein)」，肉片敲得薄薄的酥炸，搭配高溫烘烤的馬鈴薯塊。甜點可選在地特色熱甜點「薩爾茲堡舒芙蕾 (Salzburger Nockerl)」，口感如雲朵般綿密且全熟，非常暖胃。
+                            【超商補給】晚上可至 Billa 超市買罐密封常溫純水。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1179,7 +1391,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">早餐：薩爾茲堡車站超商外帶 或 飯店快速早餐</h3>
-                        <p class="item-description">【出發國王湖】由於今天一早要搭乘跨國巴士前往德國國王湖，建議提早於車站的超商或連鎖烘焙坊，買好現熱的起司火腿三明治與熱咖啡，在巴士站或車上享用。</p>
+                        <p class="item-description">
+                            【出發國王湖】由於今天一早要搭乘跨國巴士前往德國國王湖，建議提早於車站的超商或連鎖烘焙坊，買好現熱的起司火腿三明治與熱咖啡，在巴士站或車上享用。</p>
                     </div>
                 </div>
             </div>
@@ -1192,7 +1405,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">跨國巴士 840 轉 841：薩爾茲堡 > 德國國王湖</h3>
-                        <p class="item-description">自薩爾茲堡火車站前巴士站搭乘 RVO 跨國巴士 840 號至 Berchtesgaden 貝希特斯加登站，同站無縫換乘 841 號巴士直達國王湖畔（Königssee）。單程約 1 小時 15 分鐘。</p>
+                        <p class="item-description">自薩爾茲堡火車站前巴士站搭乘 RVO 跨國巴士 840 號至 Berchtesgaden 貝希特斯加登站，同站無縫換乘 841
+                            號巴士直達國王湖畔（Königssee）。單程約 1 小時 15 分鐘。</p>
                     </div>
                 </div>
             </div>
@@ -1206,11 +1420,13 @@
                     <div class="item-left">
                         <div class="info-row">⏱️ 聆聽迴音壁號角小喇叭</div>
                         <h3 class="item-title">德國國王湖遊船 ➡️ 聖巴多羅買教堂 (紅蔥頭教堂)</h3>
-                        <p class="item-description">搭乘國王湖電動環保遊船，途中船員會對著山壁吹奏小喇叭、聆聽奇幻的七次回音。隨後在📍聖巴多羅買教堂下船，欣賞仙境般的碧綠湖水與紅屋頂。</p>
+                        <p class="item-description">搭乘國王湖電動環保遊船，途中船員會對著山壁吹奏小喇叭、聆聽奇幻的七次回音。隨後在📍聖巴多羅買教堂下船，欣賞仙境般的碧綠湖水與紅屋頂。
+                        </p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=300&q=80" alt="國王湖" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=300&q=80"
+                            alt="國王湖" class="item-img">
                     </div>
                 </div>
             </div>
@@ -1224,8 +1440,8 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Gaststätte St. Bartholomä 紅蔥頭教堂旁餐廳</h3>
                         <p class="item-description">【國王湖烤鱒魚】位於紅蔥頭教堂旁、由古老狩獵小屋改建的著名湖畔餐廳。
-                        【推薦】這裡最出名的是國王湖鮮魚。請務必指名點「香烤鱒魚 (Gebratene Forelle)」，整條鱒魚經過高溫炭烤或煙燻熱製至熟透，肉質細嫩鮮美且全熟！
-                        ⚠️ 這裡也有「醃製冷魚片」，請直接略過。</p>
+                            【推薦】這裡最出名的是國王湖鮮魚。請務必指名點「香烤鱒魚 (Gebratene Forelle)」，整條鱒魚經過高溫炭烤或煙燻熱製至熟透，肉質細嫩鮮美且全熟！
+                            ⚠️ 這裡也有「醃製冷魚片」，請直接略過。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1234,12 +1450,14 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">14:45 - 18:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span><span class="tag tag-transport">交通</span></div>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span><span
+                            class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">上湖漫步（若季節開放）➡️ 搭巴士返回薩爾茲堡</h3>
-                        <p class="item-description">若季節與時間允許，可續搭船前往📍上湖 (Obersee) 健行至鏡面小木屋。傍晚依原路線搭乘 841 轉 840 跨國巴士返回薩爾茲堡火車站。</p>
+                        <p class="item-description">若季節與時間允許，可續搭船前往📍上湖 (Obersee) 健行至鏡面小木屋。傍晚依原路線搭乘 841 轉 840
+                            跨國巴士返回薩爾茲堡火車站。</p>
                     </div>
                 </div>
             </div>
@@ -1253,7 +1471,7 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：Gasthof Goldgasse</h3>
                         <p class="item-description">【老城隱藏美味】隱身在薩爾茲堡老城區巷弄中的高質感古典餐館。
-                        【推薦】「香烤嫩煎豬里肌」或「紅酒燉全熟牛肉」，醬汁濃郁，熱氣騰騰。</p>
+                            【推薦】「香烤嫩煎豬里肌」或「紅酒燉全熟牛肉」，醬汁濃郁，熱氣騰騰。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1270,7 +1488,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">早餐：薩爾茲堡車站外帶熱食</h3>
-                        <p class="item-description">【前往哈修塔特】今天將搭乘著名的湖區巴士前往哈修塔特。建議提早在車站烘焙坊買好現出爐的起司香腸派、熱鮮奶或常溫水，精神飽滿地出發。</p>
+                        <p class="item-description">【前往哈修塔特】今天將搭乘著名的湖區巴士前往哈修塔特。建議提早在車站烘焙坊買好現出爐的起司香腸派、熱鮮奶或常溫水，精神飽滿地出發。
+                        </p>
                     </div>
                 </div>
             </div>
@@ -1283,7 +1502,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">湖區巴士 150 轉 542 ＆ 543：前往哈修塔特</h3>
-                        <p class="item-description">自薩爾茲堡車站搭乘 150 號巴士，沿途欣賞薩爾茨卡默古特美麗的湖光山色，至 Bad Ischl 站下車，無縫換乘 542 巴士，再轉 543 巴士直達哈修塔特小鎮門口（Hallstatt Lahn）。單程約 2 小時 15 分鐘。</p>
+                        <p class="item-description">自薩爾茲堡車站搭乘 150 號巴士，沿途欣賞薩爾茨卡默古特美麗的湖光山色，至 Bad Ischl 站下車，無縫換乘 542 巴士，再轉
+                            543 巴士直達哈修塔特小鎮門口（Hallstatt Lahn）。單程約 2 小時 15 分鐘。</p>
                     </div>
                 </div>
             </div>
@@ -1296,11 +1516,13 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">哈修塔特老城區 ➡️ 明信片最佳拍攝點</h3>
-                        <p class="item-description">漫步於世界最美小鎮的木造民居與市集廣場。步行至著名的📍明信片最佳拍攝點（Postcard Viewpoint），拍下經典的教堂與依山傍水仙境照。</p>
+                        <p class="item-description">漫步於世界最美小鎮的木造民居與市集廣場。步行至著名的📍明信片最佳拍攝點（Postcard
+                            Viewpoint），拍下經典的教堂與依山傍水仙境照。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=300&q=80" alt="哈修塔特" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=300&q=80"
+                            alt="哈修塔特" class="item-img">
                     </div>
                 </div>
             </div>
@@ -1314,7 +1536,8 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Restaurant am See / Brauhaus 湖畔客棧</h3>
                         <p class="item-description">【經典湖魚料理】臨湖的老牌木造湖畔餐廳。
-                        【推薦】必點在地名產「煎烤哈修塔特白鮭魚 (Grilled Whitefish / Reinanke)」，整條鮮魚經由主廚高溫乾煎至兩面金黃、熟透。搭配香料烤馬鈴薯。魚肉全熟軟嫩、毫無生冷風險與器官成分，暖胃首選！</p>
+                            【推薦】必點在地名產「煎烤哈修塔特白鮭魚 (Grilled Whitefish /
+                            Reinanke)」，整條鮮魚經由主廚高溫乾煎至兩面金黃、熟透。搭配香料烤馬鈴薯。魚肉全熟軟嫩、毫無生冷風險與器官成分，暖胃首選！</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1342,7 +1565,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">原路巴士返回薩爾茲堡</h3>
-                        <p class="item-description">於 Hallstatt Lahn 巴士站搭乘 543 轉 542，再轉 150 號湖區巴士返回薩爾茲堡火車站。夜間山路車內暖氣充足，建議在車上小憩片刻。</p>
+                        <p class="item-description">於 Hallstatt Lahn 巴士站搭乘 543 轉 542，再轉 150
+                            號湖區巴士返回薩爾茲堡火車站。夜間山路車內暖氣充足，建議在車上小憩片刻。</p>
                     </div>
                 </div>
             </div>
@@ -1355,7 +1579,9 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">晚餐：薩爾茲堡車站 Piazetta（或周邊熱食）</h3>
-                        <p class="item-description">【快速暖胃】奔波整天回到薩爾茲堡後，可直接在車站內的高人氣義式餐館點一份「高溫現烤瑪格麗特披薩」或熱騰騰的「肉醬義大利麵」。起司與醬汁經高溫窯烤，100% 熟食，既省時又安全，快速暖胃後回飯店休息。</p>
+                        <p class="item-description">
+                            【快速暖胃】奔波整天回到薩爾茲堡後，可直接在車站內的高人氣義式餐館點一份「高溫現烤瑪格麗特披薩」或熱騰騰的「肉醬義大利麵」。起司與醬汁經高溫窯烤，100%
+                            熟食，既省時又安全，快速暖胃後回飯店休息。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1373,7 +1599,7 @@
                     <div class="item-left">
                         <h3 class="item-title">早餐：Café Tomaselli 百年老字號咖啡館</h3>
                         <p class="item-description">【優雅收尾】薩爾茲堡歷史最悠久的咖啡館（莫札特曾常造訪）。
-                        【推薦】單點他們的「歐姆熱蛋捲」或熱伯爵奶茶配酥脆可頌。欣賞端著木托盤的傳統甜點服務員穿梭，為維也納之行拉開優雅序幕。</p>
+                            【推薦】單點他們的「歐姆熱蛋捲」或熱伯爵奶茶配酥脆可頌。欣賞端著木托盤的傳統甜點服務員穿梭，為維也納之行拉開優雅序幕。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1387,7 +1613,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">ÖBB Railjet 高鐵：薩爾茲堡 > 維也納</h3>
-                        <p class="item-description">搭乘奧地利國鐵 ÖBB Railjet 特快高鐵直達維也納中央車站（Wien Hauptbahnhof），車程約 2 小時 20 分鐘，車速飛快穩定、高鐵上有充電插座與流暢 Wi-Fi。</p>
+                        <p class="item-description">搭乘奧地利國鐵 ÖBB Railjet 特快高鐵直達維也納中央車站（Wien Hauptbahnhof），車程約 2 小時 20
+                            分鐘，車速飛快穩定、高鐵上有充電插座與流暢 Wi-Fi。</p>
                     </div>
                 </div>
             </div>
@@ -1414,7 +1641,7 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：Figlmüller 奧地利炸豬排創始店</h3>
                         <p class="item-description">【巨無霸炸豬排】全維也納最傳奇、比臉還大的元祖炸豬排店（強烈建議幾個月前提前官網預訂，若無座位可去分店）。
-                        【推薦】必點招牌「Figlmüller-Schnitzel (豬肉口味炸豬排)」，肉片拍得極薄、裹上特製麵包粉酥炸至金黃完全全熟，酥脆可口。</p>
+                            【推薦】必點招牌「Figlmüller-Schnitzel (豬肉口味炸豬排)」，肉片拍得極薄、裹上特製麵包粉酥炸至金黃完全全熟，酥脆可口。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1428,11 +1655,13 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">聖斯蒂芬大教堂 ➡️ 格拉本大街 ➡️ 霍夫堡皇宮</h3>
-                        <p class="item-description">漫步維也納市中心核心景點：📍聖斯蒂芬大教堂。隨後至繁華的📍格拉本大街、📍黑死病紀念柱漫步。最後參觀壯麗的📍霍夫堡皇宮外觀與英雄廣場。</p>
+                        <p class="item-description">
+                            漫步維也納市中心核心景點：📍聖斯蒂芬大教堂。隨後至繁華的📍格拉本大街、📍黑死病紀念柱漫步。最後參觀壯麗的📍霍夫堡皇宮外觀與英雄廣場。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=300&q=80" alt="維也納" class="item-img">
+                        <img src="https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=300&q=80"
+                            alt="維也納" class="item-img">
                     </div>
                 </div>
             </div>
@@ -1446,11 +1675,11 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：Plachutta Wollzeile 皇家清燉牛肉湯</h3>
                         <p class="item-description">【奧匈帝國皇家御用】維也納享有盛譽、以極致清燉牛肉湯聞名的國寶級老字號餐廳（必須提前官網預約）。
-                        【推薦】必點招牌「Tafelspitz (清燉經典牛肋肉)」。
-                        這道菜是用紅銅鍋盛裝、高溫熬煮數小時的滾燙全熟牛肉湯。
-                        【安全吃法】：服務員會先為你盛一碗滾燙全熟的清牛肉湯暖胃。接著吃鍋內經長時間慢火燉煮到入口即化的全熟牛肉塊。
-                        ⚠️ 隨餐會附上「骨髓（內臟器官類）」與冷生蘋果泥醬、生馬蘿蔔醬。不吃生食需注意！
-                        【超市終極採購】餐後可至附近的 Spar Gourmet 或 Billa Plus 超市，大肆採購莫札特巧克力、密封維也納伴手禮，為這趟夢幻歐洲之旅畫下完美句點。</p>
+                            【推薦】必點招牌「Tafelspitz (清燉經典牛肋肉)」。
+                            這道菜是用紅銅鍋盛裝、高溫熬煮數小時的滾燙全熟牛肉湯。
+                            【安全吃法】：服務員會先為你盛一碗滾燙全熟的清牛肉湯暖胃。接著吃鍋內經長時間慢火燉煮到入口即化的全熟牛肉塊。
+                            ⚠️ 隨餐會附上「骨髓（內臟器官類）」與冷生蘋果泥醬、生馬蘿蔔醬。不吃生食需注意！
+                            【超市終極採購】餐後可至附近的 Spar Gourmet 或 Billa Plus 超市，大肆採購莫札特巧克力、密封維也納伴手禮，為這趟夢幻歐洲之旅畫下完美句點。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1472,7 +1701,7 @@
 
             const contents = document.querySelectorAll('.day-content');
             contents.forEach(content => content.classList.remove('active'));
-            
+
             const targetContent = document.getElementById(dayId);
             targetContent.classList.add('active');
 
@@ -1482,7 +1711,7 @@
 
         function initObserver() {
             const items = document.querySelectorAll('.day-content.active .timeline-item');
-            
+
             const observerOptions = {
                 root: null,
                 threshold: 0.05,
@@ -1504,8 +1733,8 @@
             });
         }
 
-        document.addEventListener('click', function(e) {
-            if(e.target && e.target.classList.contains('item-img')){
+        document.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('item-img')) {
                 const lightbox = document.getElementById('lightbox');
                 const lightboxImg = document.getElementById('lightbox-img');
                 lightboxImg.src = e.target.src;
@@ -1522,4 +1751,5 @@
         });
     </script>
 </body>
+
 </html>
