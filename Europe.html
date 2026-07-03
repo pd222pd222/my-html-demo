@@ -7,11 +7,12 @@
     <title>歐洲之旅 Itinerary</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <style>
+        /* ==========================================
+           1. 全域變數與重設 (Reset & Variables)
+           ========================================== */
         :root {
             --bg-color: #fdfaf4;
             --crayon-orange: #f4a261;
@@ -19,8 +20,10 @@
             --crayon-blue: #457b9d;
             --crayon-red: #e63946;
             --text-dark: #4a3f35;
+            --text-muted: #7c6e60;
             --glass-bg: rgba(255, 255, 255, 0.45);
             --glass-border: rgba(255, 255, 255, 0.4);
+            --border-light: #e2e8f0;
         }
 
         * {
@@ -40,20 +43,27 @@
             min-height: 100vh;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
+        /* ==========================================
+           2. 總覽首頁儀表板與標題樣式
+           ========================================== */
+        #homepage-dashboard {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center; /* 讓標題置中 */
         }
 
-        header h1 {
+        /* 繼承原本最上方標題的精美蠟筆底線樣式 */
+        .main-title {
             font-size: 2.2rem;
             color: var(--text-dark);
             font-weight: 700;
             display: inline-block;
             position: relative;
+            margin-bottom: 10px;
         }
 
-        header h1::after {
+        .main-title::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -66,121 +76,185 @@
             z-index: -1;
         }
 
-        /* 天數切換導覽列 
-        .day-nav {
+        .summary-list {
             display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 12px 8px;
-            margin-bottom: 30px;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-            border-bottom: 2px dashed rgba(74, 63, 53, 0.1);
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 30px;
+            text-align: left; /* 讓清單內容保持靠左對齊 */
         }
 
-        .day-nav::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .day-nav::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 10px;
-        }
-
-        .day-nav::-webkit-scrollbar-thumb {
-            background: rgba(74, 63, 53, 0.2);
-            border-radius: 10px;
-        }
-*/
-
-.nav-wrapper {
-    background: #ffffff;
-    padding: 10px 0;
-    border-bottom: 1px solid #f1f5f9;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* 加一點點若隱若現的陰影更有質感 */
-}
-
-/* 修正後的橫向滾動軸：天數少時自動置中，天數多時依舊可以流暢滑動 */
-.day-scroll-nav {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding: 5px 15px;
-    justify-content: safe center; /* 關鍵：這行能讓整排按鈕在畫面上完美置中 */
-    -webkit-overflow-scrolling: touch;
-}
-
-/* 隱藏討厭的滾動條 */
-.day-scroll-nav::-webkit-scrollbar {
-    display: none; 
-}
-
-/* 質感小圓鈕 */
-.day-circle-btn {
-    flex: 0 0 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 1px solid #e2e8f0;
-    background: #f8fafc;
-    color: #64748b;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-/* 點選啟動時的高級深色感 */
-.day-circle-btn.active {
-    background: #1e293b; 
-    color: #ffffff;
-    border-color: #1e293b;
-    transform: scale(1.05);
-}
-
-/* 下方動態資訊列（這裡也幫你設定好置中了） */
-.current-info-bar {
-    display: flex;
-    justify-content: center; /* 確保文字跟圖示也完美水平置中 */
-    align-items: center;
-    font-size: 13px;
-    color: #334155;
-    margin-top: 10px;
-    font-weight: 500;
-}
-
-.split-line {
-    margin: 0 8px;
-    color: #cbd5e1;
-}
-
-        .day-btn {
-            background: var(--glass-bg);
-            border: 2px dashed rgba(74, 63, 53, 0.3);
-            border-radius: 15px;
-            padding: 10px 18px;
-            font-size: 0.95rem;
-            font-weight: 600;
+        .summary-item {
+            display: flex !important;
+            align-items: center;
+            background: #ffffff !important;
+            padding: 16px 20px !important;
+            border-radius: 12px !important;
+            border: 1px solid var(--border-light) !important;
             cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02) !important;
+            transition: all 0.2s ease;
+        }
+
+        .summary-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05) !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .sum-day {
+            font-weight: 800;
+            color: #007bff;
+            font-size: 16px;
+            min-width: 50px;
+        }
+
+        .sum-date {
+            color: #64748b;
+            font-size: 14px;
+            min-width: 100px;
+        }
+
+        .sum-loc {
+            color: #334155;
+            font-size: 15px;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .sum-arrow {
+            color: #cbd5e1;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        /* ==========================================
+           3. 導覽列與按鈕 (Navigation Bar & Buttons)
+           ========================================== */
+        .nav-wrapper {
+            background: rgba(255, 255, 255, 0.75); 
+            backdrop-filter: blur(10px);        
+            -webkit-backdrop-filter: blur(10px); 
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(241, 245, 249, 0.6); 
+        }
+
+        .day-scroll-nav {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 5px 15px;
+            justify-content: safe center;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .day-scroll-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-home-btn, .day-circle-btn {
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--border-light);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-home-btn {
+            flex: 0 0 auto;
+            padding: 0 14px;
+            border-radius: 21px;
+            background: #1e293b;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .nav-home-btn:active {
+            transform: scale(0.95);
+        }
+
+        .day-circle-btn {
+            flex: 0 0 42px;
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .day-circle-btn.active {
+            background: #1e293b;
+            color: #ffffff;
+            border-color: #1e293b;
+            transform: scale(1.05);
+        }
+
+        .current-info-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            color: #334155;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .split-line {
+            margin: 0 8px;
+            color: #cbd5e1;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff;
+            border: 2px solid var(--text-dark);
+            padding: 8px 16px;
+            border-radius: 14px;
             color: var(--text-dark);
-            transition: all 0.25s ease;
-            white-space: nowrap;
-            backdrop-filter: blur(5px);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 2px 2px 0px var(--text-dark);
+            transition: all 0.15s ease;
+            cursor: pointer;
         }
 
-        .day-btn.active,
-        .day-btn:hover {
-            background: var(--crayon-orange);
-            color: white;
-            border-color: transparent;
-            transform: scale(1.05) rotate(-1deg);
-            box-shadow: 0 4px 10px rgba(244, 162, 97, 0.3);
+        .nav-btn:hover {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--text-dark);
+            background: #fdf7f2;
         }
 
-        /* 行程容器 */
+        #scroll-to-top-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 20px;
+            z-index: 999;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(4px);
+            color: #ffffff;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            display: none;
+            transition: all 0.15s;
+        }
+
+        #scroll-to-top-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ==========================================
+           4. 行程卡片與時間軸 (Itinerary & Cards)
+           ========================================== */
         .itinerary-container {
             max-width: 850px;
             margin: 0 auto;
@@ -194,7 +268,6 @@
             display: block;
         }
 
-        /* 外層卡片 */
         .timeline-item {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -208,7 +281,6 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-
             opacity: 0;
             transform: translateY(30px) scale(0.98);
             transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -219,7 +291,6 @@
             transform: translateY(0) scale(1);
         }
 
-        /* 第一列：時間與標籤區塊（橫跨 100%） */
         .item-header {
             display: flex;
             justify-content: space-between;
@@ -241,6 +312,11 @@
             border: 1px dashed rgba(217, 119, 6, 0.3);
         }
 
+        .info-item {
+            font-weight: bold;
+        }
+
+        /* 標籤分類 */
         .tag-container {
             display: flex;
             gap: 6px;
@@ -255,27 +331,13 @@
             color: #fff;
         }
 
-        .tag.tag-attraction {
-            background-color: #6a994e;
-        }
+        .tag.tag-attraction { background-color: #6a994e; }
+        .tag.tag-food       { background-color: #e63946; }
+        .tag.tag-transport  { background-color: #457b9d; }
+        .tag.tag-hotel      { background-color: #8338ec; }
+        .tag.tag-tips       { background-color: #f4a261; }
 
-        .tag.tag-food {
-            background-color: #e63946;
-        }
-
-        .tag.tag-transport {
-            background-color: #457b9d;
-        }
-
-        .tag.tag-hotel {
-            background-color: #8338ec;
-        }
-
-        .tag.tag-tips {
-            background-color: #f4a261;
-        }
-
-        /* 第二列：下方內容區（雙欄佈局） */
+        /* 卡片主體排版 */
         .item-body {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -312,7 +374,7 @@
 
         .info-row {
             font-size: 0.85rem;
-            color: #7c6e60;
+            color: var(--text-muted);
             background: rgba(0, 0, 0, 0.03);
             padding: 6px 12px;
             border-radius: 10px;
@@ -343,30 +405,9 @@
             transform: scale(1.05) rotate(1deg);
         }
 
-        .nav-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #fff;
-            border: 2px solid var(--text-dark);
-            padding: 8px 16px;
-            border-radius: 14px;
-            color: var(--text-dark);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: 2px 2px 0px var(--text-dark);
-            transition: all 0.15s ease;
-            cursor: pointer;
-        }
-
-        .nav-btn:hover {
-            transform: translate(1px, 1px);
-            box-shadow: 1px 1px 0px var(--text-dark);
-            background: #fdf7f2;
-        }
-
-        /* 放大燈箱 */
+        /* ==========================================
+           5. 互動燈箱 (Lightbox Popups)
+           ========================================== */
         .lightbox {
             position: fixed;
             top: 0;
@@ -403,12 +444,15 @@
             transform: scale(1);
         }
 
+        /* ==========================================
+           6. RWD 響應式斷點 (Media Queries)
+           ========================================== */
         @media(max-width: 650px) {
             body {
                 padding: 12px;
             }
 
-            header h1 {
+            .main-title {
                 font-size: 1.8rem;
             }
 
@@ -438,61 +482,61 @@
 
 <body>
 
-    <header>
-        <h1>歐洲之旅 Itinerary</h1>
-    </header>
-
-    <!-- 天數切換選單 
-    <div class="day-nav">
-        <button class="day-btn active" onclick="switchDay('d0')">9/24 D0 台北 > 維也納</button>
-        <button class="day-btn" onclick="switchDay('d1')">9/25 D1 布達佩斯 I</button>
-        <button class="day-btn" onclick="switchDay('d2')">9/26 D2 布達佩斯 II</button>
-        <button class="day-btn" onclick="switchDay('d3')">9/27 D3 布達佩斯 III</button>
-        <button class="day-btn" onclick="switchDay('d4')">9/28 D4 布拉提斯拉瓦</button>
-        <button class="day-btn" onclick="switchDay('d5')">9/29 D5 布拉格 I</button>
-        <button class="day-btn" onclick="switchDay('d6')">9/30 D6 布拉格 II</button>
-        <button class="day-btn" onclick="switchDay('d7')">10/01 D7 布拉格 III</button>
-        <button class="day-btn" onclick="switchDay('d8')">10/02 D8 CK小鎮</button>
-        <button class="day-btn" onclick="switchDay('d9')">10/03 D9 薩爾茲堡</button>
-        <button class="day-btn" onclick="switchDay('d10')">10/04 D10 國王湖</button>
-        <button class="day-btn" onclick="switchDay('d11')">10/05 D11 哈修塔特</button>
-        <button class="day-btn" onclick="switchDay('d12')">10/06 D12 維也納 I</button>
-        <button class="day-btn" onclick="switchDay('d13')">10/07 D13 維也納 II</button>
-        <button class="day-btn" onclick="switchDay('d14')">10/08 D14 維也納 III</button>
-        <button class="day-btn" onclick="switchDay('d15')">10/09 D15 維也納 IV</button>
-        <button class="day-btn" onclick="switchDay('d16')">10/10 D16 維也納 > 台北</button>
-    </div>
--->
-
-<div class="nav-wrapper">
-    <!-- 上方：極簡橫向圓鈕 (只留D幾，寬度變超窄，滑起來很順) -->
-    <div class="day-scroll-nav">
-        <button class="day-circle-btn active" onclick="switchDay('d0')">D0</button>
-        <button class="day-circle-btn" onclick="switchDay('d1')">D1</button>
-        <button class="day-circle-btn" onclick="switchDay('d2')">D2</button>
-        <button class="day-circle-btn" onclick="switchDay('d3')">D3</button>
-        <button class="day-circle-btn" onclick="switchDay('d4')">D4</button>
-        <button class="day-circle-btn" onclick="switchDay('d5')">D5</button>
-        <button class="day-circle-btn" onclick="switchDay('d6')">D6</button>
-        <button class="day-circle-btn" onclick="switchDay('d7')">D7</button>
-        <button class="day-circle-btn" onclick="switchDay('d8')">D8</button>
-        <button class="day-circle-btn" onclick="switchDay('d9')">D9</button>
-        <button class="day-circle-btn" onclick="switchDay('d10')">D10</button>
-        <button class="day-circle-btn" onclick="switchDay('d11')">D11</button>
-        <button class="day-circle-btn" onclick="switchDay('d12')">D12</button>
-        <button class="day-circle-btn" onclick="switchDay('d13')">D13</button>
-        <button class="day-circle-btn" onclick="switchDay('d14')">D14</button>
-        <button class="day-circle-btn" onclick="switchDay('d15')">D15</button>
-        <button class="day-circle-btn" onclick="switchDay('d16')">D16</button>
+    <!-- 總覽首頁區塊 -->
+    <div id="homepage-dashboard">
+        <!-- 原最上方標題移至此處，並保留獨特的蠟筆裝飾底線樣式 -->
+        <h1 class="main-title">歐洲之旅 Itinerary</h1>
+        
+        <div class="summary-list">
+            <div class="summary-item" onclick="goToDay('d0')"><span class="sum-day">D0</span><span class="sum-date">9/24 (四)</span><span class="sum-loc">台北 ➡️ 維也納 (搭機)</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d1')"><span class="sum-day">D1</span><span class="sum-date">9/25 (五)</span><span class="sum-loc">匈牙利．布達佩斯 I</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d2')"><span class="sum-day">D2</span><span class="sum-date">9/26 (六)</span><span class="sum-loc">匈牙利．布達佩斯 II</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d3')"><span class="sum-day">D3</span><span class="sum-date">9/27 (日)</span><span class="sum-loc">布達佩斯 ➡️ 維也納</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d4')"><span class="sum-day">D4</span><span class="sum-date">9/28 (一)</span><span class="sum-loc">斯洛伐克．布拉提斯拉瓦</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d5')"><span class="sum-day">D5</span><span class="sum-date">9/29 (二)</span><span class="sum-loc">捷克．布拉格 I</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d6')"><span class="sum-day">D6</span><span class="sum-date">9/30 (三)</span><span class="sum-loc">捷克．布拉格 II</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d7')"><span class="sum-day">D7</span><span class="sum-date">10/01(四)</span><span class="sum-loc">捷克．布拉格 III</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d8')"><span class="sum-day">D8</span><span class="sum-date">10/02(五)</span><span class="sum-loc">CK小鎮</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d9')"><span class="sum-day">D9</span><span class="sum-date">10/03(六)</span><span class="sum-loc">薩爾茲堡</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d10')"><span class="sum-day">D10</span><span class="sum-date">10/04(日)</span><span class="sum-loc">德國．國王湖</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d11')"><span class="sum-day">D11</span><span class="sum-date">10/05(一)</span><span class="sum-loc">哈修塔特</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d12')"><span class="sum-day">D12</span><span class="sum-date">10/06(二)</span><span class="sum-loc">奧地利．維也納 I</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d13')"><span class="sum-day">D13</span><span class="sum-date">10/07(三)</span><span class="sum-loc">奧地利．維也納 II</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d14')"><span class="sum-day">D14</span><span class="sum-date">10/08(四)</span><span class="sum-loc">奧地利．維也納 III</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d15')"><span class="sum-day">D15</span><span class="sum-date">10/09(五)</span><span class="sum-loc">奧地利．維也納 IV</span><span class="sum-arrow">➔</span></div>
+            <div class="summary-item" onclick="goToDay('d16')"><span class="sum-day">D16</span><span class="sum-date">10/10(六)</span><span class="sum-loc">維也納 ➡️ 台北 (返家)</span><span class="sum-arrow">➔</span></div>
+        </div>
     </div>
     
-    <!-- 下方：精緻的狀態橫條 (用來放長文字，完全不擠) -->
-    <div class="current-info-bar">
-        <span id="current-date">9/24 (四)</span>
-        <span class="split-line">|</span>
-        <span id="current-location">📍 台北 ➡️ 維也納</span>
+    <!-- 導覽列 -->
+    <div class="nav-wrapper" style="display: none;">
+        <div class="day-scroll-nav">
+            <button class="nav-home-btn" onclick="returnToHome()">🏠 總覽</button>
+            <button class="day-circle-btn active" onclick="switchDay('d0')">D0</button>
+            <button class="day-circle-btn" onclick="switchDay('d1')">D1</button>
+            <button class="day-circle-btn" onclick="switchDay('d2')">D2</button>
+            <button class="day-circle-btn" onclick="switchDay('d3')">D3</button>
+            <button class="day-circle-btn" onclick="switchDay('d4')">D4</button>
+            <button class="day-circle-btn" onclick="switchDay('d5')">D5</button>
+            <button class="day-circle-btn" onclick="switchDay('d6')">D6</button>
+            <button class="day-circle-btn" onclick="switchDay('d7')">D7</button>
+            <button class="day-circle-btn" onclick="switchDay('d8')">D8</button>
+            <button class="day-circle-btn" onclick="switchDay('d9')">D9</button>
+            <button class="day-circle-btn" onclick="switchDay('d10')">D10</button>
+            <button class="day-circle-btn" onclick="switchDay('d11')">D11</button>
+            <button class="day-circle-btn" onclick="switchDay('d12')">D12</button>
+            <button class="day-circle-btn" onclick="switchDay('d13')">D13</button>
+            <button class="day-circle-btn" onclick="switchDay('d14')">D14</button>
+            <button class="day-circle-btn" onclick="switchDay('d15')">D15</button>
+            <button class="day-circle-btn" onclick="switchDay('d16')">D16</button>
+        </div>
+
+        <div class="current-info-bar">
+            <span id="current-date">9/24 (四)</span>
+            <span class="split-line">|</span>
+            <span id="current-location">📍 台北 ➡️ 維也納</span>
+        </div>
     </div>
-</div>
 
     <!-- 行程容器 -->
     <div class="itinerary-container">
@@ -565,7 +609,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">FlixBus：維也納機場 > 布達佩斯</h3>
-                        <p class="item-description">出關後前往機場巴士站搭乘 FlixBus 跨國巴士，直達布達佩斯（Budapest Keleti）。</br>車程約 3 小時，可在機場超商買瓶溫熱或常溫瓶裝水帶上車。</p>
+                        <p class="item-description">出關後前往機場巴士站搭乘 FlixBus 跨國巴士，直達布達佩斯（Budapest Keleti）。</br>車程約 3
+                            小時，可在機場超商買瓶溫熱或常溫瓶裝水帶上車。</p>
                         <a href="https://global.flixbus.com/bus-routes" target="_blank" class="nav-btn">🎟️ 線上購票</a>
                     </div>
                 </div>
@@ -593,7 +638,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">Budapest Keleti 車站 > 住宿</h3>
-                        <p class="item-description">🚇地鐵 M2 [ 往 Déli pályaudvar ] </br>　Keleti pályaudvar > Blaha Lujza tér</br>🚋輕軌 4 [ 往 Széll Kálmán tér M ] </br>　Blaha Lujza tér M > Jászai Mari tér</p>
+                        <p class="item-description">🚇地鐵 M2 [ 往 Déli pályaudvar ] </br>　Keleti pályaudvar > Blaha Lujza
+                            tér</br>🚋輕軌 4 [ 往 Széll Kálmán tér M ] </br>　Blaha Lujza tér M > Jászai Mari tér</p>
                     </div>
                 </div>
             </div>
@@ -627,7 +673,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">住宿 > 聖殿</h3>
-                        <p class="item-description">步行9分 > 1站(2分) > 步行6分</br>🚇地鐵 M3 [ 往 Kőbánya-Kispest ] </br>　Nyugati pályaudvar > Arany János utca</p>
+                        <p class="item-description">步行9分 > 1站(2分) > 步行6分</br>🚇地鐵 M3 [ 往 Kőbánya-Kispest ] </br>　Nyugati
+                            pályaudvar > Arany János utca</p>
                     </div>
                 </div>
             </div>
@@ -675,7 +722,10 @@
                     <div class="item-left">
                         <div class="info-row"></div>
                         <h3 class="item-title">多瑙河畔散步</h3>
-                        <p class="item-description">※弗洛斯馬提廣場旁有 Fashion Street 可逛</br>漫步經典路線：</br>👉 1. 弗洛斯馬提廣場 Vörösmarty tér</br>👉 2. 瓦采街 Fashion street Budapest</br>👉 3. 塞切尼鏈橋 Széchenyi Lánchíd</br>👉 4. 多瑙河岸的鞋子 Cipők a Duna-parton</br>👉 5. 自由廣場 Szabadság tér</br>👉 6. 匈牙利國會大廈 Országház</p>
+                        <p class="item-description">※弗洛斯馬提廣場旁有 Fashion Street 可逛</br>漫步經典路線：</br>👉 1. 弗洛斯馬提廣場
+                            Vörösmarty tér</br>👉 2. 瓦采街 Fashion street Budapest</br>👉 3. 塞切尼鏈橋 Széchenyi
+                            Lánchíd</br>👉 4. 多瑙河岸的鞋子 Cipők a Duna-parton</br>👉 5. 自由廣場 Szabadság tér</br>👉 6. 匈牙利國會大廈
+                            Országház</p>
                         <a href="https://maps.app.goo.gl/nN3QUtcbcX2D2Ubv8" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
@@ -723,7 +773,6 @@
                     <div class="item-left">
                         <h3 class="item-title">SPAR 超市</h3>
                         <p class="item-description">去採購匈牙利著名的 Tokaji 貴腐甜白酒</br>地址：Szent István körút 17.</p>
-
                     </div>
                 </div>
             </div>
@@ -792,7 +841,8 @@
                         <a href="https://maps.app.goo.gl/YbBauVmyHqEJFJfg6" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwwvtHOV9Zw-G7YtMYKE3sbDFSw9YE0DliLN-Jy8E8AQ&s=10" alt="咖啡館" class="item-img">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwwvtHOV9Zw-G7YtMYKE3sbDFSw9YE0DliLN-Jy8E8AQ&s=10"
+                            alt="咖啡館" class="item-img">
                     </div>
                 </div>
             </div>
@@ -955,7 +1005,8 @@
                     <div class="item-left">
                         <h3 class="item-title">多瑙河黃昏遊船 (Legenda City Cruises)</h3>
                         <p class="item-description">🛳️Vigadó tér 登船</br>搭乘傍晚班次的遊船，隨著日落欣賞兩岸亮起金黃燈光的國會大廈與城堡山。</p>
-                        <a href="https://www.kkday.com/zh-tw/product/584799?cid=21091" target="_blank" class="nav-btn">🎟️ 線上購票</a>
+                        <a href="https://www.kkday.com/zh-tw/product/584799?cid=21091" target="_blank"
+                            class="nav-btn">🎟️ 線上購票</a>
                     </div>
                 </div>
             </div>
@@ -986,7 +1037,7 @@
                     <div class="item-left">
                         <h3 class="item-title">廢墟酒吧 > 住宿</h3>
                         <p class="item-description">步行10分 > 4分(7站) > 步行3分</br>🚋輕軌 4 [Széll Kálmán tér M]</br>　Wesselényi utca / Erzsébet körút> Jászai Mari tér</p>
-                        
+
                     </div>
                 </div>
             </div>
@@ -995,7 +1046,7 @@
 
         <!-- ==================== D4 ==================== -->
         <div id="d4" class="day-content">
-            
+
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">09:30</span>
@@ -1006,11 +1057,11 @@
                     <div class="item-left">
                         <h3 class="item-title">住宿 > 最美麥當勞</h3>
                         <p class="item-description">步行2分 > 2分(1站) > 步行1分</br>🚋輕軌 4 [ 往 Újbuda-központ M ]</br>　Jászai Mari tér > Nyugati pályaudvar M</p>
-                        
+
                     </div>
                 </div>
             </div>
-            
+
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">10:00</span>
@@ -1076,11 +1127,13 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">老城區</h3>
-                        <p class="item-description">漫步景點：</br>👉 1. 聖馬丁大教堂 St. Martin’s Cathedral</br>　　（09:00-11:30／13:00-17:00／日休）</br>👉 2. 城牆 Medieval City Wall</br>👉 3. 邁克爾門 Michael’s Gate</br>　　（10:00-18:00／二休）</br>👉 4. 大主教宮 Primate’s Palace</br>👉 5. 主廣場 Main Square</br>👉 6. 藍色教堂 The Blue Church</br>　　（看外觀）</br>👉 7. 逛舊城區</br>　　（找三個有名的雕像）</p>
+                        <p class="item-description">漫步景點：</br>👉 1. 聖馬丁大教堂 St. Martin’s
+                            Cathedral</br>　　（09:00-11:30／13:00-17:00／日休）</br>👉 2. 城牆 Medieval City Wall</br>👉 3. 邁克爾門 Michael’s Gate</br>　　（10:00-18:00／二休）</br>👉 4. 大主教宮 Primate’s Palace</br>👉 5. 主廣場 Main Square</br>👉 6. 藍色教堂 The Blue Church</br>　　（看外觀）</br>👉 7. 逛舊城區</br>　　（找三個有名的雕像）</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://www.heysomewhere.com/wp-content/uploads/2024/06/%E8%9E%A2%E5%B9%95%E6%88%AA%E5%9C%96-2024-06-15-20.15.02-1024x760.png" alt="老城" class="item-img">
+                        <img src="https://www.heysomewhere.com/wp-content/uploads/2024/06/%E8%9E%A2%E5%B9%95%E6%88%AA%E5%9C%96-2024-06-15-20.15.02-1024x760.png"
+                            alt="老城" class="item-img">
                     </div>
                 </div>
             </div>
@@ -1093,7 +1146,8 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">城堡區</h3>
-                        <p class="item-description">漫步景點：</br>👉 1. 布拉提斯拉瓦城堡 Bratislava Castle</br>　　（博物館10:00-18:00／城堡廣場 08:00-22:00）</br>👉 2. 巴洛克城堡花園 Baroque garden</br>　　（免費開放，可坐在城牆邊看夕陽）</br>　　日落時間大約在 18:20 左右</p>
+                        <p class="item-description">漫步景點：</br>👉 1. 布拉提斯拉瓦城堡 Bratislava
+                            Castle</br>　　（博物館10:00-18:00／廣場 08:00-22:00）</br>👉 2. 巴洛克城堡花園 Baroque garden</br>　　（免費開放，可坐在城牆邊看夕陽）</br>　　日落時間大約在 18:20 左右</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1108,7 +1162,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">首都景點區 > 餐廳</h3>
-                        <p class="item-description">步行8分 > 4分(4站) > 步行5分</br>🚌公車 44 [ 往 Koliba ]</br>　Hrad > Bratislava, Hodžovo nám.</p>
+                        <p class="item-description">步行8分 > 4分(4站) > 步行5分</br>🚌公車 44 [ 往 Koliba ]</br>　Hrad >
+                            Bratislava, Hodžovo nám.</p>
                     </div>
                 </div>
             </div>
@@ -1122,7 +1177,7 @@
                     <div class="item-left">
                         <div class="info-row">⏱️ 營業時間 11:00 - 22:00</div>
                         <h3 class="item-title">晚餐：Slovak Pub</h3>
-                        <p class="item-description">當地極受歡迎的傳統木造風餐廳。</br>【推薦】必點斯洛伐克國菜「Bryndzové Halušky」（羊起司培根麵疙瘩）、「大蒜奶油濃湯」</p>
+                        <p class="item-description">當地極受歡迎的傳統木造風餐廳。</br>【推薦】斯洛伐克國菜「Bryndzové Halušky」（羊起司培根麵疙瘩）、「大蒜奶油濃湯」</p>
                         <a href="https://maps.app.goo.gl/q8HwxPMeAgJgghV2A" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1168,7 +1223,8 @@
                     <div class="item-left">
                         <h3 class="item-title">布拉提斯拉瓦中央車站 > 布拉格中央車站</h3>
                         <p class="item-description">🚅火車 Slovak Rail 278</br>　[ 往 Prague Central Train Station ]</br>　Bratislava hl.st. > Praha hl.n.</br>　到站後搭 Uber，車程約 17 分鐘</p>
-                        <a href="https://slovakrail.transport-ticket.com/result?marketingCarrierCode=SRAI&retailerPartnerNumber=130331&locale=zh&currency=EUR&departureDate=2026-04-28&departureTime=10%3A00&pax=1&seatProduct=false&fastestConnections=false&utm_campaign=gtfs&utm_medium=agency-url&utm_source=googlemaps&utm_stream=intercity_europe&utm_country=SK&departureStation=SKBTSBHA&arrivalStation=CZPRGPHA" target="_blank" class="nav-btn">🎟️ 線上購票</a>
+                        <a href="https://slovakrail.transport-ticket.com/result?marketingCarrierCode=SRAI&retailerPartnerNumber=130331&locale=zh&currency=EUR&departureDate=2026-04-28&departureTime=10%3A00&pax=1&seatProduct=false&fastestConnections=false&utm_campaign=gtfs&utm_medium=agency-url&utm_source=googlemaps&utm_stream=intercity_europe&utm_country=SK&departureStation=SKBTSBHA&arrivalStation=CZPRGPHA"
+                            target="_blank" class="nav-btn">🎟️ 線上購票</a>
                     </div>
                 </div>
             </div>
@@ -1305,7 +1361,7 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">城堡區</h3>
-                        <p class="item-description">👉 1. 聖維特主座教堂 St. Vitus Cathedral</br>👉 2. 舊皇宮</br>👉 3. 聖喬治修道院</br>👉 4. 黃金巷（卡夫卡小屋）</br>沿著城堡東側的老階梯 (Staré zámecké schody) </br>一路往下走</br>沿途可以俯瞰整個布拉格小城區</br>會經過👉華倫斯坦花園</p>
+                        <p class="item-description">👉 1. 聖維特主座教堂 St. Vitus Cathedral</br>👉 2. 舊皇宮</br>👉 3. 聖喬治修道院</br>👉 4. 黃金巷（卡夫卡小屋）</br>沿著城堡東側的老階梯 (Staré zámecké schody)</br>一路往下走</br>沿途可以俯瞰整個布拉格小城區</br>會經過👉華倫斯坦花園</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1333,13 +1389,14 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">小城區</h3>
-                        <p class="item-description">👉 1. 聖尼古拉教堂</br>👉 2. 約翰藍儂牆</br>👉 3. 康帕島</br>👉 4. Angelato冰淇淋</br>冰淇淋店的對面是纜車站的起站ÚJEZD LD，纜車在歷經過去的軌道損毀重建後，升級版現代化車廂目前正在進行測試，預計於 2026 年 9 月正式恢復營運</p>
+                        <p class="item-description">👉 1. 聖尼古拉教堂</br>👉 2. 約翰藍儂牆</br>👉 3. 康帕島</br>👉 4. Angelato冰淇淋</br>冰淇淋店的對面是纜車站的起站ÚJEZD LD，纜車在歷經過去的軌道損毀重建後，升級版現代化車廂目前正在進行測試，預計於 2026 年 9 月正式恢復營運
+                        </p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
 
-<div class="timeline-item">
+            <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">17:30</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
@@ -1375,8 +1432,7 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：U Parlamentu</h3>
                         <p class="item-description">【在地老牌餐館】深受布拉格當地居民喜愛、價格實惠的道地餐館。
-                            【推薦】必點經典「捷克烤豬肉佐酸菜與麵包丸子 (Vepřo-knedlo-zelo)」或「香煎全熟雞排（Chicken
-                            Schnitzel）」。捷克酸菜是高溫熬煮的，非生菜沙拉，暖胃又解膩，完全不帶任何內臟成分。</p>
+                            【推薦】必點經典「捷克烤豬肉佐酸菜與麵包丸子 (Vepřo-knedlo-zelo)」或「香煎全熟雞排（Chicken Schnitzel）」。捷克酸菜是高溫熬煮的，非生菜沙拉，暖胃又解膩，完全不帶任何內臟成分。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1415,7 +1471,7 @@
                 </div>
             </div>
 
-<div class="timeline-item">
+            <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">09:00 - 10:00</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
@@ -1440,8 +1496,7 @@
                     <div class="item-left">
                         <h3 class="item-title">午餐：U Medvídků 百年啤酒館</h3>
                         <p class="item-description">【歷史悠久】擁有數百年歷史的經典大型布拉格啤酒餐館。
-                            【推薦】點他們的經典「老捷克香烤大豬腳 (Roasted Pork
-                            Knuckle)」，分量十足，外皮酥脆到像餅乾，內部肉質呈全熟且富有彈性。可搭配熱熱的馬鈴薯球。徹底遠離生食與內臟危害。</p>
+                            【推薦】點他們的經典「老捷克香烤大豬腳 (Roasted Pork Knuckle)」，分量十足，外皮酥脆到像餅乾，內部肉質呈全熟且富有彈性。可搭配熱熱的馬鈴薯球。徹底遠離生食與內臟危害。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1455,8 +1510,7 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">新城區 ➡️ 瓦茨拉夫廣場 ➡️ 菠丹妮採購</h3>
-                        <p class="item-description">漫步於繁華的商業中心📍瓦茨拉夫廣場。隨後可以前往舊城廣場後方的📍Botanicus (菠丹妮) 或 📍Manufaktura
-                            (蔓菲蘿) 總店，採購經典的手工死海泥皂、護手霜等精美伴手禮。</p>
+                        <p class="item-description">漫步於繁華的商業中心📍瓦茨拉夫廣場。隨後可以前往舊城廣場後方的📍Botanicus (菠丹妮) 或 📍Manufaktura (蔓菲蘿) 總店，採購經典的手工死海泥皂、護手霜等精美伴手禮。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1471,8 +1525,7 @@
                     <div class="item-left">
                         <h3 class="item-title">晚餐：Lokál Dlouhááá</h3>
                         <p class="item-description">【在地熱鬧酒館】超長一條延伸的熱鬧酒館，以提供極致新鮮的捷克生啤酒與傳統家常熟食聞名。
-                            【推薦】除了烤豬肉，必點他們的網紅招牌菜「現炸起司塊 (Fried Cheese / Smažený
-                            sýr)」，厚實的起司裹粉高溫油炸到牽絲，熱氣騰騰，絕對全熟且超級療癒！搭配一杯常溫密封軟飲料，完美享受最後一晚的布拉格風情。</p>
+                            【推薦】除了烤豬肉，必點他們的網紅招牌菜「現炸起司塊 (Fried Cheese / Smažený sýr)」，厚實的起司裹粉高溫油炸到牽絲，熱氣騰騰，絕對全熟且超級療癒！搭配一杯常溫密封軟飲料，完美享受最後一晚的布拉格風情。</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1975,94 +2028,132 @@
 
     </div>
 
-    <!-- 圖片放大燈箱效果 -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-        <img id="lightbox-img" src="" alt="放大圖片">
+    <!-- 浮動回頂端按鈕 -->
+    <button id="scroll-to-top-btn" onclick="scrollToTop()">⬆️ 回頂端</button>
+
+    <!-- 圖片放大燈箱容器 -->
+    <div class="lightbox" id="image-lightbox" onclick="closeLightbox()">
+        <img src="" alt="放大圖片" id="lightbox-img">
     </div>
 
+    <!-- ==========================================
+       JavaScript 邏輯處理區
+       ========================================== -->
     <script>
-        function switchDay(dayId) {
-            const buttons = document.querySelectorAll('.day-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+        const DAY_INFO_MAP = {
+            'd0': { date: '9/24 (四)', loc: '📍 台北 ➡️ 維也納' },
+            'd1': { date: '9/25 (五)', loc: '📍 匈牙利．布達佩斯 I' },
+            'd2': { date: '9/26 (六)', loc: '📍 匈牙利．布達佩斯 II' },
+            'd3': { date: '9/27 (日)', loc: '📍 布達佩斯 ➡️ 維也納' },
+            'd4': { date: '9/28 (一)', loc: '📍 斯洛伐克．布拉提斯拉瓦' },
+            'd5': { date: '9/29 (二)', loc: '📍 捷克．布拉格 I' },
+            'd6': { date: '9/30 (三)', loc: '📍 捷克．布拉格 II' },
+            'd7': { date: '10/01(四)', loc: '📍 捷克．布拉格 III' },
+            'd8': { date: '10/02(五)', loc: '📍 CK小鎮' },
+            'd9': { date: '10/03(六)', loc: '📍 薩爾茲堡' },
+            'd10': { date: '10/04(日)', loc: '📍 德國．國王湖' },
+            'd11': { date: '10/05(一)', loc: '📍 哈修塔特' },
+            'd12': { date: '10/06(二)', loc: '📍 奧地利．維也納 I' },
+            'd13': { date: '10/07(三)', loc: '📍 奧地利．維也納 II' },
+            'd14': { date: '10/08(四)', loc: '📍 奧地利．維也納 III' },
+            'd15': { date: '10/09(五)', loc: '📍 奧地利．維也納 IV' },
+            'd16': { date: '10/10(六)', loc: '📍 維也納 ➡️ 台北' }
+        };
 
-            const contents = document.querySelectorAll('.day-content');
-            contents.forEach(content => content.classList.remove('active'));
+        // 頁面載入初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initScrollEffects();
+            initImgLightbox();
+            returnToHome(); // 【修正點】初始化時強制呼叫回到總覽，避免預設把 D0 打開
+        });
 
-            const targetContent = document.getElementById(dayId);
-            targetContent.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(initObserver, 100);
-
-const infoMap = {
-        'd0': { date: '9/24 (四)', loc: '台北 ➡️ 維也納' },
-        'd1': { date: '9/25 (五)', loc: '布達佩斯 I' },
-        'd2': { date: '9/26 (六)', loc: '布達佩斯 II' },
-        'd3': { date: '9/27 (日)', loc: '布達佩斯 III' },
-        'd4': { date: '9/28 (一)', loc: '布拉提斯拉瓦' },
-        'd5': { date: '9/29 (二)', loc: '布拉格 I' },
-        'd6': { date: '9/30 (三)', loc: '布拉格 II' },
-        'd7': { date: '10/01 (四)', loc: '布拉格 III' },
-        'd8': { date: '10/02 (五)', loc: 'CK 小鎮' },
-        'd9': { date: '10/03 (六)', loc: '薩爾茲堡' },
-        'd10': { date: '10/04 (日)', loc: '國王湖' },
-        'd11': { date: '10/05 (一)', loc: '哈修塔特' },
-        'd12': { date: '10/06 (二)', loc: '維也納 I' },
-        'd13': { date: '10/07 (三)', loc: '維也納 II' },
-        'd14': { date: '10/08 (四)', loc: '維也納 III' },
-        'd15': { date: '10/09 (五)', loc: '維也納 IV' },
-        'd16': { date: '10/10 (六)', loc: '維也納 ➡️ 台北' }
-    };
-
-    if(infoMap[dayId]) {
-        document.getElementById('current-date').innerText = infoMap[dayId].date;
-        document.getElementById('current-location').innerText = '📍 ' + infoMap[dayId].loc;
-    }
-
-        }
-
-        function initObserver() {
-            const items = document.querySelectorAll('.day-content.active .timeline-item');
-
-            const observerOptions = {
-                root: null,
-                threshold: 0.05,
-                rootMargin: "0px 0px -30px 0px"
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
+        function initScrollEffects() {
+            const topBtn = document.getElementById('scroll-to-top-btn');
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('show');
-                        observer.unobserve(entry.target);
                     }
                 });
-            }, observerOptions);
+            }, { threshold: 0.1 });
 
-            items.forEach(item => {
-                item.classList.remove('show');
-                observer.observe(item);
+            document.querySelectorAll('.timeline-item').forEach(item => observer.observe(item));
+
+            window.addEventListener('scroll', () => {
+                topBtn.style.display = window.scrollY > 400 ? 'block' : 'none';
             });
         }
 
-        document.addEventListener('click', function (e) {
-            if (e.target && e.target.classList.contains('item-img')) {
-                const lightbox = document.getElementById('lightbox');
-                const lightboxImg = document.getElementById('lightbox-img');
-                lightboxImg.src = e.target.src;
-                lightbox.classList.add('active');
-            }
-        });
+        function initImgLightbox() {
+            const container = document.querySelector('.itinerary-container');
+            const lightbox = document.getElementById('image-lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
 
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
+            if (!container) return;
+
+            container.addEventListener('click', (e) => {
+                if (e.target.classList.contains('item-img')) {
+                    lightboxImg.src = e.target.src;
+                    lightbox.classList.add('active');
+                }
+            });
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            initObserver();
-        });
+        function closeLightbox() {
+            document.getElementById('image-lightbox').classList.remove('active');
+        }
+
+        function switchDay(dayId) {
+            document.getElementById('homepage-dashboard').style.display = 'none';
+            document.querySelector('.nav-wrapper').style.display = 'block';
+
+            document.querySelectorAll('.day-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            const targetContent = document.getElementById(dayId);
+            if (targetContent) targetContent.classList.add('active');
+
+            document.querySelectorAll('.day-circle-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick') === `switchDay('${dayId}')`) {
+                    btn.classList.add('active');
+                }
+            });
+
+            if (DAY_INFO_MAP[dayId]) {
+                document.getElementById('current-date').textContent = DAY_INFO_MAP[dayId].date;
+                document.getElementById('current-location').textContent = DAY_INFO_MAP[dayId].loc;
+            }
+
+            setTimeout(() => {
+                if (targetContent) {
+                    targetContent.querySelectorAll('.timeline-item').forEach(item => {
+                        item.classList.add('show');
+                    });
+                }
+            }, 50);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToDay(dayId) {
+            switchDay(dayId);
+        }
+
+        function returnToHome() {
+            document.getElementById('homepage-dashboard').style.display = 'block';
+            document.querySelector('.nav-wrapper').style.display = 'none';
+            document.querySelectorAll('.day-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
+    <button id="scroll-to-top-btn" onclick="scrollToTop()">⬆️ 回頂端</button>
 </body>
 
 </html>
