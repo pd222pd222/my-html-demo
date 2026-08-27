@@ -2,8 +2,8 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>互動式飛行足跡地圖與紀錄器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>互動式飛行足跡地圖</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
@@ -30,7 +30,7 @@
       display: flex; 
       flex-direction: column; 
       gap: 12px; 
-      z-index: 1000; 
+      z-index: 1005; 
       box-shadow: 4px 0 15px rgba(0,0,0,0.5); 
       overflow-y: auto; 
       transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -40,8 +40,8 @@
       margin-left: -380px;
     }
 
-    #mapContainer { flex: 1; min-width: 0; position: relative; }
-    #map { width: 100%; height: 100%; }
+    #mapContainer { flex: 1; min-width: 0; position: relative; height: 100%; }
+    #map { width: 100%; height: 100%; z-index: 1; }
     
     #map .leaflet-tile-pane {
       filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
@@ -88,11 +88,12 @@
     button.btn-warning { background: #f59e0b; border: none; cursor: pointer; font-weight: bold; }
     button.btn-warning:hover { background: #d97706; }
 
+    /* 浮動控制列 */
     #floatingControls {
       position: absolute;
       top: 15px;
       left: 15px;
-      z-index: 1001;
+      z-index: 1000;
       display: flex;
       gap: 8px;
       opacity: 0;
@@ -100,13 +101,14 @@
       transition: opacity 0.2s ease;
     }
 
-    #sidebar.collapsed ~ #floatingControls {
+    #sidebar.collapsed ~ #mapContainer #floatingControls,
+    body.mobile-collapsed #floatingControls {
       opacity: 1;
       pointer-events: auto;
     }
 
     .floating-btn {
-      background: rgba(30, 41, 59, 0.9);
+      background: rgba(30, 41, 59, 0.85);
       color: #38bdf8;
       border: 1px solid #0284c7;
       padding: 8px 14px;
@@ -122,11 +124,11 @@
     }
     .floating-btn:hover { background: #0284c7; color: #fff; }
     
-    .floating-btn-success { background: rgba(16, 185, 129, 0.9); color: #fff; border-color: #059669; }
+    .floating-btn-success { background: rgba(16, 185, 129, 0.85); color: #fff; border-color: #059669; }
     .floating-btn-success:hover { background: #059669; }
     .floating-btn-success:disabled { background: rgba(51, 65, 85, 0.8); border-color: #334155; color: #64748b; cursor: not-allowed; }
 
-    .floating-btn-danger { background: rgba(239, 68, 68, 0.9); color: #fff; border-color: #dc2626; }
+    .floating-btn-danger { background: rgba(239, 68, 68, 0.85); color: #fff; border-color: #dc2626; }
     .floating-btn-danger:hover { background: #dc2626; }
     .floating-btn-danger:disabled { background: rgba(51, 65, 85, 0.8); border-color: #334155; color: #64748b; cursor: not-allowed; }
 
@@ -189,47 +191,88 @@
     .btn-delete { width: auto; padding: 4px 6px; background: #ef4444; border: none; border-radius: 4px; color: #fff; font-size: 11px; cursor: pointer; }
     .btn-delete:hover { background: #dc2626; }
     
+    /* 飛行狀態提示 Overlay */
     .flight-info-overlay {
-      position: absolute; top: 20px; right: 20px; z-index: 1000;
-      background: rgba(15, 23, 42, 0.9); color: #fff;
-      padding: 12px 18px; border-radius: 12px; backdrop-filter: blur(8px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+      position: absolute; 
+      top: 20px; 
+      right: 20px; 
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.85); 
+      color: #fff;
+      padding: 12px 18px; 
+      border-radius: 12px; 
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4); 
+      border: 1px solid rgba(255,255,255,0.1);
       min-width: 220px;
+      pointer-events: none;
     }
 
-    /* --- 手機：直式 --- */
+    /* --- 手機：直式 (Portrait) RWD 最佳化 --- */
     @media (max-width: 768px) and (orientation: portrait) {
       body { flex-direction: column; }
+      
       #sidebar {
         width: 100%;
         min-width: 0;
         height: auto;
-        max-height: 52vh;
+        max-height: 55vh;
         padding: 14px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         position: absolute;
         top: 0;
         left: 0;
       }
+      
       #sidebar.collapsed {
         margin-left: 0;
         transform: translateY(-100%);
       }
-      #mapContainer { flex: 1; width: 100%; height: 100vh; }
+
+      #mapContainer { 
+        flex: 1; 
+        width: 100%; 
+        height: 100vh; 
+      }
+
+      /* 將當前狀態移至右下角，完全避開頂部按鈕區與頂部抽屜面板 */
       .flight-info-overlay {
-        top: 10px; right: 10px;
-        padding: 8px 12px; min-width: 160px;
+        top: auto;
+        bottom: 25px;
+        right: 12px;
+        padding: 8px 12px;
+        min-width: 150px;
+        max-width: 220px;
+        font-size: 11px;
+      }
+
+      #floatingControls {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        justify-content: flex-start;
+      }
+
+      .floating-btn {
+        padding: 6px 10px;
+        font-size: 12px;
       }
     }
 
-    /* --- 手機：橫式 --- */
+    /* --- 手機：橫式 (Landscape) RWD 最佳化 --- */
     @media (max-width: 900px) and (orientation: landscape) {
       #sidebar { width: 300px; min-width: 260px; padding: 12px; gap: 8px; }
       #sidebar.collapsed { margin-left: -300px; }
       .row { gap: 6px; }
       input, select, button { font-size: 12px; padding: 6px 8px; }
       h2 { font-size: 15px; }
-      .flight-info-overlay { padding: 8px 12px; min-width: 160px; }
+      
+      .flight-info-overlay { 
+        top: 15px; 
+        right: 15px; 
+        padding: 8px 12px; 
+        min-width: 160px; 
+      }
     }
   </style>
 </head>
@@ -339,20 +382,20 @@
   </div>
 </div>
 
-<!-- 收合時於地圖左上角顯現的浮動控制按鈕 -->
-<div id="floatingControls">
-  <button class="floating-btn" onclick="toggleSidebar()">展開面板</button>
-  <button class="floating-btn floating-btn-success" id="floatPlayBtn" onclick="startAnimation()">▶ 播放動畫</button>
-  <button class="floating-btn floating-btn-danger" id="floatStopBtn" onclick="stopAnimation()" disabled>⏹ 停止播放</button>
-</div>
-
 <div id="mapContainer">
+  <!-- 收合時於地圖懸浮顯現的控制按鈕 -->
+  <div id="floatingControls">
+    <button class="floating-btn" onclick="toggleSidebar()">展開</button>
+    <button class="floating-btn floating-btn-success" id="floatPlayBtn" onclick="startAnimation()">▶ 播放</button>
+    <button class="floating-btn floating-btn-danger" id="floatStopBtn" onclick="stopAnimation()" disabled>⏹ 停止</button>
+  </div>
+
   <div id="map"></div>
 
   <div class="flight-info-overlay">
-    <div style="font-size: 12px; color: #94a3b8;">當前狀態</div>
-    <div id="overlay-status" style="font-weight: bold; color: #38bdf8; margin-top: 4px;">待命</div>
-    <div id="overlay-detail" style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">-</div>
+    <div style="font-size: 11px; color: #94a3b8;">當前狀態</div>
+    <div id="overlay-status" style="font-weight: bold; color: #38bdf8; margin-top: 2px;">待命</div>
+    <div id="overlay-detail" style="font-size: 11px; color: #cbd5e1; margin-top: 2px;">-</div>
   </div>
 </div>
 
@@ -379,7 +422,7 @@
     "PVG (上海浦東)": [121.805, 31.143], "SHA (上海虹橋)": [121.336, 31.198],
     "PEK (北京首都)": [116.597, 40.080], "PKX (北京大興)": [116.410, 39.510],
     "CAN (廣州)": [113.299, 23.392], "SZX (深圳)": [113.811, 22.639],
-    "CTU (成都雙流)": [103.947, 30.578], CKG: [106.642, 29.719],
+    "CTU (成都雙流)": [103.947, 30.578], "CKG (重慶江北)": [106.642, 29.719],
     "XIY (西安)": [108.751, 34.447], "KMG (昆明)": [102.929, 24.992],
     "XMN (廈門)": [118.128, 24.544], "HGH (杭州)": [119.729, 30.229],
     "NKG (南京)": [118.862, 31.742], "WUH (武漢)": [114.208, 30.784],
@@ -397,7 +440,7 @@
     "PEN (檳城)": [100.277, 5.297], "CGK (雅加達)": [106.655, -6.126],
     "DPS (峇里島)": [115.167, -8.748], "MNL (馬尼拉)": [121.020, 14.509],
     "CEB (宿霧)": [123.979, 10.308], "TAG (薄荷島)": [123.853, 9.565],
-    "HAN (河內)": [105.807, 21.221], "SGN (胡止明市)": [106.652, 10.819],
+    "HAN (河內)": [105.807, 21.221], "SGN (胡志明市)": [106.652, 10.819],
     "DAD (峴港)": [108.199, 16.044], "RGN (仰光)": [96.133, 16.907],
     "PNH (金邊)": [104.844, 11.547], "VTE (永珍)": [102.563, 17.988],
 
@@ -470,6 +513,12 @@
   function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('collapsed');
+    
+    if (sidebar.classList.contains('collapsed')) {
+      document.body.classList.add('mobile-collapsed');
+    } else {
+      document.body.classList.remove('mobile-collapsed');
+    }
 
     setTimeout(() => {
       if (typeof map !== 'undefined') {
