@@ -2,7 +2,8 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>互動式飛行足跡地圖與紀錄器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>互動式飛行足跡地圖</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
@@ -91,6 +92,41 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
       min-width: 220px;
     }
+
+    /* flex 子元素預設 min-width:auto */
+    .row, .form-group, .row .form-group {
+      min-width: 0;
+    }
+
+    /* --- 手機：直式 --- */
+    @media (max-width: 768px) and (orientation: portrait) {
+      body { flex-direction: column; }
+      #sidebar {
+        width: 100%;
+        min-width: 0;
+        max-height: 48vh;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      }
+      #map {
+        flex: 1;
+        height: auto;
+        min-height: 200px;
+      }
+    }
+
+    /* --- 手機：橫式 --- */
+    @media (max-width: 900px) and (orientation: landscape) {
+      #sidebar {
+        width: 300px;
+        min-width: 260px;
+        padding: 12px;
+        gap: 8px;
+      }
+      .row { gap: 6px; }
+      input, select, button { font-size: 12px; padding: 6px 8px; }
+      h2 { font-size: 15px; }
+      .flight-info-overlay { padding: 8px 12px; min-width: 160px; }
+    }
   </style>
 </head>
 <body>
@@ -116,7 +152,7 @@
       <input type="date" id="startDate">
     </div>
     <div class="form-group">
-      <label>開始時間 (可選)</label>
+      <label>開始時間 (選填)</label>
       <input type="time" id="startTime">
     </div>
   </div>
@@ -127,18 +163,18 @@
       <input type="date" id="endDate">
     </div>
     <div class="form-group">
-      <label>結束時間 (可選)</label>
+      <label>結束時間 (選填)</label>
       <input type="time" id="endTime">
     </div>
   </div>
 
   <div class="row">
     <div class="form-group">
-      <label>航班號碼 (可選)</label>
+      <label>航班號碼 (選填)</label>
       <input type="text" id="flightNo" placeholder="請輸入航班號碼">
     </div>
     <div class="form-group">
-      <label>航空公司 (可選)</label>
+      <label>航空公司 (選填)</label>
       <input type="text" id="airline" placeholder="請輸入航空公司">
     </div>
   </div>
@@ -196,6 +232,7 @@
 </div>
 
 <script>
+  // 座標格式統一為 [經度 lng, 緯度 lat]，僅供地圖繪製用途，精確度足夠展示但非航空導航級數據
   const defaultAirports = {
     // --- 台灣 ---
     "TPE (台灣桃園)": [121.233, 25.077], "TSA (台北松山)": [121.552, 25.069],
@@ -301,19 +338,26 @@
   let mapLayers = [];
   let animTimer = null;
   let isPlaying = false;
-  let segmentDurations = []; 
-  let effectiveIntervalSec = 0; 
-  let currentViewLng = null; 
+  let flightDistances = []; // 紀錄各航段的實際距離
+  let segmentDurations = []; // 紀錄各航段實際要播放的秒數（依距離長短分配後）
+  let effectiveIntervalSec = 0; // 實際套用的停頓秒數（可能因航班數太多而自動收斂）
+  let currentViewLng = null; // 目前鏡頭所在「世界副本」的經度基準，讓下一段接續同一份地圖播放
 
+  // 當「航段數量多 × 停頓秒數」已經吃光甚至超過使用者選的總秒數時，
+  // 自動把停頓秒數壓縮，確保停頓不會反過來把總播放時間拖到遠超過使用者的設定。
   function calcEffectiveInterval(rawIntervalSec, totalDurationSec, n) {
     if (n <= 1 || rawIntervalSec <= 0) return rawIntervalSec;
-    const MAX_PAUSE_RATIO = 0.5; 
+    const MAX_PAUSE_RATIO = 0.5;
     const rawPauseTotal = rawIntervalSec * (n - 1);
     const maxPauseTotal = totalDurationSec * MAX_PAUSE_RATIO;
     if (rawPauseTotal <= maxPauseTotal) return rawIntervalSec;
     return maxPauseTotal / (n - 1);
   }
 
+  // 依照「距離長短」決定每個航段的播放秒數：
+  // 1) 先用 MIN_SEG_SEC ~ MAX_SEG_SEC 之間，依相對距離（本次清單中最短~最長）做線性對應，
+  //    讓長程航班感覺飛比較久、短程航班飛比較快。
+  // 2) 再把所有航段秒數等比例縮放，讓「所有航段秒數 + 航段間停頓秒數」的總和貼近使用者選擇的總秒數。
   function calcSegmentDurations(distances, totalDurationSec, intervalSec) {
     const MIN_SEG_SEC = 0.5;
     const MAX_SEG_SEC = 2.0;
@@ -321,6 +365,7 @@
 
     if (n === 0) return [];
 
+    // Step 1：依相對距離算出基礎秒數
     const minD = Math.min(...distances);
     const maxD = Math.max(...distances);
     let baseDurations;
@@ -334,9 +379,11 @@
       });
     }
 
+    // Step 2：扣掉航段間的停頓秒數，剩下的秒數才是用來分配給「飛行動畫」本身的時間
     const pauseTotal = intervalSec * Math.max(0, n - 1);
     let availableFlightTime = totalDurationSec - pauseTotal;
 
+    // 保底：每段至少留一點點時間可以看到移動
     const MIN_TOTAL_FLIGHT_TIME = n * 0.05;
     if (availableFlightTime < MIN_TOTAL_FLIGHT_TIME) {
       availableFlightTime = MIN_TOTAL_FLIGHT_TIME;
@@ -345,6 +392,7 @@
     const sumBase = baseDurations.reduce((a, b) => a + b, 0);
     const scale = sumBase > 0 ? (availableFlightTime / sumBase) : 1;
 
+    // 每段最終秒數也設一個很低的下限（0.05 秒），純粹避免出現 0 秒導致除以 0
     return baseDurations.map(d => Math.max(0.05, d * scale));
   }
 
@@ -382,12 +430,12 @@
       startTime: document.getElementById('startTime').value || "",
       endDate: document.getElementById('endDate').value || "",
       endTime: document.getElementById('endTime').value || "",
-      flight: document.getElementById('flightNo').value || "",
+      flight: document.getElementById('flightNo').value || "未定航班",
       from: from,
       to: to,
       fromCoord: fromCoord,
       toCoord: toCoord,
-      airline: document.getElementById('airline').value || ""
+      airline: document.getElementById('airline').value || "未指定"
     };
 
     myFlightLogs.push(newLog);
@@ -454,6 +502,7 @@
         <button class="btn-delete" onclick="deleteFlight(${index})">刪除</button>
       `;
 
+      // 拖拉事件綁定
       div.addEventListener('dragstart', handleDragStart);
       div.addEventListener('dragover', handleDragOver);
       div.addEventListener('drop', handleDrop);
@@ -463,6 +512,7 @@
     });
   }
 
+  // --- 拖動排序邏輯 ---
   let draggedIndex = null;
 
   function handleDragStart(e) {
@@ -544,8 +594,8 @@
     if (isPlaying) return;
     clearMapLayers();
 
-    // 區域計算各航線距離
-    const distances = myFlightLogs.map(log => {
+    // 預先計算所有航段的距離，再依距離長短分配每段實際要播放的秒數
+    flightDistances = myFlightLogs.map(log => {
       const p1 = turf.point(log.fromCoord);
       const p2 = turf.point(log.toCoord);
       return turf.distance(p1, p2, { units: 'kilometers' });
@@ -553,11 +603,11 @@
 
     const totalDurationSec = parseFloat(document.getElementById('totalDurationSec').value) || 10;
     const rawIntervalSec = parseFloat(document.getElementById('intervalSec').value) || 0;
-    
-    // 依距離計算各航段動態播放秒數與壓縮停頓
-    effectiveIntervalSec = calcEffectiveInterval(rawIntervalSec, totalDurationSec, distances.length);
-    segmentDurations = calcSegmentDurations(distances, totalDurationSec, effectiveIntervalSec);
+    effectiveIntervalSec = calcEffectiveInterval(rawIntervalSec, totalDurationSec, flightDistances.length);
+    segmentDurations = calcSegmentDurations(flightDistances, totalDurationSec, effectiveIntervalSec);
 
+    // 每次重新播放都重置「目前鏡頭所在世界副本」的基準，讓第一段從原始座標開始，
+    // 之後每一段會依上一段結束時的位置接續，不會突然跳回另一份重複地圖。
     currentViewLng = null;
     const firstFlight = myFlightLogs[0];
     map.setView([firstFlight.fromCoord[1], firstFlight.fromCoord[0]], 3, { animate: false });
@@ -599,20 +649,25 @@
     }
 
     const flight = myFlightLogs[index];
-    const durationSec = segmentDurations[index] || 0.05;
+    const intervalSec = effectiveIntervalSec;
+
+    // 使用 startAnimation 時預先算好的秒數（依距離長短分配，且總和已貼近使用者選擇的總秒數）
+    const thisFlightDurationSec = segmentDurations[index] || 0.05;
 
     document.getElementById('overlay-status').textContent = `${flight.flight} (${flight.from.split(' ')[0]} ➔ ${flight.to.split(' ')[0]})`;
-    document.getElementById('overlay-detail').textContent = `日期：${flight.date} ${flight.startTime} | 預計耗時：${durationSec.toFixed(1)}s`;
+    document.getElementById('overlay-detail').textContent = `日期：${flight.date} ${flight.startTime} | 預計耗時：${thisFlightDurationSec.toFixed(1)}s`;
 
-    // 依分配到的動畫秒數動態取得座標點 (設定 50fps)
+    // 描點數量依「這段要播放幾秒」動態決定（約 50fps），
+    // 避免固定用 300 個點時，短秒數的航段被 10ms 的 step 下限強迫拉長播放時間。
     const FRAME_MS = 20;
-    const npoints = Math.min(300, Math.max(8, Math.round((durationSec * 1000) / FRAME_MS)));
+    const npoints = Math.min(300, Math.max(8, Math.round((thisFlightDurationSec * 1000) / FRAME_MS)));
     const gc = turf.greatCircle(flight.fromCoord, flight.toCoord, { npoints });
     const rawCoords = flattenGreatCircleCoords(gc.geometry);
 
     const unwrappedCoords = [];
     let prevLng = null;
 
+    // 讓這段的起點盡量接續「目前鏡頭所在的世界副本」
     let offset = 0;
     if (currentViewLng !== null) {
       const rawStartLng = rawCoords[0][0];
@@ -643,7 +698,7 @@
 
     const startPt = unwrappedCoords[0];
     const endPt = unwrappedCoords[unwrappedCoords.length - 1];
-    currentViewLng = endPt[1];
+    currentViewLng = endPt[1]; // 記住這段結束的位置，下一段接續同一份世界副本
 
     const startMarker = L.circleMarker(startPt, { radius: 5, color: '#38bdf8', fillColor: '#fff', fillOpacity: 1 }).addTo(map);
     const endMarker = L.circleMarker(endPt, { radius: 6, color: '#f43f5e', fillColor: '#f43f5e', fillOpacity: 0.8 }).addTo(map);
@@ -653,6 +708,8 @@
 
     if (!map.hasLayer(movingPlane)) movingPlane.addTo(map);
 
+    // 計算當前航段每一 Step 的時間毫秒數
+    const stepIntervalMs = Math.max(4, (thisFlightDurationSec * 1000) / unwrappedCoords.length);
     let step = 0;
 
     function animateStep() {
@@ -666,11 +723,11 @@
         map.setView(currentCoord, 3, { animate: false });
 
         step++;
-        animTimer = setTimeout(animateStep, FRAME_MS);
+        animTimer = setTimeout(animateStep, stepIntervalMs);
       } else {
         animTimer = setTimeout(() => {
           playFlightSequence(index + 1);
-        }, effectiveIntervalSec * 1000);
+        }, intervalSec * 1000);
       }
     }
 
