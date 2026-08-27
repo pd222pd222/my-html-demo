@@ -9,8 +9,37 @@
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; height: 100vh; background: #0b0e14; color: #fff; overflow: hidden; }
-    #sidebar { width: 380px; min-width: 380px; background: #1e293b; padding: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; box-shadow: 4px 0 15px rgba(0,0,0,0.5); overflow-y: auto; }
+    body { 
+      margin: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      display: flex; 
+      height: 100vh; 
+      background: #0b0e14; 
+      color: #fff; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* 側邊欄：支援抽屜式平滑滑出動畫 */
+    #sidebar { 
+      width: 380px; 
+      min-width: 380px; 
+      height: 100vh;
+      background: #1e293b; 
+      padding: 20px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 12px; 
+      z-index: 1000; 
+      box-shadow: 4px 0 15px rgba(0,0,0,0.5); 
+      overflow-y: auto; 
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #sidebar.collapsed {
+      margin-left: -380px;
+    }
+
     #mapContainer { flex: 1; min-width: 0; position: relative; }
     #map { width: 100%; height: 100%; }
     
@@ -18,55 +47,89 @@
       filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
     }
     
-    h2 { margin: 0 0 5px 0; font-size: 18px; color: #38bdf8; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+    h2 { margin: 0; font-size: 18px; color: #38bdf8; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; width: 100%; min-width: 0; }
     label { font-size: 12px; color: #94a3b8; }
     
     input, select, button { 
-  width: 100%; 
-  max-width: 100%; 
-  padding: 8px 10px; 
-  border-radius: 6px; 
-  border: 1px solid #334155; 
-  background: #0f172a; 
-  color: #fff; 
-  font-size: 13px; 
-  color-scheme: dark; 
-  -webkit-appearance: none; 
-  appearance: none;
-}
-
-input[type="date"], input[type="time"] {
-  min-width: 0; 
-  padding-right: 4px; 
-}
+      width: 100%; 
+      max-width: 100%;
+      padding: 8px 10px; 
+      border-radius: 6px; 
+      border: 1px solid #334155; 
+      background: #0f172a; 
+      color: #fff; 
+      font-size: 13px; 
+      color-scheme: dark; 
+      -webkit-appearance: none;
+      appearance: none;
+    }
     input:focus, select:focus { outline: none; border-color: #38bdf8; }
-    .row { 
-  display: flex; 
-  gap: 8px; 
-  width: 100%; 
-  min-width: 0; 
-}
 
-.row .form-group { 
-  flex: 1 1 0%; 
-  min-width: 0; 
-}
+    input[type="date"], input[type="time"] {
+      min-width: 0;
+      padding-right: 4px;
+    }
+
+    .row { display: flex; gap: 8px; width: 100%; min-width: 0; }
+    .row .form-group { flex: 1 1 0%; min-width: 0; }
     
     button.btn-primary { background: #0284c7; border: none; cursor: pointer; font-weight: bold; margin-top: 5px; }
     button.btn-primary:hover { background: #0369a1; }
     
     button.btn-success { background: #10b981; border: none; cursor: pointer; font-weight: bold; }
     button.btn-success:hover { background: #059669; }
+    button.btn-success:disabled { background: #334155; cursor: not-allowed; opacity: 0.5; }
     
     button.btn-danger { background: #ef4444; border: none; cursor: pointer; font-weight: bold; }
     button.btn-danger:hover { background: #dc2626; }
-    button.btn-danger:disabled { background: #334155; cursor: not-allowed; }
+    button.btn-danger:disabled { background: #334155; cursor: not-allowed; opacity: 0.5; }
 
     button.btn-warning { background: #f59e0b; border: none; cursor: pointer; font-weight: bold; }
     button.btn-warning:hover { background: #d97706; }
 
-    /* 折疊表單樣式 */
+    #floatingControls {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 1001;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    #sidebar.collapsed ~ #floatingControls {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .floating-btn {
+      background: rgba(30, 41, 59, 0.9);
+      color: #38bdf8;
+      border: 1px solid #0284c7;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .floating-btn:hover { background: #0284c7; color: #fff; }
+    
+    .floating-btn-success { background: rgba(16, 185, 129, 0.9); color: #fff; border-color: #059669; }
+    .floating-btn-success:hover { background: #059669; }
+    .floating-btn-success:disabled { background: rgba(51, 65, 85, 0.8); border-color: #334155; color: #64748b; cursor: not-allowed; }
+
+    .floating-btn-danger { background: rgba(239, 68, 68, 0.9); color: #fff; border-color: #dc2626; }
+    .floating-btn-danger:hover { background: #dc2626; }
+    .floating-btn-danger:disabled { background: rgba(51, 65, 85, 0.8); border-color: #334155; color: #64748b; cursor: not-allowed; }
+
     .toggle-form-btn {
       background: #334155;
       color: #38bdf8;
@@ -120,7 +183,6 @@ input[type="date"], input[type="time"] {
     .flight-main { font-weight: bold; font-size: 13px; color: #38bdf8; }
     .flight-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
     
-    /* 排序與刪除按鈕群組 */
     .item-controls { display: flex; gap: 4px; align-items: center; }
     .btn-move { width: auto; padding: 4px 6px; background: #334155; border: none; border-radius: 4px; color: #fff; font-size: 11px; cursor: pointer; }
     .btn-move:hover { background: #475569; }
@@ -135,32 +197,35 @@ input[type="date"], input[type="time"] {
       min-width: 220px;
     }
 
-    .row, .form-group, .row .form-group { min-width: 0; }
-
     /* --- 手機：直式 --- */
     @media (max-width: 768px) and (orientation: portrait) {
-  body { flex-direction: column; }
-  #sidebar {
-    width: 100%;
-    min-width: 0;
-    max-height: 52vh;
-    padding: 14px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  }
-  
-
-  .row { gap: 6px; }
-  
-  #mapContainer { flex: 1; min-height: 220px; }
-  .flight-info-overlay {
-    top: 10px; right: 10px;
-    padding: 8px 12px; min-width: 160px;
-  }
-}
+      body { flex-direction: column; }
+      #sidebar {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        max-height: 52vh;
+        padding: 14px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      #sidebar.collapsed {
+        margin-left: 0;
+        transform: translateY(-100%);
+      }
+      #mapContainer { flex: 1; width: 100%; height: 100vh; }
+      .flight-info-overlay {
+        top: 10px; right: 10px;
+        padding: 8px 12px; min-width: 160px;
+      }
+    }
 
     /* --- 手機：橫式 --- */
     @media (max-width: 900px) and (orientation: landscape) {
       #sidebar { width: 300px; min-width: 260px; padding: 12px; gap: 8px; }
+      #sidebar.collapsed { margin-left: -300px; }
       .row { gap: 6px; }
       input, select, button { font-size: 12px; padding: 6px 8px; }
       h2 { font-size: 15px; }
@@ -170,8 +235,12 @@ input[type="date"], input[type="time"] {
 </head>
 <body>
 
+<!-- 側邊欄 -->
 <div id="sidebar">
-  <h2>✈️ 飛行紀錄管理</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>✈️ 飛行紀錄管理</h2>
+    <button class="btn-sm" style="background:#334155; color:#38bdf8; border:1px solid #0284c7; cursor:pointer; padding:6px 10px; border-radius:6px; font-weight:bold;" onclick="toggleSidebar()">◀ 收合面板</button>
+  </div>
 
   <!-- 檔案操作 -->
   <div class="file-actions" style="border-top: none; padding-top: 0;">
@@ -227,7 +296,7 @@ input[type="date"], input[type="time"] {
         <input type="date" id="startDate">
       </div>
       <div class="form-group">
-        <label>開始時間 (可選)</label>
+        <label>開始時間 (選填)</label>
         <input type="time" id="startTime">
       </div>
     </div>
@@ -238,19 +307,19 @@ input[type="date"], input[type="time"] {
         <input type="date" id="endDate">
       </div>
       <div class="form-group">
-        <label>結束時間 (可選)</label>
+        <label>結束時間 (選填)</label>
         <input type="time" id="endTime">
       </div>
     </div>
 
     <div class="row">
       <div class="form-group">
-        <label>航班號碼 (可選)</label>
-        <input type="text" id="flightNo" placeholder="如 JX026">
+        <label>航班號碼 (選填)</label>
+        <input type="text" id="flightNo" placeholder="請輸入航班號碼">
       </div>
       <div class="form-group">
-        <label>航空公司 (可選)</label>
-        <input type="text" id="airline" placeholder="如 星宇航空">
+        <label>航空公司 (選填)</label>
+        <input type="text" id="airline" placeholder="請輸入航空公司">
       </div>
     </div>
 
@@ -268,6 +337,13 @@ input[type="date"], input[type="time"] {
     </div>
     <div class="flight-list" id="flightListContainer"></div>
   </div>
+</div>
+
+<!-- 收合時於地圖左上角顯現的浮動控制按鈕 -->
+<div id="floatingControls">
+  <button class="floating-btn" onclick="toggleSidebar()">展開面板</button>
+  <button class="floating-btn floating-btn-success" id="floatPlayBtn" onclick="startAnimation()">▶ 播放動畫</button>
+  <button class="floating-btn floating-btn-danger" id="floatStopBtn" onclick="stopAnimation()" disabled>⏹ 停止播放</button>
 </div>
 
 <div id="mapContainer">
@@ -303,7 +379,7 @@ input[type="date"], input[type="time"] {
     "PVG (上海浦東)": [121.805, 31.143], "SHA (上海虹橋)": [121.336, 31.198],
     "PEK (北京首都)": [116.597, 40.080], "PKX (北京大興)": [116.410, 39.510],
     "CAN (廣州)": [113.299, 23.392], "SZX (深圳)": [113.811, 22.639],
-    "CTU (成都雙流)": [103.947, 30.578], "CKG (重慶)": [106.642, 29.719],
+    "CTU (成都雙流)": [103.947, 30.578], CKG: [106.642, 29.719],
     "XIY (西安)": [108.751, 34.447], "KMG (昆明)": [102.929, 24.992],
     "XMN (廈門)": [118.128, 24.544], "HGH (杭州)": [119.729, 30.229],
     "NKG (南京)": [118.862, 31.742], "WUH (武漢)": [114.208, 30.784],
@@ -321,7 +397,7 @@ input[type="date"], input[type="time"] {
     "PEN (檳城)": [100.277, 5.297], "CGK (雅加達)": [106.655, -6.126],
     "DPS (峇里島)": [115.167, -8.748], "MNL (馬尼拉)": [121.020, 14.509],
     "CEB (宿霧)": [123.979, 10.308], "TAG (薄荷島)": [123.853, 9.565],
-    "HAN (河內)": [105.807, 21.221], "SGN (胡志明市)": [106.652, 10.819],
+    "HAN (河內)": [105.807, 21.221], "SGN (胡止明市)": [106.652, 10.819],
     "DAD (峴港)": [108.199, 16.044], "RGN (仰光)": [96.133, 16.907],
     "PNH (金邊)": [104.844, 11.547], "VTE (永珍)": [102.563, 17.988],
 
@@ -368,7 +444,7 @@ input[type="date"], input[type="time"] {
     "LAS (拉斯維加斯)": [-115.152, 36.084], "PHX (鳳凰城)": [-112.011, 33.435],
     "IAD (華盛頓杜勒斯)": [-77.456, 38.953], "BOS (波士頓)": [-71.005, 42.366],
     "MIA (邁阿密)": [-80.291, 25.796], "YYZ (多倫多)": [-79.631, 43.678],
-    "YVR (溫哥華)": [-123.182, 49.197], "YUL (蒙特婁)": [-73.741, 45.471],
+    "YVR (溫哥華)": [-123.182, 49.197], "YUL (蒙特樓)": [-73.741, 45.471],
     "MEX (墨西哥城)": [-99.072, 19.436], "PTY (巴拿馬城)": [-79.384, 9.071],
 
     // --- 中南美 ---
@@ -390,6 +466,24 @@ input[type="date"], input[type="time"] {
   let segmentDurations = [];
   let effectiveIntervalSec = 0;
   let currentViewLng = null;
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+
+    setTimeout(() => {
+      if (typeof map !== 'undefined') {
+        map.invalidateSize();
+      }
+    }, 320);
+  }
+
+  function setPlayButtonsState(playing) {
+    document.getElementById('playBtn').disabled = playing;
+    document.getElementById('floatPlayBtn').disabled = playing;
+    document.getElementById('stopBtn').disabled = !playing;
+    document.getElementById('floatStopBtn').disabled = !playing;
+  }
 
   function calcEffectiveInterval(rawIntervalSec, totalDurationSec, n) {
     if (n <= 1 || rawIntervalSec <= 0) return rawIntervalSec;
@@ -450,7 +544,6 @@ input[type="date"], input[type="time"] {
 
   const movingPlane = L.circleMarker([0, 0], { radius: 7, color: '#ffffff', fillColor: '#38bdf8', fillOpacity: 1 });
 
-  // 切換折疊表單
   function toggleForm() {
     const form = document.getElementById('addFlightForm');
     const btn = document.querySelector('.toggle-form-btn');
@@ -491,8 +584,6 @@ input[type="date"], input[type="time"] {
 
     myFlightLogs.push(newLog);
     updateFlightUI();
-    
-    // 新增後自動收合表單
     toggleForm();
   }
 
@@ -638,16 +729,14 @@ input[type="date"], input[type="time"] {
     map.setView([firstFlight.fromCoord[1], firstFlight.fromCoord[0]], 3, { animate: false });
 
     isPlaying = true;
-    document.getElementById('playBtn').disabled = true;
-    document.getElementById('stopBtn').disabled = false;
+    setPlayButtonsState(true);
     playFlightSequence(0);
   }
 
   function stopAnimation() {
     if (animTimer) clearTimeout(animTimer);
     isPlaying = false;
-    document.getElementById('playBtn').disabled = false;
-    document.getElementById('stopBtn').disabled = true;
+    setPlayButtonsState(false);
     document.getElementById('overlay-status').textContent = "已停止";
     document.getElementById('overlay-detail').textContent = "使用者手動取消播放";
     if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
@@ -667,8 +756,7 @@ input[type="date"], input[type="time"] {
       document.getElementById('overlay-status').textContent = "播放完成";
       document.getElementById('overlay-detail').textContent = "全數航線已繪製完畢";
       isPlaying = false;
-      document.getElementById('playBtn').disabled = false;
-      document.getElementById('stopBtn').disabled = true;
+      setPlayButtonsState(false);
       if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
       return;
     }
