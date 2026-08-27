@@ -10,20 +10,7 @@
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; height: 100vh; background: #0b0e14; color: #fff; overflow: hidden; }
-    
-    /* 電腦版預設：側邊欄佔 1/3 (33.33vw)，地圖佔 2/3 */
-    #sidebar { 
-      width: 33.33vw; 
-      min-width: 300px; 
-      background: #1e293b; 
-      padding: 16px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 10px; 
-      z-index: 1000; 
-      box-shadow: 4px 0 15px rgba(0,0,0,0.5); 
-      overflow-y: auto; 
-    }
+    #sidebar { width: 380px; min-width: 380px; background: #1e293b; padding: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; box-shadow: 4px 0 15px rgba(0,0,0,0.5); overflow-y: auto; }
     #mapContainer { flex: 1; min-width: 0; position: relative; }
     #map { width: 100%; height: 100%; }
     
@@ -32,25 +19,39 @@
     }
     
     h2 { margin: 0 0 5px 0; font-size: 18px; color: #38bdf8; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; width: 100%; min-width: 0; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
     label { font-size: 12px; color: #94a3b8; }
     
-    /* 確保所有輸入元素不會溢出容器 */
     input, select, button { 
-      width: 100%; 
-      max-width: 100%;
-      padding: 8px 10px; 
-      border-radius: 6px; 
-      border: 1px solid #334155; 
-      background: #0f172a; 
-      color: #fff; 
-      font-size: 13px; 
-      color-scheme: dark; 
-      box-sizing: border-box;
-    }
+  width: 100%; 
+  max-width: 100%; 
+  padding: 8px 10px; 
+  border-radius: 6px; 
+  border: 1px solid #334155; 
+  background: #0f172a; 
+  color: #fff; 
+  font-size: 13px; 
+  color-scheme: dark; 
+  -webkit-appearance: none; 
+  appearance: none;
+}
+
+input[type="date"], input[type="time"] {
+  min-width: 0; 
+  padding-right: 4px; 
+}
     input:focus, select:focus { outline: none; border-color: #38bdf8; }
-    .row { display: flex; gap: 8px; width: 100%; min-width: 0; }
-    .row .form-group { flex: 1; }
+    .row { 
+  display: flex; 
+  gap: 8px; 
+  width: 100%; 
+  min-width: 0; 
+}
+
+.row .form-group { 
+  flex: 1 1 0%; 
+  min-width: 0; 
+}
     
     button.btn-primary { background: #0284c7; border: none; cursor: pointer; font-weight: bold; margin-top: 5px; }
     button.btn-primary:hover { background: #0369a1; }
@@ -86,25 +87,22 @@
       padding: 12px;
       border-radius: 8px;
       border: 1px solid #334155;
-      width: 100%;
-      box-sizing: border-box;
-      overflow: hidden;
     }
     .form-container.active { display: flex; }
 
-    .file-actions { display: flex; gap: 8px; margin-top: 5px; border-top: 1px solid #334155; padding-top: 10px; }
+    .file-actions { display: flex; gap: 8px; margin-top: 5px; border-top: 1px solid #334155; padding-top: 12px; }
     .file-actions input[type="file"] { display: none; }
     .file-btn { flex: 1; text-align: center; padding: 8px; border-radius: 6px; background: #334155; cursor: pointer; font-size: 12px; }
     .file-btn:hover { background: #475569; }
 
-    .control-panel { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; width: 100%; box-sizing: border-box; }
+    .control-panel { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
     
-    .flight-list-section { display: flex; flex-direction: column; gap: 6px; flex: 1; min-height: 120px; }
+    .flight-list-section { display: flex; flex-direction: column; gap: 6px; flex: 1; min-height: 200px; }
     .list-header { display: flex; justify-content: space-between; align-items: center; }
     .list-actions { display: flex; gap: 6px; }
     .btn-sm { width: auto; padding: 2px 8px; font-size: 11px; }
 
-    .flight-list { flex: 1; max-height: 220px; overflow-y: auto; background: #0f172a; border-radius: 6px; border: 1px solid #334155; padding: 8px; }
+    .flight-list { flex: 1; max-height: 260px; overflow-y: auto; background: #0f172a; border-radius: 6px; border: 1px solid #334155; padding: 8px; }
     .flight-item { 
       padding: 8px; 
       border-bottom: 1px solid #1e293b; 
@@ -118,8 +116,8 @@
     }
     .flight-item:last-child { margin-bottom: 0; }
     .flight-item input[type="checkbox"] { width: auto; cursor: pointer; }
-    .flight-content { flex: 1; min-width: 0; }
-    .flight-main { font-weight: bold; font-size: 13px; color: #38bdf8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .flight-content { flex: 1; }
+    .flight-main { font-weight: bold; font-size: 13px; color: #38bdf8; }
     .flight-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
     
     /* 排序與刪除按鈕群組 */
@@ -134,38 +132,39 @@
       background: rgba(15, 23, 42, 0.9); color: #fff;
       padding: 12px 18px; border-radius: 12px; backdrop-filter: blur(8px);
       box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
-      min-width: 200px;
+      min-width: 220px;
     }
 
-    /* --- 手機直式：控制面板 1/3 (35vh)，地圖 2/3 (65vh) --- */
+    .row, .form-group, .row .form-group { min-width: 0; }
+
+    /* --- 手機：直式 --- */
     @media (max-width: 768px) and (orientation: portrait) {
-      body { flex-direction: column; }
-      #sidebar {
-        width: 100%;
-        min-width: 0;
-        height: 35vh; /* 佔高 1/3 */
-        max-height: 35vh;
-        padding: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      }
-      .row { flex-direction: row; } /* 保持橫向排列不擠壓 */
-      #mapContainer {
-        height: 65vh; /* 地圖佔高 2/3 */
-        flex: none;
-      }
-      .flight-info-overlay {
-        top: 10px; right: 10px;
-        padding: 8px 12px; min-width: 150px;
-      }
-    }
+  body { flex-direction: column; }
+  #sidebar {
+    width: 100%;
+    min-width: 0;
+    max-height: 52vh;
+    padding: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  
 
-    /* --- 手機橫式：控制面板 1/3 (33.33vw)，地圖 2/3 --- */
+  .row { gap: 6px; }
+  
+  #mapContainer { flex: 1; min-height: 220px; }
+  .flight-info-overlay {
+    top: 10px; right: 10px;
+    padding: 8px 12px; min-width: 160px;
+  }
+}
+
+    /* --- 手機：橫式 --- */
     @media (max-width: 900px) and (orientation: landscape) {
-      #sidebar { width: 33.33vw; min-width: 250px; padding: 10px; gap: 6px; }
+      #sidebar { width: 300px; min-width: 260px; padding: 12px; gap: 8px; }
       .row { gap: 6px; }
       input, select, button { font-size: 12px; padding: 6px 8px; }
       h2 { font-size: 15px; }
-      .flight-info-overlay { padding: 8px 12px; min-width: 150px; }
+      .flight-info-overlay { padding: 8px 12px; min-width: 160px; }
     }
   </style>
 </head>
@@ -196,7 +195,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label>航段停頓秒數</label>
+        <label>航段之間停頓秒數</label>
         <input type="number" id="intervalSec" value="0.5" step="0.5" min="0">
       </div>
     </div>
@@ -451,6 +450,7 @@
 
   const movingPlane = L.circleMarker([0, 0], { radius: 7, color: '#ffffff', fillColor: '#38bdf8', fillOpacity: 1 });
 
+  // 切換折疊表單
   function toggleForm() {
     const form = document.getElementById('addFlightForm');
     const btn = document.querySelector('.toggle-form-btn');
@@ -491,6 +491,8 @@
 
     myFlightLogs.push(newLog);
     updateFlightUI();
+    
+    // 新增後自動收合表單
     toggleForm();
   }
 
@@ -676,7 +678,7 @@
     const thisFlightDurationSec = segmentDurations[index] || 0.05;
 
     document.getElementById('overlay-status').textContent = `${flight.flight} (${flight.from.split(' ')[0]} ➔ ${flight.to.split(' ')[0]})`;
-    document.getElementById('overlay-detail').textContent = `日期：${flight.date} ${flight.startTime} | 預計耗時：${thisFlightDurationSec.toFixed(1)}s`;
+    document.getElementById('overlay-detail').textContent = `日期：${flight.date} ${flight.startTime}`;
 
     const FRAME_MS = 20;
     const npoints = Math.min(300, Math.max(8, Math.round((thisFlightDurationSec * 1000) / FRAME_MS)));
