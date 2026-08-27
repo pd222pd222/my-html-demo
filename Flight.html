@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>互動式飛行足跡地圖與紀錄器</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; height: 100vh; background: #0b0e14; color: #fff; overflow: hidden; }
+    #sidebar { width: 380px; min-width: 380px; background: #1e293b; padding: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; box-shadow: 4px 0 15px rgba(0,0,0,0.5); overflow-y: auto; }
+    #map { flex: 1; height: 100vh; }
+    
+    #map .leaflet-tile-pane {
+      filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+    }
+    
+    h2 { margin: 0 0 5px 0; font-size: 18px; color: #38bdf8; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+    label { font-size: 12px; color: #94a3b8; }
+    
+    input, select, button { 
+      width: 100%; 
+      padding: 8px 10px; 
+      border-radius: 6px; 
+      border: 1px solid #334155; 
+      background: #0f172a; 
+      color: #fff; 
+      font-size: 13px; 
+      color-scheme: dark; 
+    }
+    input:focus, select:focus { outline: none; border-color: #38bdf8; }
+    .row { display: flex; gap: 8px; width: 100%; }
+    .row .form-group { flex: 1; }
+    
+    button.btn-primary { background: #0284c7; border: none; cursor: pointer; font-weight: bold; margin-top: 5px; }
+    button.btn-primary:hover { background: #0369a1; }
+    
+    button.btn-success { background: #10b981; border: none; cursor: pointer; font-weight: bold; }
+    button.btn-success:hover { background: #059669; }
+    
+    button.btn-danger { background: #ef4444; border: none; cursor: pointer; font-weight: bold; }
+    button.btn-danger:hover { background: #dc2626; }
+    button.btn-danger:disabled { background: #334155; cursor: not-allowed; }
+
+    button.btn-warning { background: #f59e0b; border: none; cursor: pointer; font-weight: bold; }
+    button.btn-warning:hover { background: #d97706; }
+
+    .file-actions { display: flex; gap: 8px; margin-top: 5px; border-top: 1px solid #334155; padding-top: 12px; }
+    .file-actions input[type="file"] { display: none; }
+    .file-btn { flex: 1; text-align: center; padding: 8px; border-radius: 6px; background: #334155; cursor: pointer; font-size: 12px; }
+    .file-btn:hover { background: #475569; }
+
+    .control-panel { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+    
+    .flight-list-section { display: flex; flex-direction: column; gap: 6px; flex: 1; min-height: 200px; }
+    .list-header { display: flex; justify-content: space-between; align-items: center; }
+    .list-actions { display: flex; gap: 6px; }
+    .btn-sm { width: auto; padding: 2px 8px; font-size: 11px; }
+
+    .flight-list { flex: 1; max-height: 260px; overflow-y: auto; background: #0f172a; border-radius: 6px; border: 1px solid #334155; padding: 8px; }
+    .flight-item { 
+      padding: 8px; 
+      border-bottom: 1px solid #1e293b; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      background: #131c2e; 
+      margin-bottom: 6px; 
+      border-radius: 4px; 
+      cursor: grab; 
+      user-select: none;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .flight-item:active { cursor: grabbing; }
+    .flight-item.dragging { opacity: 0.4; background: #334155; }
+    .flight-item:last-child { margin-bottom: 0; }
+    .drag-handle { color: #64748b; font-size: 14px; cursor: grab; }
+    .flight-item input[type="checkbox"] { width: auto; cursor: pointer; }
+    .flight-content { flex: 1; }
+    .flight-main { font-weight: bold; font-size: 13px; color: #38bdf8; }
+    .flight-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .btn-delete { width: auto; padding: 2px 6px; background: #ef4444; border: none; border-radius: 4px; color: #fff; font-size: 11px; cursor: pointer; }
+    .btn-delete:hover { background: #dc2626; }
+    
+    .flight-info-overlay {
+      position: absolute; top: 20px; right: 20px; z-index: 1000;
+      background: rgba(15, 23, 42, 0.9); color: #fff;
+      padding: 12px 18px; border-radius: 12px; backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+      min-width: 220px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h2>✈️ 飛行紀錄管理</h2>
+
+  <div class="form-group">
+    <label>出發地 (起點)</label>
+    <input list="airports" id="fromAirport" placeholder="輸入或選擇機場 (例: TPE)">
+  </div>
+  
+  <div class="form-group">
+    <label>目的地 (終點)</label>
+    <input list="airports" id="toAirport" placeholder="輸入或選擇機場 (例: PHX)">
+  </div>
+
+  <datalist id="airports"></datalist>
+
+  <div class="row">
+    <div class="form-group">
+      <label>開始日期 *</label>
+      <input type="date" id="startDate">
+    </div>
+    <div class="form-group">
+      <label>開始時間 (可選)</label>
+      <input type="time" id="startTime">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <label>結束日期</label>
+      <input type="date" id="endDate">
+    </div>
+    <div class="form-group">
+      <label>結束時間 (可選)</label>
+      <input type="time" id="endTime">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <label>航班號碼 (可選)</label>
+      <input type="text" id="flightNo" placeholder="請輸入航班號碼">
+    </div>
+    <div class="form-group">
+      <label>航空公司 (可選)</label>
+      <input type="text" id="airline" placeholder="請輸入航空公司">
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="addFlight()">＋ 新增至清單</button>
+
+  <div class="control-panel">
+    <div class="row">
+      <div class="form-group">
+        <label>全部航班總播放秒數</label>
+        <select id="totalDurationSec">
+          <option value="5">5 秒</option>
+          <option value="10" selected>10 秒</option>
+          <option value="15">15 秒</option>
+          <option value="20">20 秒</option>
+          <option value="25">25 秒</option>
+          <option value="30">30 秒</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>航段之間停頓秒數</label>
+        <input type="number" id="intervalSec" value="0.5" step="0.5" min="0">
+      </div>
+    </div>
+    <div class="row" style="margin-top: 8px;">
+      <button class="btn-success" id="playBtn" onclick="startAnimation()">▶ 播放動畫</button>
+      <button class="btn-danger" id="stopBtn" onclick="stopAnimation()" disabled>⏹ 停止播放</button>
+    </div>
+  </div>
+
+  <div class="file-actions">
+    <label class="file-btn" for="jsonFileInput">📂 上傳 JSON</label>
+    <input type="file" id="jsonFileInput" accept=".json" onchange="importJSON(event)">
+    <button class="file-btn" onclick="exportJSON()">💾 匯出 JSON</button>
+  </div>
+
+  <div class="flight-list-section">
+    <div class="list-header">
+      <label>已登錄航班 (<span id="flightCount">0</span>) <span style="font-size: 10px; color: #64748b;">(可拖拉排序)</span></label>
+      <div class="list-actions">
+        <button class="btn-warning btn-sm" onclick="deleteSelectedFlights()">刪除選取</button>
+        <button class="btn-danger btn-sm" onclick="clearAllFlights()">清空全部</button>
+      </div>
+    </div>
+    <div class="flight-list" id="flightListContainer"></div>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<div class="flight-info-overlay">
+  <div style="font-size: 12px; color: #94a3b8;">當前狀態</div>
+  <div id="overlay-status" style="font-weight: bold; color: #38bdf8; margin-top: 4px;">待命</div>
+  <div id="overlay-detail" style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">-</div>
+</div>
+
+<script>
+  const defaultAirports = {
+    // --- 台灣 ---
+    "TPE (台灣桃園)": [121.233, 25.077], "TSA (台北松山)": [121.552, 25.069],
+    "KHH (高雄小港)": [120.350, 22.577], "RMQ (台中)": [120.686, 24.265],
+    "TNN (台南)": [120.206, 22.950], "HUN (花蓮)": [121.618, 23.989],
+    "MZG (澎湖馬公)": [119.628, 23.569], "KNH (金門)": [118.359, 24.428],
+
+    // --- 日本 ---
+    "NRT (東京成田)": [140.386, 35.764], "HND (東京羽田)": [139.781, 35.553],
+    "KIX (大阪關西)": [135.233, 34.434], "ITM (大阪伊丹)": [135.438, 34.785],
+    "CTS (札幌新千歲)": [141.692, 42.775], "FUK (福岡)": [130.451, 33.586],
+    "NGO (名古屋中部)": [136.805, 34.858], "OKA (沖繩那霸)": [127.646, 26.196],
+    "KOJ (鹿兒島)": [130.719, 31.803],
+
+    // --- 韓國 ---
+    "ICN (首爾仁川)": [126.451, 37.460], "GMP (首爾金浦)": [126.791, 37.558],
+    "PUS (釜山金海)": [128.938, 35.179], "CJU (濟州)": [126.493, 33.511],
+
+    // --- 中國大陸 ---
+    "PVG (上海浦東)": [121.805, 31.143], "SHA (上海虹橋)": [121.336, 31.198],
+    "PEK (北京首都)": [116.597, 40.080], "PKX (北京大興)": [116.410, 39.510],
+    "CAN (廣州)": [113.299, 23.392], "SZX (深圳)": [113.811, 22.639],
+    "CTU (成都雙流)": [103.947, 30.578], "CKG (重慶)": [106.642, 29.719],
+    "XIY (西安)": [108.751, 34.447], "KMG (昆明)": [102.929, 24.992],
+    "XMN (廈門)": [118.128, 24.544], "HGH (杭州)": [119.729, 30.229],
+    "NKG (南京)": [118.862, 31.742], "WUH (武漢)": [114.208, 30.784],
+    "TAO (青島)": [120.374, 36.266], "DLC (大連)": [121.539, 38.966],
+    "HRB (哈爾濱)": [126.250, 45.623], "TSN (天津)": [117.346, 39.124],
+    "URC (烏魯木齊)": [87.474, 43.907],
+
+    // --- 港澳 ---
+    "HKG (香港)": [113.915, 22.308], "MFM (澳門)": [113.592, 22.149],
+
+    // --- 東南亞 ---
+    "BKK (曼谷蘇凡納布)": [100.750, 13.690], "DMK (曼谷廊曼)": [100.607, 13.912],
+    "HKT (普吉島)": [98.317, 8.113], "CNX (清邁)": [98.963, 18.767],
+    "SIN (新加坡)": [103.991, 1.364], "KUL (吉隆坡)": [101.710, 2.745],
+    "PEN (檳城)": [100.277, 5.297], "CGK (雅加達)": [106.655, -6.126],
+    "DPS (峇里島)": [115.167, -8.748], "MNL (馬尼拉)": [121.020, 14.509],
+    "CEB (宿霧)": [123.979, 10.308], "TAG (薄荷島)": [123.853, 9.565],
+    "HAN (河內)": [105.807, 21.221], "SGN (胡志明市)": [106.652, 10.819],
+    "DAD (峴港)": [108.199, 16.044], "RGN (仰光)": [96.133, 16.907],
+    "PNH (金邊)": [104.844, 11.547], "VTE (永珍)": [102.563, 17.988],
+
+    // --- 南亞 ---
+    "DEL (德里)": [77.103, 28.556], "BOM (孟買)": [72.868, 19.089],
+    "BLR (班加羅爾)": [77.706, 13.199], "MAA (清奈)": [80.169, 12.990],
+    "CCU (加爾各答)": [88.447, 22.655], "KTM (加德滿都)": [85.359, 27.696],
+    "CMB (可倫坡)": [79.884, 7.181], "DAC (達卡)": [90.397, 23.843],
+    "KHI (喀拉蚩)": [67.161, 24.906],
+
+    // --- 中東 ---
+    "DXB (杜拜)": [55.364, 25.253], "AUH (阿布達比)": [54.651, 24.433],
+    "DOH (多哈)": [51.608, 25.273], "TLV (特拉維夫)": [34.887, 32.011],
+    "IST (伊斯坦堡)": [28.752, 41.262], "AMM (安曼)": [35.993, 31.722],
+    "CAI (開羅)": [31.406, 30.122],
+
+    // --- 大洋洲 ---
+    "SYD (雪梨)": [151.177, -33.946], "MEL (墨爾本)": [144.843, -37.673],
+    "BNE (布里斯本)": [153.118, -27.384], "PER (伯斯)": [115.967, -31.940],
+    "ADL (阿德雷德)": [138.531, -34.945], "AKL (奧克蘭)": [174.785, -37.008],
+    "CHC (基督城)": [172.532, -43.487], "NAN (斐濟南迪)": [177.443, -17.755],
+    "GUM (關島)": [144.796, 13.484],
+
+    // --- 歐洲 ---
+    "LHR (倫敦希斯洛)": [-0.454, 51.470], "LGW (倫敦蓋威克)": [-0.182, 51.148],
+    "CDG (巴黎戴高樂)": [2.548, 49.010], "AMS (阿姆斯特丹)": [4.764, 52.309],
+    "FRA (法蘭克福)": [8.571, 50.038], "MUC (慕尼黑)": [11.786, 48.354],
+    "MAD (馬德里)": [-3.568, 40.498], "BCN (巴塞隆納)": [2.079, 41.297],
+    "FCO (羅馬)": [12.239, 41.800], "MXP (米蘭)": [8.723, 45.631],
+    "ZRH (蘇黎世)": [8.549, 47.465], "VIE (維也納)": [16.569, 48.110],
+    "CPH (哥本哈根)": [12.656, 55.618], "ARN (斯德哥爾摩)": [17.919, 59.652],
+    "OSL (奧斯陸)": [11.100, 60.198], "HEL (赫爾辛基)": [24.963, 60.317],
+    "DUB (都柏林)": [-6.270, 53.421], "LIS (里斯本)": [-9.136, 38.781],
+    "ATH (雅典)": [23.945, 37.936], "WAW (華沙)": [20.968, 52.166],
+    "PRG (布拉格)": [14.263, 50.101], "BUD (布達佩斯)": [19.261, 47.430],
+    "BRU (布魯塞爾)": [4.484, 50.901], "GVA (日內瓦)": [6.109, 46.238],
+
+    // --- 北美 ---
+    "LAX (洛杉磯)": [-118.409, 33.942], "SFO (舊金山)": [-122.379, 37.621],
+    "SEA (西雅圖)": [-122.308, 47.450], "JFK (紐約甘迺迪)": [-73.778, 40.641],
+    "EWR (紐華克)": [-74.175, 40.690], "ORD (芝加哥)": [-87.905, 41.974],
+    "ATL (亞特蘭大)": [-84.428, 33.641], "DFW (達拉斯)": [-97.040, 32.900],
+    "IAH (休士頓)": [-95.341, 29.990], "DEN (丹佛)": [-104.674, 39.856],
+    "LAS (拉斯維加斯)": [-115.152, 36.084], "PHX (鳳凰城)": [-112.011, 33.435],
+    "IAD (華盛頓杜勒斯)": [-77.456, 38.953], "BOS (波士頓)": [-71.005, 42.366],
+    "MIA (邁阿密)": [-80.291, 25.796], "YYZ (多倫多)": [-79.631, 43.678],
+    "YVR (溫哥華)": [-123.182, 49.197], "YUL (蒙特婁)": [-73.741, 45.471],
+    "MEX (墨西哥城)": [-99.072, 19.436], "PTY (巴拿馬城)": [-79.384, 9.071],
+
+    // --- 中南美 ---
+    "GRU (聖保羅)": [-46.473, -23.436], "GIG (里約熱內盧)": [-43.251, -22.809],
+    "EZE (布宜諾斯艾利斯)": [-58.536, -34.822], "SCL (聖地牙哥)": [-70.786, -33.393],
+    "BOG (波哥大)": [-74.147, 4.702], "LIM (利馬)": [-77.114, -12.022],
+
+    // --- 非洲 ---
+    "JNB (約翰尼斯堡)": [28.246, -26.137], "CPT (開普敦)": [18.602, -33.972],
+    "NBO (奈洛比)": [36.928, -1.319], "ADD (阿迪斯阿貝巴)": [38.799, 8.978],
+    "LOS (拉哥斯)": [3.321, 6.577], "CMN (卡薩布蘭加)": [-7.590, 33.368]
+  };
+
+  let myFlightLogs = [];
+  let mapLayers = [];
+  let animTimer = null;
+  let isPlaying = false;
+  let segmentDurations = []; 
+  let effectiveIntervalSec = 0; 
+  let currentViewLng = null; 
+
+  function calcEffectiveInterval(rawIntervalSec, totalDurationSec, n) {
+    if (n <= 1 || rawIntervalSec <= 0) return rawIntervalSec;
+    const MAX_PAUSE_RATIO = 0.5; 
+    const rawPauseTotal = rawIntervalSec * (n - 1);
+    const maxPauseTotal = totalDurationSec * MAX_PAUSE_RATIO;
+    if (rawPauseTotal <= maxPauseTotal) return rawIntervalSec;
+    return maxPauseTotal / (n - 1);
+  }
+
+  function calcSegmentDurations(distances, totalDurationSec, intervalSec) {
+    const MIN_SEG_SEC = 0.5;
+    const MAX_SEG_SEC = 2.0;
+    const n = distances.length;
+
+    if (n === 0) return [];
+
+    const minD = Math.min(...distances);
+    const maxD = Math.max(...distances);
+    let baseDurations;
+    if (n === 1 || maxD === minD) {
+      const flat = (MIN_SEG_SEC + MAX_SEG_SEC) / 2;
+      baseDurations = distances.map(() => flat);
+    } else {
+      baseDurations = distances.map(d => {
+        const ratio = (d - minD) / (maxD - minD);
+        return MIN_SEG_SEC + ratio * (MAX_SEG_SEC - MIN_SEG_SEC);
+      });
+    }
+
+    const pauseTotal = intervalSec * Math.max(0, n - 1);
+    let availableFlightTime = totalDurationSec - pauseTotal;
+
+    const MIN_TOTAL_FLIGHT_TIME = n * 0.05;
+    if (availableFlightTime < MIN_TOTAL_FLIGHT_TIME) {
+      availableFlightTime = MIN_TOTAL_FLIGHT_TIME;
+    }
+
+    const sumBase = baseDurations.reduce((a, b) => a + b, 0);
+    const scale = sumBase > 0 ? (availableFlightTime / sumBase) : 1;
+
+    return baseDurations.map(d => Math.max(0.05, d * scale));
+  }
+
+  const datalist = document.getElementById('airports');
+  for (let key in defaultAirports) {
+    let opt = document.createElement('option');
+    opt.value = key;
+    datalist.appendChild(opt);
+  }
+
+  const map = L.map('map', { worldCopyJump: true }).setView([20, 120], 3);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    noWrap: false,
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const movingPlane = L.circleMarker([0, 0], { radius: 7, color: '#ffffff', fillColor: '#38bdf8', fillOpacity: 1 });
+
+  function addFlight() {
+    const from = document.getElementById('fromAirport').value;
+    const to = document.getElementById('toAirport').value;
+    const startDate = document.getElementById('startDate').value;
+
+    if (!from || !to || !startDate) {
+      alert("請至少填寫：出發地、目的地與開始日期！");
+      return;
+    }
+
+    const fromCoord = defaultAirports[from] || [0, 0];
+    const toCoord = defaultAirports[to] || [0, 0];
+
+    const newLog = {
+      date: startDate,
+      startTime: document.getElementById('startTime').value || "",
+      endDate: document.getElementById('endDate').value || "",
+      endTime: document.getElementById('endTime').value || "",
+      flight: document.getElementById('flightNo').value || "",
+      from: from,
+      to: to,
+      fromCoord: fromCoord,
+      toCoord: toCoord,
+      airline: document.getElementById('airline').value || ""
+    };
+
+    myFlightLogs.push(newLog);
+    updateFlightUI();
+  }
+
+  function deleteFlight(index) {
+    myFlightLogs.splice(index, 1);
+    updateFlightUI();
+  }
+
+  function deleteSelectedFlights() {
+    const checkboxes = document.querySelectorAll('.flight-checkbox:checked');
+    if (checkboxes.length === 0) {
+      alert("請先勾選要刪除的航班！");
+      return;
+    }
+    
+    if (confirm(`確定要刪除選取的 ${checkboxes.length} 筆航班紀錄嗎？`)) {
+      const indicesToDelete = Array.from(checkboxes)
+        .map(cb => parseInt(cb.dataset.index))
+        .sort((a, b) => b - a);
+      
+      indicesToDelete.forEach(index => {
+        myFlightLogs.splice(index, 1);
+      });
+      
+      updateFlightUI();
+    }
+  }
+
+  function clearAllFlights() {
+    if (myFlightLogs.length === 0) return;
+    if (confirm("確定要清空所有航班紀錄嗎？此動作無法復原！")) {
+      myFlightLogs = [];
+      updateFlightUI();
+      clearMapLayers();
+      document.getElementById('overlay-status').textContent = "待命";
+      document.getElementById('overlay-detail').textContent = "-";
+    }
+  }
+
+  function updateFlightUI() {
+    document.getElementById('flightCount').textContent = myFlightLogs.length;
+    const container = document.getElementById('flightListContainer');
+    container.innerHTML = "";
+    
+    myFlightLogs.forEach((item, index) => {
+      let div = document.createElement('div');
+      div.className = "flight-item";
+      div.draggable = true;
+      div.dataset.index = index;
+
+      const fromName = item.from.split(' ')[0];
+      const toName = item.to.split(' ')[0];
+      
+      div.innerHTML = `
+        <span class="drag-handle">☰</span>
+        <input type="checkbox" class="flight-checkbox" data-index="${index}">
+        <div class="flight-content">
+          <div class="flight-main">${fromName} ✈️ ${toName} <span style="color:#f59e0b; font-size:11px;">(${item.flight})</span></div>
+          <div class="flight-sub">${item.date} ${item.startTime} | ${item.airline}</div>
+        </div>
+        <button class="btn-delete" onclick="deleteFlight(${index})">刪除</button>
+      `;
+
+      div.addEventListener('dragstart', handleDragStart);
+      div.addEventListener('dragover', handleDragOver);
+      div.addEventListener('drop', handleDrop);
+      div.addEventListener('dragend', handleDragEnd);
+
+      container.appendChild(div);
+    });
+  }
+
+  let draggedIndex = null;
+
+  function handleDragStart(e) {
+    draggedIndex = parseInt(this.dataset.index);
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragOver(e) {
+    if (e.preventDefault) e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+  }
+
+  function handleDrop(e) {
+    if (e.stopPropagation) e.stopPropagation();
+    const targetIndex = parseInt(this.dataset.index);
+    if (draggedIndex !== null && draggedIndex !== targetIndex) {
+      const movedItem = myFlightLogs.splice(draggedIndex, 1)[0];
+      myFlightLogs.splice(targetIndex, 0, movedItem);
+      updateFlightUI();
+    }
+    return false;
+  }
+
+  function handleDragEnd() {
+    this.classList.remove('dragging');
+    draggedIndex = null;
+  }
+
+  function exportJSON() {
+    if (myFlightLogs.length === 0) {
+      alert("沒有任何飛行紀錄可匯出！");
+      return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(myFlightLogs, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "myFlightLogs.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (Array.isArray(data)) {
+          myFlightLogs = data;
+          updateFlightUI();
+          alert(`成功載入 ${myFlightLogs.length} 筆飛行資料！`);
+        } else {
+          alert("檔案格式不正確，應為陣列 JSON");
+        }
+      } catch (err) {
+        alert("讀取檔案失敗，請確認是否為標準 JSON 格式");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function clearMapLayers() {
+    if (animTimer) clearTimeout(animTimer);
+    if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
+    mapLayers.forEach(layer => map.removeLayer(layer));
+    mapLayers = [];
+  }
+
+  function startAnimation() {
+    if (myFlightLogs.length === 0) {
+      alert("目前沒有航班可播放！");
+      return;
+    }
+    if (isPlaying) return;
+    clearMapLayers();
+
+    // 區域計算各航線距離
+    const distances = myFlightLogs.map(log => {
+      const p1 = turf.point(log.fromCoord);
+      const p2 = turf.point(log.toCoord);
+      return turf.distance(p1, p2, { units: 'kilometers' });
+    });
+
+    const totalDurationSec = parseFloat(document.getElementById('totalDurationSec').value) || 10;
+    const rawIntervalSec = parseFloat(document.getElementById('intervalSec').value) || 0;
+    
+    // 依距離計算各航段動態播放秒數與壓縮停頓
+    effectiveIntervalSec = calcEffectiveInterval(rawIntervalSec, totalDurationSec, distances.length);
+    segmentDurations = calcSegmentDurations(distances, totalDurationSec, effectiveIntervalSec);
+
+    currentViewLng = null;
+    const firstFlight = myFlightLogs[0];
+    map.setView([firstFlight.fromCoord[1], firstFlight.fromCoord[0]], 3, { animate: false });
+
+    isPlaying = true;
+    document.getElementById('playBtn').disabled = true;
+    document.getElementById('stopBtn').disabled = false;
+    playFlightSequence(0);
+  }
+
+  function stopAnimation() {
+    if (animTimer) clearTimeout(animTimer);
+    isPlaying = false;
+    document.getElementById('playBtn').disabled = false;
+    document.getElementById('stopBtn').disabled = true;
+    document.getElementById('overlay-status').textContent = "已停止";
+    document.getElementById('overlay-detail').textContent = "使用者手動取消播放";
+    if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
+  }
+
+  function flattenGreatCircleCoords(geometry) {
+    if (geometry.type === 'MultiLineString') {
+      return geometry.coordinates.flat();
+    }
+    return geometry.coordinates;
+  }
+
+  function playFlightSequence(index) {
+    if (!isPlaying) return;
+
+    if (index >= myFlightLogs.length) {
+      document.getElementById('overlay-status').textContent = "播放完成";
+      document.getElementById('overlay-detail').textContent = "全數航線已繪製完畢";
+      isPlaying = false;
+      document.getElementById('playBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+      if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
+      return;
+    }
+
+    const flight = myFlightLogs[index];
+    const durationSec = segmentDurations[index] || 0.05;
+
+    document.getElementById('overlay-status').textContent = `${flight.flight} (${flight.from.split(' ')[0]} ➔ ${flight.to.split(' ')[0]})`;
+    document.getElementById('overlay-detail').textContent = `日期：${flight.date} ${flight.startTime} | 預計耗時：${durationSec.toFixed(1)}s`;
+
+    // 依分配到的動畫秒數動態取得座標點 (設定 50fps)
+    const FRAME_MS = 20;
+    const npoints = Math.min(300, Math.max(8, Math.round((durationSec * 1000) / FRAME_MS)));
+    const gc = turf.greatCircle(flight.fromCoord, flight.toCoord, { npoints });
+    const rawCoords = flattenGreatCircleCoords(gc.geometry);
+
+    const unwrappedCoords = [];
+    let prevLng = null;
+
+    let offset = 0;
+    if (currentViewLng !== null) {
+      const rawStartLng = rawCoords[0][0];
+      offset = Math.round((currentViewLng - rawStartLng) / 360) * 360;
+    }
+
+    for (let i = 0; i < rawCoords.length; i++) {
+      let lng = rawCoords[i][0];
+      let lat = rawCoords[i][1];
+
+      if (!Number.isFinite(lng) || !Number.isFinite(lat)) continue;
+
+      if (prevLng !== null) {
+        let diff = lng - prevLng;
+        if (diff > 180) offset -= 360;
+        else if (diff < -180) offset += 360;
+      }
+      
+      unwrappedCoords.push([lat, lng + offset]);
+      prevLng = lng;
+    }
+
+    if (unwrappedCoords.length < 2) {
+      console.warn('航段座標異常，已跳過：', flight);
+      animTimer = setTimeout(() => playFlightSequence(index + 1), 300);
+      return;
+    }
+
+    const startPt = unwrappedCoords[0];
+    const endPt = unwrappedCoords[unwrappedCoords.length - 1];
+    currentViewLng = endPt[1];
+
+    const startMarker = L.circleMarker(startPt, { radius: 5, color: '#38bdf8', fillColor: '#fff', fillOpacity: 1 }).addTo(map);
+    const endMarker = L.circleMarker(endPt, { radius: 6, color: '#f43f5e', fillColor: '#f43f5e', fillOpacity: 0.8 }).addTo(map);
+    const historyLine = L.polyline([], { color: '#00f2fe', weight: 3, opacity: 0.8 }).addTo(map);
+
+    mapLayers.push(startMarker, endMarker, historyLine);
+
+    if (!map.hasLayer(movingPlane)) movingPlane.addTo(map);
+
+    let step = 0;
+
+    function animateStep() {
+      if (!isPlaying) return;
+
+      if (step < unwrappedCoords.length) {
+        const currentCoord = unwrappedCoords[step];
+        
+        movingPlane.setLatLng(currentCoord);
+        historyLine.addLatLng(currentCoord);
+        map.setView(currentCoord, 3, { animate: false });
+
+        step++;
+        animTimer = setTimeout(animateStep, FRAME_MS);
+      } else {
+        animTimer = setTimeout(() => {
+          playFlightSequence(index + 1);
+        }, effectiveIntervalSec * 1000);
+      }
+    }
+
+    animateStep();
+  }
+</script>
+
+</body>
+</html>
