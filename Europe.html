@@ -11,7 +11,7 @@
 
     <style>
         /* ==========================================
-           1. 全域變數與重設 (Reset & Variables)
+           1. 全域變數
            ========================================== */
         :root {
             --bg-color: #fdfaf4;
@@ -50,10 +50,9 @@
             max-width: 800px;
             margin: 40px auto;
             padding: 0 20px;
-            text-align: center; /* 讓標題置中 */
+            text-align: center;
         }
 
-        /* 繼承原本最上方標題的精美蠟筆底線樣式 */
         .main-title {
             font-size: 2.2rem;
             color: var(--text-dark);
@@ -81,7 +80,7 @@
             flex-direction: column;
             gap: 12px;
             margin-top: 30px;
-            text-align: left; /* 讓清單內容保持靠左對齊 */
+            text-align: left;
         }
 
         .summary-item {
@@ -129,7 +128,7 @@
         }
 
         /* ==========================================
-           3. 導覽列與按鈕 (Navigation Bar & Buttons)
+           3. 導覽列與按鈕
            ========================================== */
         .nav-wrapper {
             background: rgba(255, 255, 255, 0.75); 
@@ -253,7 +252,7 @@
         }
 
         /* ==========================================
-           4. 行程卡片與時間軸 (Itinerary & Cards)
+           4. 行程卡片與時間軸
            ========================================== */
         .itinerary-container {
             max-width: 850px;
@@ -316,7 +315,6 @@
             font-weight: bold;
         }
 
-        /* 標籤分類 */
         .tag-container {
             display: flex;
             gap: 6px;
@@ -337,7 +335,7 @@
         .tag.tag-hotel      { background-color: #8338ec; }
         .tag.tag-tips       { background-color: #f4a261; }
 
-        /* 卡片主體排版 */
+        /* 卡片主體 */
         .item-body {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -406,7 +404,7 @@
         }
 
         /* ==========================================
-           5. 互動燈箱 (Lightbox Popups)
+           5. 互動燈箱
            ========================================== */
         .lightbox {
             position: fixed;
@@ -445,7 +443,7 @@
         }
 
         /* ==========================================
-           6. RWD 響應式斷點 (Media Queries)
+           6. RWD
            ========================================== */
         @media(max-width: 650px) {
             body {
@@ -484,7 +482,7 @@
 
     <!-- 總覽首頁區塊 -->
     <div id="homepage-dashboard">
-        <!-- 原最上方標題移至此處，並保留獨特的蠟筆裝飾底線樣式 -->
+        
         <h1 class="main-title">歐洲之旅 Itinerary</h1>
         
         <div class="summary-list">
@@ -593,50 +591,51 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">長榮航空 BR061 (BKK > VIE T3)</h3>
-                        <p class="item-description">✈️ 第二段航程：11小時
-                            【機上餐點】享用飛機餐。</p>
+                        <p class="item-description">✈️ 第二段航程：11小時</br>【機上餐點】享用飛機餐。</p>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">09:50 - 12:55</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">3小時5分鐘 │ 票價：€19</span>
+                    <span class="time-box">11:40 - 14:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">2小時50分鐘 │ 💰 €17.98/$720</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">FlixBus：維也納機場 > 布達佩斯</h3>
-                        <p class="item-description">出關後前往機場巴士站搭乘 FlixBus 跨國巴士，直達布達佩斯（Budapest Keleti）。</br>車程約 3 小時，可在機場超商買瓶溫熱或常溫瓶裝水帶上車。</p>
-                        <a href="https://global.flixbus.com/bus-routes" target="_blank" class="nav-btn">🎟️ 線上購票</a>
+                        <p class="item-description">🚌巴士 [ 往 Déli pályaudvar ] </br>　Vienna Airport > Budapest Népliget</p>
+                        <a href="https://global.flixbus.com/bus-routes" target="_blank" class="nav-btn">🎟️ 已訂票</a>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">13:00 - 14:00</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <h3 class="item-title">午餐：Budapest Keleti 車站周邊簡食</h3>
-                        <p class="item-description">剛抵達布達佩斯，推薦到車站附近的 Fornetti 連鎖店買份剛出爐的熱起司鹹派或熱壓吐司，方便又暖胃。</p>
-                        <a href="https://maps.app.goo.gl/dNuywVGTxXLUj8pU7" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">14:00 - 14:30</span>
+                    <span class="time-box">14:30 - 15:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">28分鐘</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">車站 > 住宿</h3>
-                        <p class="item-description">🚇地鐵 M2 [ 往 Déli pályaudvar ] </br>　Keleti pályaudvar > Blaha Lujza tér</br>🚋輕軌 4 [ 往 Széll Kálmán tér M ] </br>　Blaha Lujza tér M > Jászai Mari tér</p>
+                        <p class="item-description">步行5分 > 8站(13分) > 步行10分</br>🚇地鐵 M3 [ 往 Újpest-központ ] </br>　Népliget > Nyugati pályaudvar</br>到站後可走10分鐘到民宿，或是坐Uber</br>記得搭地鐵前先買72小時pass</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">15:00 - 15:20</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $130 - 220</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body">
+                    <div class="item-left">
+                        <h3 class="item-title">點心：Mütyür Kürtőskalács / Chimney Cake</h3>
+                        <p class="item-description">民宿旁的煙囪捲</p>
+                        <a href="https://maps.app.goo.gl/d45Uik1nfjb4fkL98" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
@@ -650,7 +649,7 @@
                 <div class="item-body">
                     <div class="item-left">
                         <h3 class="item-title">Little Americas Alaska Apartment 入住</h3>
-                        <p class="item-description">Check-in 15:00-23:30</br>抵達布達佩斯後前往公寓辦理 Check-in、卸下行李。</br>【暖胃小點】放完行李後可以順便到民宿旁的「Mütyür Kürtőskalács」買現烤、熱呼呼的經典肉桂煙囪捲</p>
+                        <p class="item-description">Check-in 15:00-23:30</br>抵達布達佩斯後前往公寓辦理 Check-in、卸下行李。</p>
                         <a href="https://maps.app.goo.gl/aghq8RT4Vo4jLJXC9" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
@@ -696,6 +695,7 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">16:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $140 - 190</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -730,13 +730,14 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">18:30 - 20:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $530 - 790</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <div class="info-row">⏱️ 營業時間 12:00 - 23:30</div>
                         <h3 class="item-title">晚餐：Pörc & Prézli Restaurant</h3>
-                        <p class="item-description">主打傳統匈牙利家常菜與肉類料理</p>
+                        <p class="item-description">主打傳統匈牙利家常菜與肉類料理</br>也可省錢回住宿處吃</p>
                         <a href="https://maps.app.goo.gl/ywyxsKbX1T1PvDiL7" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -764,7 +765,7 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">SPAR 超市</h3>
-                        <p class="item-description">去採購匈牙利著名的 Tokaji 貴腐甜白酒</br>地址：Szent István körút 17.</p>
+                        <p class="item-description">去採購匈牙利著名的 Tokaji 貴腐甜白酒</br>地址：Szent István körút 17.</br>買隔天的早餐</p>
                     </div>
                 </div>
             </div>
@@ -795,8 +796,7 @@
                     <div class="item-left">
                         <div class="info-row">⏱️ 週六市場營業 06:00 - 16:00</div>
                         <h3 class="item-title">布達佩斯中央市場</h3>
-                        <p class="item-description">逛逛一樓色彩繽紛的乾貨攤。中午在二樓用餐
-                            【推薦】匈牙利牛肉湯(Goulash)搭配麵疙瘩、現烤大雞腿、高麗菜捲</p>
+                        <p class="item-description">逛逛一樓色彩繽紛的乾貨攤</br>中午在二樓用餐</br>【推薦】匈牙利牛肉湯(Goulash)搭配麵疙瘩、現烤大雞腿、高麗菜捲</p>
                         <a href="https://maps.app.goo.gl/Ra51CnKiMb2xH5w2A" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
@@ -823,13 +823,13 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">13:15 - 14:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                    <div class="tag-container"><span class="tag tag-food">景點</span></div>
                 </div>
                 <div class="item-body">
                     <div class="item-left">
                         <div class="info-row">⏱️ 營業時間 07:00 - 13:00</div>
                         <h3 class="item-title">紐約宮殿咖啡館</h3>
-                        <p class="item-description"></p>
+                        <p class="item-description">餐點很貴，只參觀不點餐</br>可從旁邊的飯店進去</p>
                         <a href="https://maps.app.goo.gl/YbBauVmyHqEJFJfg6" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
@@ -875,8 +875,8 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <div class="info-row">⏱️ 營業時間 12:00 - 22:00</div>
-                        <h3 class="item-title">晚餐：Városliget Café & Restaurant</h3>
-                        <p class="item-description">距離溫泉浴場走路約8分鐘</p>
+                        <h3 class="item-title">晚餐：溫泉浴場附近</h3>
+                        <p class="item-description">方案一：Városliget Café & Restaurant</br>距離溫泉浴場走路約8分鐘</br>$530 - 750</br>方案二：Ligeti Lángos</br>距離溫泉浴場走路1分鐘的蘭戈斯</br>$180 - 310</p>
                         <a href="https://maps.app.goo.gl/iEZJobEVpJ857iYS8" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -899,16 +899,16 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">20:30 - 21:00</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">€79</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 €78/$2,531</span>
                     <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">塞切尼溫泉浴場</h3>
-                        <p class="item-description">Sparty - 終極深夜水療派對</p>
+                        <p class="item-description">Sparty - 終極深夜水療派對</br>記得帶泳衣、浴巾</br>浴巾可裝進透明塑膠袋</p>
                         <a href="https://maps.app.goo.gl/57eAJuq19dJMpoFb9" target="_blank" class="nav-btn">📍 地圖導航</a>
                         <a href="https://www.getyourguide.com/en-gb/budapest-l29/budapest-the-ultimate-late-night-spa-party-ticket-t386559/?ranking_uuid=55133953-0fb1-425f-a1fc-b72b74bbe6e0"
-                            target="_blank" class="nav-btn">🎟️ 線上購票</a>
+                            target="_blank" class="nav-btn">🎟️ 已訂票</a>
                     </div>
                 </div>
             </div>
@@ -947,13 +947,13 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">10:30 - 13:30</span>
+                    <span class="time-box">10:30 - 12:30</span>
                     <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">布達城堡區</h3>
-                        <p class="item-description">布達城堡區</br>👉 1. 馬加什教堂 Matthias Church</br>　　(09:00-17:00)</br>👉 2. 漁人堡 Fisherman's Bastion</br>　　(收費時段 09:00-21:00)</br>👉 3. 岩石醫院 Hospital in the Rock</br>　　(10:00-19:00)</br>👉 4. 布達王宮地下迷宮 Labyrinth of Buda Castle</br>　　(可去可不去，只能付現)</br>👉 5. 布達城堡 Buda Castle</br>　　(10:00-18:00)</p>
+                        <p class="item-description">布達城堡區</br>👉 1. 馬加什教堂 Matthias Church</br>　　(09:00-17:00)</br>👉 2. 漁人堡 Fisherman's Bastion</br>　　(地面層與迴廊區域免費)</br>　　(上層收費時段 09:00-21:00)</p>
                         <a href="https://maps.app.goo.gl/Ma6ixhy6kXuthoqV6" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -961,59 +961,45 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">13:30 - 14:45</span>
+                    <span class="time-box">12:30 - 13:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $90 - 200</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <div class="info-row">⏱️ 營業時間 12:00 - 23:00</div>
-                        <h3 class="item-title">午餐：Lánchíd Sörözö</h3>
-                        <p class="item-description"></p>
-                        <a href="https://maps.app.goo.gl/VYJjkzFBu7nq9EC19" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <div class="info-row">⏱️ 營業時間 08:00 - 20:00</div>
+                        <h3 class="item-title">輕食：Buda Rétesvár-strudel</h3>
+                        <p class="item-description">推薦蘋果派</p>
+                        <a href="https://maps.app.goo.gl/uwMKJKvNiAeYWLZF8" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">15:00 - 17:00</span>
+                    <span class="time-box">13:00 - 16:20</span>
                     <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">盧達溫泉</h3>
-                        <p class="item-description">16 世紀浴場，可去可不去，有傳統土耳其浴、泳池和三溫暖</p>
-                        <a href="https://maps.app.goo.gl/pG2qQFArr9gyCwpw6" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <h3 class="item-title">布達城堡區</h3>
+                        <p class="item-description">布達城堡區</br>👉 3. 岩石醫院 Hospital in the Rock</br>　　(10:00-19:00)</br>👉 4. 布達王宮地下迷宮 Labyrinth of Buda Castle</br>　　(可去可不去，只能付現)</br>👉 5. 布達城堡 Buda Castle</br>　　(10:00-18:00)</p>
+                        <a href="https://maps.app.goo.gl/Ma6ixhy6kXuthoqV6" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">17:30</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">多瑙河黃昏遊船 (Legenda City Cruises)</h3>
-                        <p class="item-description">🛳️Vigadó tér 登船</br>搭乘傍晚班次的遊船，隨著日落欣賞兩岸亮起金黃燈光的國會大廈與城堡山。</p>
-                        <a href="https://www.kkday.com/zh-tw/product/584799?cid=21091" target="_blank"
-                            class="nav-btn">🎟️ 線上購票</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">18:30 - 21:00</span>
+                    <span class="time-box">17:00 - 18:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $160 - 310</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <div class="info-row">⏱️ 營業時間 09:00 - 04:00</div>
-                        <h3 class="item-title">晚餐：Szimpla Kert 廢墟酒吧</h3>
-                        <p class="item-description">【潮流夜生活】拜訪全布達佩斯最著名的廢墟酒吧，感受迷幻復古的裝潢與歡樂氣氛。
-                            【推薦】酒吧內的餐點以酒水為主。食物部分推薦現炸薯條、美式烤熱狗、牛肉漢堡</p>
+                        <h3 class="item-title">晚餐：街頭美食市集 & 廢墟酒吧</h3>
+                        <p class="item-description">【潮流夜生活】拜訪全布達佩斯最著名的廢墟酒吧，感受迷幻復古的裝潢與歡樂氣氛</p>
                         <a href="https://maps.app.goo.gl/EK5f6GnWGXoxW5wS6" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1021,14 +1007,30 @@
 
             <div class="timeline-item">
                 <div class="item-header">
+                    <span class="time-box">18:50 - 20:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $785</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">多瑙河黃昏遊船 (Legenda City Cruises)</h3>
+                        <p class="item-description">🛳️Vigadó tér 登船</br>18:50報到，19:10開船</br>搭乘傍晚班次的遊船，隨著日落欣賞兩岸亮起金黃燈光的國會大廈與城堡山。</p>
+                        <a href="https://www.kkday.com/zh-tw/product/584799?cid=21091" target="_blank"
+                            class="nav-btn">🎟️ 已訂票</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
                     <span class="time-box">21:30</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">17分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">14分鐘</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">廢墟酒吧 > 住宿</h3>
-                        <p class="item-description">步行10分 > 4分(7站) > 步行3分</br>🚋輕軌 4 [Széll Kálmán tér M]</br>　Wesselényi utca / Erzsébet körút> Jászai Mari tér</p>
+                        <h3 class="item-title">多瑙河遊船 > 住宿</h3>
+                        <p class="item-description">步行1分 > 8分(5站) > 步行5分</br>🚋輕軌 2 [Jászai Mari tér]</br>　Vigadó tér > Jászai Mari tér</p>
                     </div>
                 </div>
             </div>
@@ -1056,6 +1058,7 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">10:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $120 - 190</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -1071,13 +1074,15 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">11:30 - 13:55</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">2小時25分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">2小時25分鐘 │ 💰 $763</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">EuroCity 火車：布達佩斯西火車站 > 布拉提斯拉瓦中央車站</h3>
-                        <p class="item-description">搭乘跨國火車前往斯洛伐克首都</br>🚅 火車 Slovak Rail 276</br>　[ 往 Prague Central Train Station ]</br>　Budapest-Nyugati > Bratislava hl.st.</br>　到站後搭 Uber，車程約 6 分鐘</p>
+                        <p class="item-description">搭乘跨國火車前往斯洛伐克首都</br>27車53-56號</br>🚅 火車 Slovak Rail 276</br>　[ 往 Prague Central Train Station ]</br>　Budapest-Nyugati > Bratislava hl.st.</br>　到站後搭 Uber，車程約 6 分鐘</p>
+                        <a href="https://slovakrail.transport-ticket.com/result?marketingCarrierCode=SRAI&retailerPartnerNumber=130331&locale=zh&currency=EUR&departureDate=2026-04-28&departureTime=10%3A00&pax=1&seatProduct=false&fastestConnections=false&utm_campaign=gtfs&utm_medium=agency-url&utm_source=googlemaps&utm_stream=intercity_europe&utm_country=SK&departureStation=SKBTSBHA&arrivalStation=CZPRGPHA" target="_blank"
+                            class="nav-btn">🎟️ 已訂票</a>
                     </div>
                 </div>
             </div>
@@ -1100,7 +1105,7 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">14:40 - 14:55</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">14分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">14分鐘 │ 💰 €0.97</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -1131,7 +1136,7 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">17:15</span>
+                    <span class="time-box">16:45</span>
                     <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
                 </div>
                 <div class="item-body">
@@ -1145,8 +1150,8 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">19:00</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">17分鐘</span>
+                    <span class="time-box">18:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">17分鐘 │ 💰 €0.97</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -1159,7 +1164,8 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">19:30</span>
+                    <span class="time-box">18:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $355 - 570</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -1174,8 +1180,8 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">21:30</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">13分鐘</span>
+                    <span class="time-box">20:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">13分鐘 │ 💰 €0.97</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -1205,15 +1211,15 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">11:58 - 16:23</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">4小時25分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">4小時25分鐘 │ 💰 $679</span>
                     <div class="tag-container"><span class="tag tag-food">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">布拉提斯拉瓦中央車站 > 布拉格中央車站</h3>
-                        <p class="item-description">🚅火車 Slovak Rail 278</br>　[ 往 Prague Central Train Station ]</br>　Bratislava hl.st. > Praha hl.n.</br>　到站後搭 Uber，車程約 17 分鐘</p>
+                        <p class="item-description">🚅火車 Slovak Rail 278</br>367車22,24,26,28號</br>　[ 往 Prague Central Train Station ]</br>　Bratislava hl.st. > Praha hl.n.</br>　到站後搭 Uber，車程約 17 分鐘</p>
                         <a href="https://slovakrail.transport-ticket.com/result?marketingCarrierCode=SRAI&retailerPartnerNumber=130331&locale=zh&currency=EUR&departureDate=2026-04-28&departureTime=10%3A00&pax=1&seatProduct=false&fastestConnections=false&utm_campaign=gtfs&utm_medium=agency-url&utm_source=googlemaps&utm_stream=intercity_europe&utm_country=SK&departureStation=SKBTSBHA&arrivalStation=CZPRGPHA"
-                            target="_blank" class="nav-btn">🎟️ 線上購票</a>
+                            target="_blank" class="nav-btn">🎟️ 已訂票</a>
                     </div>
                 </div>
             </div>
@@ -1236,13 +1242,13 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">17:30</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">44分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">44分鐘 │ 💰 40Kč</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">住宿 > 萊特納公園</h3>
-                        <p class="item-description">步行1分 > 19分(13站) > 17分(9站) > 步行7分</br>🚇電車 7 [ 往 Kotlářka ]</br>　Solidarita > Albertov</br>🚇電車 18 [ 往 Nádraží Podbaba ]</br>　Albertov > Chotkovy sady</p>
+                        <p class="item-description">需買90分鐘的交通票券</br>步行1分 > 19分(13站) > 17分(9站) > 步行7分</br>🚇電車 7 [ 往 Kotlářka ]</br>　Solidarita > Albertov</br>🚇電車 18 [ 往 Nádraží Podbaba ]</br>　Albertov > Chotkovy sady</p>
                     </div>
                 </div>
             </div>
@@ -1265,6 +1271,7 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">19:00 - 20:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $490 - 770</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -1280,13 +1287,13 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">21:30</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">38分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">38分鐘 │ 💰 30Kč</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">萊特納公園 > 住宿</h3>
-                        <p class="item-description">步行14分 > 14分(7站) > 步行10分</br>🚇地鐵 A [ 往 Skalka ]</br>　Malostranská > Strašnická</p>
+                        <p class="item-description">需買30分鐘的交通票券</br>步行14分 > 14分(7站) > 步行10分</br>🚇地鐵 A [ 往 Skalka ]</br>　Malostranská > Strašnická</p>
                     </div>
                 </div>
             </div>
@@ -1311,176 +1318,13 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">09:00</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">25分鐘</span>
-                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">住宿 > 老城廣場</h3>
-                        <p class="item-description">步行10分 > 9分(5站) > 步行6分</br>🚇地鐵 A [ 往 Nemocnice Motol ]</br>　Strašnická > Můstek</p>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">09:30</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <div class="info-row">⏱️ 開放時間 09:00 - 20:00</div>
-                        <h3 class="item-title">布拉格市立圖書館</h3>
-                        <p class="item-description">看無限書塔</p>
-                        <a href="https://maps.app.goo.gl/vZQ28ryZk6p4n3Am8" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                    <div class="item-right">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr4cRJ1ZyjzyC25e4Jp-3rBEgbg_Egkk1qxgS0-puCZw&s=10"
-                            alt="無限書塔" class="item-img">
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">10:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <h3 class="item-title">老城區</h3>
-                        <p class="item-description">👉 1. 布拉格天文鐘 Pražský orloj</br>　　（09:00-21:00 整點都有報時秀）</br>　　可登塔看風景（有電梯）$1095</br>👉 2. 泰恩教堂 Church of Our Lady before Týn</br>　　（17:00 closed）</br>👉 3. 火藥塔 The Powder Tower</br>　　（19:00 closed）</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                    <div class="item-right">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS9GAVJe8F-Dib8azvcPPOQVEBEXJ36l7Z4X0cada2Ew&s=10"
-                            alt="天文鐘" class="item-img">
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">12:00</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <div class="info-row">⏱️ 營業時間 11:00 - 23:00</div>
-                        <h3 class="item-title">午餐：Restaurace Mlejnice</h3>
-                        <p class="item-description">【經典捷克小酒館】隱身在舊城巷弄中的溫馨老店。</br>【推薦】必點裝在純手工麵包碗裡的「捷克傳統啤酒燉牛肉湯 (Goulash in bread bowl)」，外皮香脆、湯頭濃郁。</p>
-                        <a href="https://maps.app.goo.gl/e4UTASphdxPC1AgU9" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">14:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <h3 class="item-title">老城區、新城區</h3>
-                        <p class="item-description">👉 1. 哈維爾市集</br>　　（07:00-19:00）</br>👉 2. 卡夫卡雕像</br>　　（08:00-21:00 每小時整點會旋轉15分鐘）</br>👉 3. 跳舞的房子</br>　　（可去可不去）</p>
-                        <a href="https://maps.app.goo.gl/ji816vk4j3A6JF4o7" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                    <div class="item-right">
-                        <img src="https://static01.nyt.com/images/2015/12/27/travel/27KAFKA6/27KAFKA6-articleLarge.jpg"
-                            alt="卡夫卡" class="item-img">
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">15:30 - 17:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <h3 class="item-title">伏爾塔瓦河 腳踏船</h3>
-                        <p class="item-description">U Kotvy 歷史悠久的人氣船家</br>基本型四人座腳踏船每小時約13-18美元（僅收現金）</p>
-                        <a href="https://maps.app.goo.gl/tx43ZhQ2oGdbqBzN7" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">17:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <div class="info-row">⏱️ 開放時間 08:00 - 23:30</div>
-                        <h3 class="item-title">午晚餐：Cafe Louvre 羅浮咖啡館</h3>
-                        <p class="item-description">【百年歷史】追隨卡夫卡與愛因斯坦的足跡。
-                            【推薦】強烈建議單點「法式歐姆蛋包拼盤（要求熟培根）」或現烤熱鬆餅，配上一杯招牌熱可可。略過冷燻肉品與生菜葉，兼顧優雅與腸胃健康。</p>
-                        <a href="https://maps.app.goo.gl/hNQjTQQ1pFFCPQLh9" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">19:30 - 22:00</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">約 €25</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <h3 class="item-title">國立木偶戲劇院</h3>
-                        <p class="item-description">自由入座（先到先選位）</br>建議提早半小時去選位</br>七八月才開</br>演出時間約2小時</br>通常八點開演</br>經典劇：莫札特歌劇《唐·喬凡尼》（Don Giovanni）</p>
-                        <a href="https://maps.app.goo.gl/B7XWr1dpK2ctiEZQ8" target="_blank" class="nav-btn">📍 地圖導航</a>
-                        <a href="https://www.narodni-divadlo.cz/en" target="_blank" class="nav-btn">🎟️ 官網連結</a>
-                    </div>
-                </div>
-            </div>
-           
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">22:30</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">26分鐘</span>
-                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">木偶戲劇院 > 住宿</h3>
-                        <p class="item-description">步行5分 > 11分(6站) > 步行10分</br>🚇地鐵 A [ 往 Depo Hostivař ]</br>　Staroměstská > Strašnická</p>
-                    </div>
-                </div>
-            </div>
-            
-
-        </div>
-
-        <!-- ==================== D7 ==================== -->
-        <div id="d7" class="day-content">
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">08:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">早餐：住宿早餐</h3>
-                        <p class="item-description"></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">09:00</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">56分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">56分鐘 │ 💰 40Kč</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">住宿 > 城堡區</h3>
-                        <p class="item-description">步行1分 > 4站(5分) > 走1分 > 20站(30分) > 步行14分</br>🚋輕軌 37 [ 往 Nádraží Hostivař ]</br>　Solidarita > Na Hroudě</br>🚋輕軌 22 [ 往 Vypich ]</br>　Na Hroudě > Prašný most</p>
+                        <p class="item-description">需買90分鐘的交通票券</br>步行1分 > 4站(5分) > 走1分 > 20站(30分) > 步行14分</br>🚋輕軌 37 [ 往 Nádraží Hostivař ]</br>　Solidarita > Na Hroudě</br>🚋輕軌 22 [ 往 Vypich ]</br>　Na Hroudě > Prašný most</p>
                     </div>
                 </div>
             </div>
@@ -1502,6 +1346,7 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">13:00 - 14:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $250 - 390</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body">
@@ -1538,7 +1383,7 @@
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">佩特任纜車</h3>
-                        <p class="item-description">搭乘佩特任纜車上山去展望塔（展望塔150Kč）</p>
+                        <p class="item-description">搭乘佩特任纜車上山去展望塔（展望塔150Kč）</br>纜車整修中，不確定到時候是否已營運</p>
                         <a href="https://maps.app.goo.gl/SCY1mPdMXFcAxcLc8" target="_blank" class="nav-btn">📍 地圖導航</a>
                         <a href="https://prague.eu/cs/objevujte/petrinska-rozhledna?back=1" target="_blank" class="nav-btn">🎟️ 官網聯結</a>
                     </div>
@@ -1548,13 +1393,15 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">19:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $420 - 630</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">晚餐：JAZZ DOCK</h3>
-                        <p class="item-description">爵士樂俱樂部，會有現場音樂演出</br>纜車起點站走到餐廳約 11 分鐘</p>
-                        <a href="https://maps.app.goo.gl/dZiKJv9yirsQBaiX9" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <div class="info-row">⏱️ 營業時間 11:00 - 00:00</div>
+                        <h3 class="item-title">晚餐：Lokál U Bílé kuželky</h3>
+                        <p class="item-description">也可省錢回住宿處煮</p>
+                        <a href="https://maps.app.goo.gl/yry3aySTGSLJHX2U9" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
@@ -1562,17 +1409,167 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">22:00</span>
-                    <span class="info-item" style="color: #137333; font-weight: bold;">37分鐘</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">37分鐘 │ 💰 40Kč</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">餐廳 > 住宿</h3>
-                        <p class="item-description">步行10分 > 26分(17站) > 步行1分</br>🚇電車 7 [ 往 Ústřední dílny DP ]</br>　Zborovská > Solidarita</p>
+                        <p class="item-description">需買90分鐘的交通票券</br>步行10分 > 26分(17站) > 步行1分</br>🚇電車 7 [ 往 Ústřední dílny DP ]</br>　Zborovská > Solidarita</p>
                     </div>
                 </div>
             </div>
             
+        </div>
+            
+
+        <!-- ==================== D7 ==================== -->
+        <div id="d7" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">09:00</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">早餐：住宿早餐</h3>
+                        <p class="item-description"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">25分鐘 │ 💰 30Kč</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 老城廣場</h3>
+                        <p class="item-description">需買30分鐘的交通票券</br>步行10分 > 9分(5站) > 步行6分</br>🚇地鐵 A [ 往 Nemocnice Motol ]</br>　Strašnická > Můstek</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:30</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 開放時間 09:00 - 20:00</div>
+                        <h3 class="item-title">布拉格市立圖書館</h3>
+                        <p class="item-description">看無限書塔</p>
+                        <a href="https://maps.app.goo.gl/vZQ28ryZk6p4n3Am8" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                    <div class="item-right">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr4cRJ1ZyjzyC25e4Jp-3rBEgbg_Egkk1qxgS0-puCZw&s=10"
+                            alt="無限書塔" class="item-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">11:00</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body">
+                    <div class="item-left">
+                        <h3 class="item-title">老城區</h3>
+                        <p class="item-description">👉 1. 布拉格天文鐘 Pražský orloj</br>　　（09:00-21:00 整點都有報時秀）</br>　　可登塔看風景（有電梯）$1095</br>👉 2. 泰恩教堂 Church of Our Lady before Týn</br>　　（17:00 closed）</br>👉 3. 火藥塔 The Powder Tower</br>　　（19:00 closed）</p>
+                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                    <div class="item-right">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS9GAVJe8F-Dib8azvcPPOQVEBEXJ36l7Z4X0cada2Ew&s=10"
+                            alt="天文鐘" class="item-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">13:00 - 14:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $490 - 840</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 營業時間 11:00 - 23:00</div>
+                        <h3 class="item-title">午餐：Café Imperial</h3>
+                        <p class="item-description">已訂位12:00</br>極具宮廷風的百年咖啡館</p>
+                        <a href="https://maps.app.goo.gl/e4UTASphdxPC1AgU9" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">14:00</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body">
+                    <div class="item-left">
+                        <h3 class="item-title">老城區、新城區</h3>
+                        <p class="item-description">👉 1. 哈維爾市集</br>　　（07:00-19:00）</br>👉 2. 卡夫卡雕像</br>　　（08:00-21:00 每小時整點會旋轉15分鐘）</br>👉 3. 跳舞的房子</br>　　（可去可不去）</p>
+                        <a href="https://maps.app.goo.gl/ji816vk4j3A6JF4o7" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                    <div class="item-right">
+                        <img src="https://static01.nyt.com/images/2015/12/27/travel/27KAFKA6/27KAFKA6-articleLarge.jpg"
+                            alt="卡夫卡" class="item-img">
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">17:30 - 19:00</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 開放時間 08:00 - 23:30</div>
+                        <h3 class="item-title">晚餐：Cafe Louvre 羅浮咖啡館</h3>
+                        <p class="item-description">【百年歷史】追隨卡夫卡與愛因斯坦的足跡。</br>【推薦】法式歐姆蛋包拼盤或現烤熱鬆餅，配上一杯招牌熱可可。</p>
+                        <a href="https://maps.app.goo.gl/hNQjTQQ1pFFCPQLh9" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">20:00 - 21:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 590Kč</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body">
+                    <div class="item-left">
+                        <h3 class="item-title">Image Black Light Theatre</h3>
+                        <p class="item-description">黑光劇</p>
+                        <a href="https://maps.app.goo.gl/sd8sRgyqbRsFPE8M9" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <a href="https://www.webticket.cz/akce/78780.c?l=en&_gl=1*kxzye3*_gcl_au*MTUxMzg2OTQ2MC4xNzg4MzE2NTg4" target="_blank" class="nav-btn">🎟️ 已訂票</a>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">22:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">26分鐘 │ 💰 30Kč</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">黑光劇 > 住宿</h3>
+                        <p class="item-description">需買30分鐘的交通票券</br>步行5分 > 11分(6站) > 步行10分</br>🚇地鐵 A [ 往 Depo Hostivař ]</br>　Staroměstská > Strašnická</p>
+                    </div>
+                </div>
+            </div>
+            
+
         </div>
 
         <!-- ==================== D8 ==================== -->
@@ -1584,34 +1581,50 @@
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">早餐：出發前超商外帶 或 民宿自理</h3>
-                        <p class="item-description">【拉車預備】由於今天是大巴長途移動日，建議在布拉格總站或巴士站的超商與烘焙坊，買剛出爐的現烤巧克力可頌、熱伯爵茶，直接上車享用。</p>
+                        <h3 class="item-title">早餐：住宿早餐</h3>
+                        <p class="item-description"></p>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">09:00 - 11:50</span>
+                    <span class="time-box">09:19 - 09:54</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">33分鐘 │ 💰 40Kč</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 巴士站</h3>
+                        <p class="item-description">需買90分鐘的交通票券</br>步行1分 > 26分(16站) > 步行6分</br>🚋 輕軌 16 [ Vozovna Motol ]</br>　Solidarita > Anděl</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:25 - 13:10</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $401</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">RegioJet 巴士：布拉格 > 克魯姆洛夫 (CK小鎮)</h3>
-                        <p class="item-description">搭乘黃色 RegioJet 奢華大巴前往世界最美童話小鎮庫倫洛夫（Český Krumlov）。車程約 2 小時 50 分鐘，大巴提供免費熱飲（可選熱美式咖啡或熱茶，皆安全全熟）。</p>
+                        <p class="item-description">已訂</br>搭乘 RegioJet 大巴前往世界最美童話小鎮庫倫洛夫。車程約 2 小時 50 分鐘。</p>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">12:00 - 12:30</span>
+                    <span class="time-box">13:10 - 13:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 1550/1晚</span>
                     <div class="tag-container"><span class="tag tag-hotel">住宿</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">CK小鎮民宿 Check-in / 寄放行李</h3>
-                        <p class="item-description">抵達小鎮巴士站（建议在 Český Krumlov - Špičák 下車步行較平坦），拖行李至古城內的童話風民宿辦理手續、安頓行李。
+                        <p class="item-description">抵達小鎮巴士站（建議在 Český Krumlov - Špičák 下車步行較平坦），拖行李至民宿辦理手續、安頓行李。
                         </p>
                     </div>
                 </div>
@@ -1619,30 +1632,29 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">12:30 - 14:00</span>
+                    <span class="time-box">14:00 - 15:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $390 - 630</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">午餐：Papa's Living Restaurant</h3>
-                        <p class="item-description">【河畔河景】緊鄰伏爾塔瓦河畔、風景絕佳的老牌西餐廳。
-                            【推薦】可點他們的「現烤全熟香料烤雞胸肉」或熱騰騰的「茄汁海鮮義大利麵（確保蛤蜊皆全熟開殼）」。伴著波光粼粼的河水享用全熟美味。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <p class="item-description">已訂位</br>【河畔河景】緊鄰伏爾塔瓦河畔、風景絕佳的老牌西餐廳。</br>【推薦】可點「香料烤雞胸肉」或「茄汁海鮮義大利麵」。伴著波光粼粼的河水享用全熟美味。</p>
+                        <a href="https://maps.app.goo.gl/o9xEFrcMbGzBe4Cb9" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">14:00 - 18:00</span>
+                    <span class="time-box">15:30 - 17:00</span>
                     <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
                 </div>
                 <div class="item-body">
                     <div class="item-left">
-                        <h3 class="item-title">庫倫洛夫城堡區 ➡️ 彩繪塔 ➡️ 斗篷橋</h3>
-                        <p class="item-description">漫步童話般的石板路小鎮。攀登小鎮地標📍彩繪塔俯瞰 S 型河道。步行穿過宏偉的石造📍斗篷橋，在城堡花園居高臨下拍攝如明信片般的風景。
-                        </p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <h3 class="item-title">城堡區</h3>
+                        <p class="item-description">👉 1. 彩繪塔</br>👉 2. 克魯姆洛夫城堡</br>👉 3. 斗篷橋</br>👉 4. 克倫洛夫城堡公園</p>
+                        <a href="https://maps.app.goo.gl/YpMCA6mxESMoud3aA" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
                         <img src="https://res.klook.com/image/upload/q_85/c_fill,w_750/v1716449150/yiebe6gidccw9xj3er0h.jpg"
@@ -1653,16 +1665,30 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">18:30 - 21:00</span>
+                    <span class="time-box">17:00 - 18:30</span>
+                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
+                </div>
+                <div class="item-body">
+                    <div class="item-left">
+                        <h3 class="item-title">舊城區</h3>
+                        <p class="item-description">👉 1. 市政廳廣場</br>👉 2. 黑死病紀念柱</br>👉 3. 聖維特教堂</br>👉 4. CK公園</p>
+                        <a href="https://maps.app.goo.gl/XLbYMfsoaV2E3S6v5" target="_blank" class="nav-btn">📍 地圖導航</a>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">19:00 - 20:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $560 - 710</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">晚餐：Krčma v Šatlavské ulici 地窖炙烤餐廳</h3>
-                        <p class="item-description">【中世紀地窖烤肉】人氣極高的篝火地窖餐廳（強烈建議提前幾週寫信或官網預訂）。
-                            【推薦】店內中央是巨大的開放式炭火烤爐，所有肉品都是高溫炭烤至全熟。必點「綜合炙烤肉盤 (Mixed Grill Plate)」，包含烤雞肉、烤豬肉。多汁且全熟。
-                            ⚠️ 點餐時請直接告訴服務員不要血水（Please make it well done）。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <h3 class="item-title">晚餐：Krčma Šatlava 地窖炙烤餐廳</h3>
+                        <p class="item-description">已訂位</br>【中世紀地窖烤肉】人氣極高的篝火地窖餐廳。</br>【推薦】店內中央是巨大的開放式炭火烤爐，所有肉品都是高溫炭烤至全熟。必點「綜合炙烤肉盤 (Mixed Grill Plate)」。</p>
+                        <a href="https://maps.app.goo.gl/Pkcrk4FsAUts3YFZ8" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
             </div>
@@ -1672,27 +1698,27 @@
         <div id="d9" class="day-content">
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">08:30 - 09:15</span>
+                    <span class="time-box">08:30</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">早餐：小鎮古風咖啡廳 或 民宿早餐</h3>
-                        <p class="item-description">【晨曦靜謐】在清晨還沒有團體遊客的 CK 小鎮享用早餐。點份烘烤滾燙的熱壓火腿起司可頌，配上一杯溫牛奶，暖胃又安心。</p>
+                        <h3 class="item-title">早餐：買到車上吃</h3>
+                        <p class="item-description"></p>
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">09:30 - 12:30</span>
+                    <span class="time-box">09:35 - 12:50</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $738</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
                         <h3 class="item-title">CK Shuttle 跨國接駁：CK小鎮 > 薩爾茲堡</h3>
-                        <p class="item-description">搭乘預約好的 CK Shuttle 廂型車（車對車接送），直接跨越捷克與奧地利國境，直達奧地利音樂之都薩爾茲堡下榻飯店。車程約 3
-                            小時，省去頻繁轉車的勞累。</p>
+                        <p class="item-description">已訂</br>搭乘 CK Shuttle 廂型車（車對車接送），直接跨越捷克與奧地利國境，直達奧地利音樂之都薩爾茲堡下榻飯店。車程約 3 小時，省去頻繁轉車的勞累。</p>
                     </div>
                 </div>
             </div>
@@ -1700,6 +1726,7 @@
             <div class="timeline-item">
                 <div class="item-header">
                     <span class="time-box">12:30 - 13:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $7,342/3晚</span>
                     <div class="tag-container"><span class="tag tag-hotel">住宿</span></div>
                 </div>
                 <div class="item-body no-image">
@@ -1712,15 +1739,13 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">13:00 - 14:30</span>
+                    <span class="time-box">13:30 - 14:00</span>
                     <div class="tag-container"><span class="tag tag-food">美食</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">午餐：Bärenwirt 奧地利百年老店</h3>
-                        <p class="item-description">【奧地利脆皮炸雞】自 1663 年營業至今的傳統經典老字號餐館。
-                            【推薦】一定要點他們的招牌「奧地利正宗炸雞 (Austrian Fried Chicken /
-                            Backhendl)」，外皮金黃酥脆，內部雞肉鮮嫩多汁且百分之百全熟。亦可單點「熱燉牛肉湯」，濃郁可口，無任何生食與內臟隱憂。</p>
+                        <h3 class="item-title">午餐：BILLA PLUS</h3>
+                        <p class="item-description">吃超市的較省錢</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                 </div>
@@ -1728,303 +1753,14 @@
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">14:45 - 18:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <h3 class="item-title">米拉貝爾宮花園 ➡️ 糧食胡同 ➡️ 莫札特故居</h3>
-                        <p class="item-description">
-                            遊覽電影《真善美》經典拍攝地📍米拉貝爾宮花園。穿過巴亞河前往📍糧食胡同（Getreidegasse），欣賞兩旁精緻的古典鑄鐵招牌，並參觀📍莫札特出生地黃色小屋。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                    <div class="item-right">
-                        <img src="https://image.cdn-eztravel.com.tw/gP1Gvdi-t0OnrCv3PqhBiZsnpn3ZYYwA9UFqTdQrpHY/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvQUFfMTI0NTMzNzU3LmpwZw.jpg"
-                            alt="薩爾茲堡" class="item-img">
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">18:30 - 20:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">晚餐：St. Peter Stiftskulinarium（或老城酒館）</h3>
-                        <p class="item-description">【歐洲最古老餐廳】創立於西元 803 年、藏在修道院旁的傳奇老店（需提前網上預約，亦可挑選老城內其他溫馨餐館）。
-                            【推薦】建議點奧地利國菜「維也納炸豬排 (Wiener Schnitzel vom
-                            Schwein)」，肉片敲得薄薄的酥炸，搭配高溫烘烤的馬鈴薯塊。甜點可選在地特色熱甜點「薩爾茲堡舒芙蕾 (Salzburger Nockerl)」，口感如雲朵般綿密且全熟，非常暖胃。
-                            【超商補給】晚上可至 Billa 超市買罐密封常溫純水。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== D10 ==================== -->
-        <div id="d10" class="day-content">
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">07:30 - 08:10</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">早餐：薩爾茲堡車站超商外帶 或 飯店快速早餐</h3>
-                        <p class="item-description">
-                            【出發國王湖】由於今天一早要搭乘跨國巴士前往德國國王湖，建議提早於車站的超商或連鎖烘焙坊，買好現熱的起司火腿三明治與熱咖啡，在巴士站或車上享用。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">08:15 - 09:30</span>
+                    <span class="time-box">13:30 - 14:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $85</span>
                     <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">跨國巴士 840 轉 841：薩爾茲堡 > 德國國王湖</h3>
-                        <p class="item-description">自薩爾茲堡火車站前巴士站搭乘 RVO 跨國巴士 840 號至 Berchtesgaden 貝希特斯加登站，同站無縫換乘 841
-                            號巴士直達國王湖畔（Königssee）。單程約 1 小時 15 分鐘。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">09:45 - 13:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <div class="info-row">⏱️ 聆聽迴音壁號角小喇叭</div>
-                        <h3 class="item-title">德國國王湖遊船 ➡️ 聖巴多羅買教堂 (紅蔥頭教堂)</h3>
-                        <p class="item-description">搭乘國王湖電動環保遊船，途中船員會對著山壁吹奏小喇叭、聆聽奇幻的七次回音。隨後在📍聖巴多羅買教堂下船，欣賞仙境般的碧綠湖水與紅屋頂。
-                        </p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                    <div class="item-right">
-                        <img src="https://image.cdn-eztravel.com.tw/BJvr7qkD4DiKJkmwtkX8gPAlv5qsKuclCbIXV4DCWqM/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvREVfMzMxNTg1NDkwLmpwZw.jpg"
-                            alt="國王湖" class="item-img">
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">13:00 - 14:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">午餐：Gaststätte St. Bartholomä 紅蔥頭教堂旁餐廳</h3>
-                        <p class="item-description">【國王湖烤鱒魚】位於紅蔥頭教堂旁、由古老狩獵小屋改建的著名湖畔餐廳。
-                            【推薦】這裡最出名的是國王湖鮮魚。請務必指名點「香烤鱒魚 (Gebratene Forelle)」，整條鱒魚經過高溫炭烤或煙燻熱製至熟透，肉質細嫩鮮美且全熟！
-                            ⚠️ 這裡也有「醃製冷魚片」，請直接略過。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">14:45 - 18:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span><span
-                            class="tag tag-transport">交通</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">上湖漫步（若季節開放）➡️ 搭巴士返回薩爾茲堡</h3>
-                        <p class="item-description">若季節與時間允許，可續搭船前往📍上湖 (Obersee) 健行至鏡面小木屋。傍晚依原路線搭乘 841 轉 840
-                            跨國巴士返回薩爾茲堡火車站。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">18:30 - 20:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">晚餐：Gasthof Goldgasse</h3>
-                        <p class="item-description">【老城隱藏美味】隱身在薩爾茲堡老城區巷弄中的高質感古典餐館。
-                            【推薦】「香烤嫩煎豬里肌」或「紅酒燉全熟牛肉」，醬汁濃郁，熱氣騰騰。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== D11 ==================== -->
-        <div id="d11" class="day-content">
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">07:45 - 08:15</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">早餐：薩爾茲堡車站外帶熱食</h3>
-                        <p class="item-description">【前往哈修塔特】今天將搭乘著名的湖區巴士前往哈修塔特。建議提早在車站烘焙坊買好現出爐的起司香腸派、熱鮮奶或常溫水，精神飽滿地出發。
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">08:15 - 10:30</span>
-                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">湖區巴士 150 轉 542 ＆ 543：前往哈修塔特</h3>
-                        <p class="item-description">自薩爾茲堡車站搭乘 150 號巴士，沿途欣賞薩爾茨卡默古特美麗的湖光山色，至 Bad Ischl 站下車，無縫換乘 542 巴士，再轉
-                            543 巴士直達哈修塔特小鎮門口（Hallstatt Lahn）。單程約 2 小時 15 分鐘。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">10:30 - 13:00</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body">
-                    <div class="item-left">
-                        <h3 class="item-title">哈修塔特老城區 ➡️ 明信片最佳拍攝點</h3>
-                        <p class="item-description">漫步於世界最美小鎮的木造民居與市集廣場。步行至著名的📍明信片最佳拍攝點（Postcard
-                            Viewpoint），拍下經典的教堂與依山傍水仙境照。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                    <div class="item-right">
-                        <img src="https://image.kkday.com/v2/image/get/s1.kkday.com/product_36568/20200122064534_xxRQH/jpg"
-                            alt="哈修塔特" class="item-img">
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">13:00 - 14:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">午餐：Restaurant am See / Brauhaus 湖畔客棧</h3>
-                        <p class="item-description">【經典湖魚料理】臨湖的老牌木造湖畔餐廳。
-                            【推薦】必點在地名產「煎烤哈修塔特白鮭魚 (Grilled Whitefish /
-                            Reinanke)」，整條鮮魚經由主廚高溫乾煎至兩面金黃、熟透。搭配香料烤馬鈴薯。魚肉全熟軟嫩、毫無生冷風險與器官成分，暖胃首選！</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">14:30 - 16:30</span>
-                    <div class="tag-container"><span class="tag tag-attraction">景點</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">哈修塔特鹽礦體驗 ＆ 世界最古老木滑梯</h3>
-                        <p class="item-description">搭乘歷史悠久的地面纜車登上鹽礦山上。換上特製工作服，體驗「世界最古老的地下木滑梯」，深度探索地底鹽礦歷史，刺激又好玩。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">16:45 - 19:15</span>
-                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">原路巴士返回薩爾茲堡</h3>
-                        <p class="item-description">於 Hallstatt Lahn 巴士站搭乘 543 轉 542，再轉 150
-                            號湖區巴士返回薩爾茲堡火車站。夜間山路車內暖氣充足，建議在車上小憩片刻。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">19:30 - 21:00</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">晚餐：薩爾茲堡車站 Piazetta（或周邊熱食）</h3>
-                        <p class="item-description">
-                            【快速暖胃】奔波整天回到薩爾茲堡後，可直接在車站內的高人氣義式餐館點一份「高溫現烤瑪格麗特披薩」或熱騰騰的「肉醬義大利麵」。起司與醬汁經高溫窯烤，100%
-                            熟食，既省時又安全，快速暖胃後回飯店休息。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== D12 ==================== -->
-        <div id="d12" class="day-content">
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">08:30 - 09:30</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">早餐：Café Tomaselli 百年老字號咖啡館</h3>
-                        <p class="item-description">【優雅收尾】薩爾茲堡歷史最悠久的咖啡館（莫札特曾常造訪）。
-                            【推薦】單點他們的「歐姆熱蛋捲」或熱伯爵奶茶配酥脆可頌。欣賞端著木托盤的傳統甜點服務員穿梭，為維也納之行拉開優雅序幕。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">10:08 - 12:30</span>
-                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">ÖBB Railjet 高鐵：薩爾茲堡 > 維也納</h3>
-                        <p class="item-description">搭乘奧地利國鐵 ÖBB Railjet 特快高鐵直達維也納中央車站（Wien Hauptbahnhof），車程約 2 小時 20
-                            分鐘，車速飛快穩定、高鐵上有充電插座與流暢 Wi-Fi。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">12:30 - 13:00</span>
-                    <div class="tag-container"><span class="tag tag-hotel">住宿</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">維也納飯店 Check-in / 寄存行李</h3>
-                        <p class="item-description">抵達維也納中央車站後，前往下榻飯店辦理入住手續並寄存重物，準備出發探索音樂之都的終點站。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="item-header">
-                    <span class="time-box">13:15 - 14:45</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
-                </div>
-                <div class="item-body no-image">
-                    <div class="item-left">
-                        <h3 class="item-title">午餐：Figlmüller 奧地利炸豬排創始店</h3>
-                        <p class="item-description">【巨無霸炸豬排】全維也納最傳奇、比臉還大的元祖炸豬排店（強烈建議幾個月前提前官網預訂，若無座位可去分店）。
-                            【推薦】必點招牌「Figlmüller-Schnitzel (豬肉口味炸豬排)」，肉片拍得極薄、裹上特製麵包粉酥炸至金黃完全全熟，酥脆可口。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <h3 class="item-title">住宿 > 景點區</h3>
+                        <p class="item-description">🚌公車 4 [ Salzburg Langwied ]</br>　Salzburg Lieferinger Spitz > Salzburg Ferdinand-Hanusch-Platz</p>
                     </div>
                 </div>
             </div>
@@ -2036,39 +1772,747 @@
                 </div>
                 <div class="item-body">
                     <div class="item-left">
-                        <h3 class="item-title">聖斯蒂芬大教堂 ➡️ 格拉本大街 ➡️ 霍夫堡皇宮</h3>
-                        <p class="item-description">
-                            漫步維也納市中心核心景點：📍聖斯蒂芬大教堂。隨後至繁華的📍格拉本大街、📍黑死病紀念柱漫步。最後參觀壯麗的📍霍夫堡皇宮外觀與英雄廣場。</p>
+                        <h3 class="item-title">遊覽電影《真善美》經典拍攝地</h3>
+                        <p class="item-description">📍米拉貝爾宮花園</br>📍糧食胡同（Getreidegasse）</br>📍莫札特出生地黃色小屋。</br>📍薩爾茲堡要塞</br>📍格特拉大街</p>
                         <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
                     </div>
                     <div class="item-right">
-                        <img src="https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=300&q=80"
-                            alt="維也納" class="item-img">
+                        <img src="https://image.cdn-eztravel.com.tw/gP1Gvdi-t0OnrCv3PqhBiZsnpn3ZYYwA9UFqTdQrpHY/g:ce/aHR0cHM6Ly92YWNhdGlvbi5jZG4tZXp0cmF2ZWwuY29tLnR3L2ltZy9WRFIvQUFfMTI0NTMzNzU3LmpwZw.jpg"
+                            alt="薩爾茲堡" class="item-img">
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item">
                 <div class="item-header">
-                    <span class="time-box">18:30 - 21:00</span>
-                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                    <span class="time-box">18:30 - 19:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $85</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
                 </div>
                 <div class="item-body no-image">
                     <div class="item-left">
-                        <h3 class="item-title">晚餐：Plachutta Wollzeile 皇家清燉牛肉湯</h3>
-                        <p class="item-description">【奧匈帝國皇家御用】維也納享有盛譽、以極致清燉牛肉湯聞名的國寶級老字號餐廳（必須提前官網預約）。
-                            【推薦】必點招牌「Tafelspitz (清燉經典牛肋肉)」。
-                            這道菜是用紅銅鍋盛裝、高溫熬煮數小時的滾燙全熟牛肉湯。
-                            【安全吃法】：服務員會先為你盛一碗滾燙全熟的清牛肉湯暖胃。接著吃鍋內經長時間慢火燉煮到入口即化的全熟牛肉塊。
-                            ⚠️ 隨餐會附上「骨髓（內臟器官類）」與冷生蘋果泥醬、生馬蘿蔔醬。不吃生食需注意！
-                            【超市終極採購】餐後可至附近的 Spar Gourmet 或 Billa Plus 超市，大肆採購莫札特巧克力、密封維也納伴手禮，為這趟夢幻歐洲之旅畫下完美句點。</p>
-                        <a href="https://maps.google.com" target="_blank" class="nav-btn">📍 地圖導航</a>
+                        <h3 class="item-title">住宿 > 景點區</h3>
+                        <p class="item-description">🚌公車 10 [Himmelreich Outlet]</br>　Salzburg Ferdinand-Hanusch-Platz > Salzburg Airport Terminal"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">19:30 - 20:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $1,690</span>
+                <div class="tag-container"><span class="tag tag-transport">租車</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 營業時間 08:00 - 19:30</div>
+                        <h3 class="item-title">薩爾茲堡機場取車：AVIS Salzburg Airport</h3>
+                        <p class="item-description">Seat Ateca 或同級車款</br>取車憑證：24996489TW0</br>須備本國駕照正本＋英文國際駕照正本＋主駕駛信用卡</br>信用卡號碼需浮凸</br>順遊 Casino Salzburg (可去可不去)</p>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- ==================== D10 ==================== -->
+        <div id="d10" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">08:30 - 09:10</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">早餐</h3>
+                        <p class="item-description">享用早餐，準備出發前往德國國王湖。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">09:10 - 10:00</span>
+                    <div class="tag-container"><span class="tag tag-transport">自駕</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">自駕前往貝希特斯加登國家公園：國王湖停車場</h3>
+                        <p class="item-description">車程約 35 分鐘</br>停車費 €9 (Königssee Pkw-Parkplatz)</br>停車場走到搭船處約 10 分鐘。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:30 - 11:05</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $1,114</span>
+                    <div class="tag-container"><span class="tag tag-spot">體驗</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">國王湖遊船：Königssee Seelande > St. Bartholomä</h3>
+                        <p class="item-description">預訂 10:30 場次 (官網購票 €119.2/4人，單人 €29.8)</br>須於出發前 20 分鐘抵達</br>早晨搭船太陽在左側 (右側順光)。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">11:05 - 12:30</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">紅頂教堂 St. Bartholomä 漫步與午餐</h3>
+                        <p class="item-description">品嚐鱒魚料理</br>餐廳推薦：Fischerei St. Bartholomä (€16.5-20) 或 Gaststätte St. Bartholomä (€20-28)</br>或結束回碼頭吃 Gaststätte Echostüberl</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">12:35 - 13:00</span>
+                    <div class="tag-container"><span class="tag tag-transport">船程</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">遊船前往上湖區：St. Bartholomä > Salet</h3>
+                        <p class="item-description">航程約 25 分鐘</br>前一班 12:05 / 後一班 13:05</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">13:00 - 15:30</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">上湖區健行</h3>
+                        <p class="item-description">📍牛奶小屋 Fischunkelalm</br>　Salet 步行約 38 分，喝新鮮牛奶</br>📍瀑布 Röthbach Waterfall</br>　牛奶小屋再步行約 38 分</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">15:55 - 16:55</span>
+                    <div class="tag-container"><span class="tag tag-transport">船程</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">回程遊船：Salet > Königssee Seelande</h3>
+                        <p class="item-description">航程約 1 小時</br>前一班 14:25 / 後一班 15:25</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">17:30 - 19:00</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">貝希特斯加登鎮晚餐 & 超市採買</h3>
+                        <p class="item-description">Gasthof NEUHAUS 或 Brauereigasthof Bürgerbräu (脆皮豬腳、燉牛肉)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">19:00 - 20:00</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">德國超市 REWE</h3>
+                        <p class="item-description">酒類價格便宜，可買隔天早餐</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== D11 ==================== -->
+        <div id="d11" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">06:15 - 07:45</span>
+                    <div class="tag-container"><span class="tag tag-transport">自駕</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">自駕前往哈修塔特 Hallstatt</h3>
+                        <p class="item-description">車程約 1 小時 30 分</br>秋遊賞楓季停車場容易滿，首選 P2 停車場 (Hallstatt Parking P2)，次選市區 P1 停車場。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:30 - 12:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $1,833</span>
+                    <div class="tag-container"><span class="tag tag-spot">體驗</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">哈修塔特鹽礦導覽 Salzwelten Hallstatt</h3>
+                        <p class="item-description">官網購票 (€196/4人，單人約 €49，Order: HT2707510)</br>場次 10:30</br>包含地底小火車、長木滑梯、鹽湖燈光秀與 Hallstatt Skywalk 天空步道觀景台。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">12:30 - 16:30</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">午餐 & 哈修塔特市區遊覽</h3>
+                        <p class="item-description">午餐：Brauhaus Lobisser</br>景點：</br>📍市集廣場</br>📍路德教堂</br>📍明信片展望點 (上午順光)</br>📍聖母升天教區教堂 (須爬坡，旁有付費人骨屋)</br>📍渡輪碼頭 Hallstatt Lahn</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">17:00 - 18:30</span>
+                    <div class="tag-container"><span class="tag tag-transport">自駕</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">自駕返回薩爾茲堡機場還車</h3>
+                        <p class="item-description">Alamo Salzburg Airport (Innsbrucker Bundesstraße 105)</br>車程約 1.5 小時</br>須於 19:30 前完成還車</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== D12 ==================== -->
+        <div id="d12" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">11:00 - 11:20</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $444</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">飯店 Check-out，前往薩爾茲堡中央車站</h3>
+                        <p class="item-description">走路 12 分鐘或搭乘 Uber (車程 4 分鐘，六人座約 €12)。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">11:34 - 14:32</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $856</span>
+                    <div class="tag-container"><span class="tag tag-transport">火車</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">OBB 火車：Salzburg central station > Vienna Central Station</h3>
+                        <p class="item-description">先搭 S3 到車站，轉 RJX 186</br>車程 2 小時 58 分</br>已訂票：35 號車廂，座位 71, 72, 73, 78</br>行李架在旁邊、中間有桌子</br>午餐於車站購買輕食車上吃</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">14:40</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $331</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">車站 > 住宿</h3>
+                        <p class="item-description">可買 24 小時票卷 €9</br>步行7分 > 9分(6站) > 步行4分</br>🚇地鐵 U1 [ Alaudagasse ]</br>　Südtiroler Platz > Troststraße</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">15:00 - 15:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $7,743/3晚</span>
+                    <div class="tag-container"><span class="tag tag-hotel">住宿</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 入住 15:00 後 / 退房 11:00 前</div>
+                        <h3 class="item-title">Check-in：Spacious Vienna Central Station Residence</h3>
+                        <p class="item-description">地址：Hebbelgasse 2/10</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">15:30</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 格拉本大街</h3>
+                        <p class="item-description">步行7分 > 9分(6站) > 步行4分</br>🚇地鐵 U1 [Leopoldau]</br>Troststraße > Stephansplatz</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">16:00 - 18:00</span>
+                    <div class="tag-container"><span class="tag tag-spot">購物</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">格拉本大街 Graben 逛街</h3>
+                        <p class="item-description">至迪奧 (Dior) 維也納圖赫勞本大街店幫買東西。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">18:00 - 19:30</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 08:30 - 19:30</div>
+                        <h3 class="item-title">晚餐：Buffet Trzesniewski Dorotheergasse</h3>
+                        <p class="item-description">卡夫卡曾造訪過的百年老店，招牌一口三明治。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">19:30 - 20:00</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">格拉本大街 > 住宿</h3>
+                        <p class="item-description">步行3分 > 10分(7站) > 步行7分</br>🚇地鐵 U1 [Alaudagasse]</br>　Südtiroler Platz > Troststraße</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== D13 ==================== -->
+        <div id="d13" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:00 - 11:30</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 安可鐘</h3>
+                        <p class="item-description">步行7分 > 9分(6站) > 步行4分</br>🚇地鐵 U1 [Leopoldau]</br>　Troststraße > Stephansplatz</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">12:00 - 12:30</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 24小時</div>
+                        <h3 class="item-title">安可鐘 Ankeruhr</h3>
+                        <p class="item-description">12:00-12:30 欣賞安可鐘 12 位歷史人物音樂演出</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">12:30 - 14:00</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 06:00 - 22:00</div>
+                        <h3 class="item-title">聖史帝芬大教堂 St. Stephen's Cathedral</h3>
+                        <p class="item-description">聖史帝芬大教堂主堂中殿免費，塔樓與墓穴另外收費。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">14:00 - 15:30</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 08:00 - 21:00</div>
+                        <h3 class="item-title">下午茶：中央咖啡館 Café Central</h3>
+                        <p class="item-description">維也納極具代表性的著名咖啡館</br>鋼琴演奏 15:30-20:30</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">15:30 - 20:00</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">維也納環城大道景點漫步</h3>
+                        <p class="item-description">彈性參觀</br>📍人民公園 Volksgarten</br>📍城堡劇場 Burgtheater</br>📍市政廳公園</br>📍維也納大學</br>📍維也納市政廳</br>📍奧地利國會大廈 (欣賞哥德式外觀與廣場拍照)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">20:30 - 21:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $1,031</span>
+                    <div class="tag-container"><span class="tag tag-spot">體驗</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">沃蒂夫教堂《創世之光》沉浸式燈光秀</h3>
+                        <p class="item-description">注意：18:00 前要先去售票處領票，否則會關門！</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">21:00 - 21:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $111</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">沃蒂夫教堂 > 住宿</h3>
+                        <p class="item-description">步行6分 > 7分(4站) > 步行2分 > 7分(5站) > 步行7分</br>🚇地鐵 U2 [ Karlsplatz ]</br>　Schottentor U > Karlsplatz</br>🚇地鐵 U1 [ Oberlaa ]</br>　Karlsplatz > Troststraße</br>　單趟 €3</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    <!-- ==================== D14 ==================== -->
+        <div id="d14" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:00 - 10:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $111</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 美景宮</h3>
+                        <p class="item-description">步行7分 > 3分(3站) > 步行12分</br>🚇地鐵 U1 [Leopoldau]</br>　Troststraße > Südtiroler Platz</br>　單趟 €3</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:30 - 12:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $773</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 09:00 - 18:00</div>
+                        <h3 class="item-title">美景宮 Belvedere Palace</h3>
+                        <p class="item-description">花園免費，內部展館門票線上全票約 €21</br>主要觀賞古斯塔夫·克林姆名畫《吻》。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">12:30 - 14:00</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 10:00 - 19:00</div>
+                        <h3 class="item-title">午餐：德梅爾咖啡 Café Demel</h3>
+                        <p class="item-description">維也納著名的皇室御用糕點店</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">14:00 - 16:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $734</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">霍夫堡冬宮</h3>
+                        <p class="item-description">📍霍夫堡冬宮 Hofburg</br>　茜茜博物館+寢宮聯票 €20</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">16:00 - 18:00</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">國家圖書館與周邊</h3>
+                        <p class="item-description">📍奧地利國家圖書館 State Hall (約 €10)</br>📍城堡公園莫札特紀念碑</br>📍維也納國家歌劇院 (外觀拍照)</br>📍卡爾教堂 (倒影夜景，門票 €9.5)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">18:00 - 19:00</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">晚餐</h3>
+                        <p class="item-description">於金色大廳周邊享用晚餐。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">19:30 - 22:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $750</span>
+                    <div class="tag-container"><span class="tag tag-spot">體驗</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">維也納音樂協會大樓 金色大廳音樂會</h3>
+                        <p class="item-description">已訂票：第4區2排5-8號。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">22:00 - 22:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $111</span>
+                    <div class="tag-container"><span class="tag tag-transport">地鐵</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">金色大廳 > 住宿</h3>
+                        <p class="item-description">步行5分 > 7分(5站) > 步行6分</br>🚇地鐵 U1 [ Alaudagasse ]</br>　Karlsplatz > Troststraße</br>　單趟 €3</p>
+                    </div>
+                </div>
+            </div>
+
     </div>
+
+    <!-- ==================== D15 ==================== -->
+        <div id="d15" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:00 - 10:30</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $331</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 熊布朗宮</h3>
+                        <p class="item-description">約 10 點購買 24 小時票卷 €9 (可用至隔天)</br>步行7分 > 7分(5站) > 步行3分 > 9分(6站) > 步行7分</br>🚇地鐵 U1 [ Leopoldau ]</br>　Troststraße > Karlsplatz</br>🚇地鐵 U4 [ Hütteldorf ]</br>　Karlsplatz > Schönbrunn</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:30 - 12:00</span>
+                    <span class="info-item" style="color: #137333; font-weight: bold;">💰 $1,399</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 08:30 - 17:30</div>
+                        <h3 class="item-title">熊布朗宮（美泉宮） Schönbrunn Palace</h3>
+                        <p class="item-description">Palace Ticket (Grand Tour)：成人約 €38。參觀宮殿內全部約 40 個展廳。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">10:00 - 10:30</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">熊布朗宮 > 納許市場</h3>
+                        <p class="item-description">步行8分 > 8分(5站) > 步行7分</br>🚇地鐵 U4 [ Heiligenstadt ]</br>　Schönbrunn > Kettenbrückengasse</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">12:30 - 13:30</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 06:00 - 19:30</div>
+                        <h3 class="item-title">午餐：納許市場 Naschmarkt</h3>
+                        <p class="item-description">體驗在地熱鬧市場美食</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">14:00 - 14:30</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">納許市場 > 百水公寓</h3>
+                        <p class="item-description">步行6分 > 26分(15站) > 步行1分</br>🚇電車 1 [Prater, Hauptallee]</br>　Resselgasse > Löwengasse</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">14:30 - 15:30</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">百水公寓 Hundertwasser house & 百水藝術村</h3>
+                        <p class="item-description">藝術村開放時間 09:00-18:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">15:30 - 16:00</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">百水公寓 > 維也納經濟大學</h3>
+                        <p class="item-description">步行2分 > 4分(2站) > 步行5分</br>🚇電車 1 [Prater, Hauptallee]</br>　Löwengasse > Prater, Hauptallee</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">16:00 - 18:00</span>
+                    <div class="tag-container"><span class="tag tag-spot">景點</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">維也納經濟大學 Campus WU</h3>
+                        <p class="item-description">欣賞前衛現代建築群。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">18:30 - 20:30</span>
+                    <div class="tag-container"><span class="tag tag-food">美食</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 11:00 - 23:00</div>
+                        <h3 class="item-title">晚餐：啤酒花園 Schweizerhaus & 普拉特摩天輪</h3>
+                        <p class="item-description">已訂位位於普拉特遊樂園內 (經濟大學步行 350m)</br>人均約 €20-30</br>順遊維也納摩天輪 (搭乘約 €14)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">20:30 - 21:00</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">啤酒花園 > 住宿</h3>
+                        <p class="item-description">步行6分 > 12分(9站) > 步行6分</br>🚇地鐵 U1 [ Alaudagasse ]</br>　Praterstern > Troststraße</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    <!-- ==================== D16 ==================== -->
+        <div id="d16" class="day-content">
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">08:00 - 09:00</span>
+                   <div class="tag-container"><span class="tag tag-hotel">住宿</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">早餐 & Check-out</h3>
+                        <p class="item-description">享用早餐，辦理退房，準備前往機場</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">09:00 - 09:30</span>
+                    <div class="tag-container"><span class="tag tag-transport">交通</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">住宿 > 車站</h3>
+                        <p class="item-description">步行7分 > 4分(3站) > 步行3分</br>🚇地鐵 U1 [ Leopoldau ]</br>　Troststraße > Südtiroler Platz</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">09:40 - 09:57</span>
+                    <div class="tag-container"><span class="tag tag-transport">火車</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <h3 class="item-title">鐵路 [rjx]：Vienna Central Station > Vienna Airport</h3>
+                        <p class="item-description">前往 Flughafen Wien Bahnhof (維也納國際機場)。</p>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="timeline-item">
+                <div class="item-header">
+                    <span class="time-box">12:30 - 06:20 (+1)</span>
+                    <div class="tag-container"><span class="tag tag-transport">航班</span></div>
+                </div>
+                <div class="item-body no-image">
+                    <div class="item-left">
+                        <div class="info-row">⏱️ 飛行時間 11h 50m</div>
+                        <h3 class="item-title">維也納國際機場 T3 > TPE 臺灣桃園國際機場 T2</h3>
+                        <p class="item-description">搭乘長榮航空返台</br>10/11 06:20抵達台灣</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
     <!-- 浮動回頂端按鈕 -->
     <button id="scroll-to-top-btn" onclick="scrollToTop()">⬆️ 回頂端</button>
