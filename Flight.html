@@ -1,923 +1,1722 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>互動式飛行足跡地圖</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
-  <style>
-    * { box-sizing: border-box; }
-    body { 
-      margin: 0; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-      display: flex; 
-      height: 100vh; 
-      background: #0b0e14; 
-      color: #fff; 
-      overflow: hidden; 
-      position: relative;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>飛行足跡地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+  --bg:#060a13; --panel:#0b1220; --panel2:#0f1829; --card:#131e33; --card2:#192741;
+  --line:rgba(148,163,184,.13); --line2:rgba(148,163,184,.24);
+  --text:#e6edf7; --muted:#93a3bd; --dim:#5f6f8a;
+  --accent:#38bdf8; --accent2:#818cf8; --warm:#fbbf24; --ok:#34d399; --danger:#f87171; --violet:#a78bfa;
+  --grad:linear-gradient(135deg,#0ea5e9,#6366f1);
+  --radius:14px; --sb-w:410px;
+  --font:'Noto Sans TC',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;overflow:hidden;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.hidden{display:none!important}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22);border-radius:99px}
+::-webkit-scrollbar-track{background:transparent}
 
-    /* 側邊欄：支援抽屜式平滑滑出動畫 */
-    #sidebar { 
-      width: 380px; 
-      min-width: 380px; 
-      height: 100vh;
-      background: #1e293b; 
-      padding: 20px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 12px; 
-      z-index: 1005; 
-      box-shadow: 4px 0 15px rgba(0,0,0,0.5); 
-      overflow-y: auto; 
-      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+/* ===== 側邊欄 ===== */
+#sidebar{width:var(--sb-w);min-width:var(--sb-w);height:100vh;height:100dvh;background:linear-gradient(180deg,#0d1527 0%,#090f1c 100%);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:1100;transition:margin-left .32s cubic-bezier(.4,0,.2,1),transform .32s cubic-bezier(.4,0,.2,1);box-shadow:10px 0 30px rgba(0,0,0,.35)}
+body.sb-collapsed #sidebar{margin-left:calc(-1 * var(--sb-w))}
+.grab{display:none}
+.sb-head{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px}
+.brand{display:flex;gap:12px;align-items:center;min-width:0}
+.logo{width:42px;height:42px;border-radius:13px;background:var(--grad);display:grid;place-items:center;flex:none;box-shadow:0 8px 20px rgba(56,189,248,.3)}
+.logo svg{width:22px;height:22px;fill:#fff;transform:rotate(45deg)}
+.brand h1{font-size:17px;margin:0;font-weight:900;letter-spacing:1px}
+.brand p{margin:2px 0 0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs{display:flex;gap:4px;padding:4px;margin:0 18px;background:var(--panel2);border:1px solid var(--line);border-radius:12px}
+.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:8px 0;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;position:relative;transition:.15s}
+.tab:hover{color:var(--text)}
+.tab.active{background:var(--card2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2)}
+.badge{position:absolute;top:2px;right:6px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--warm);color:#1f1500;font-size:10px;font-weight:700;display:grid;place-items:center}
+.badge:empty{display:none}
+.tab-body{flex:1;overflow-y:auto;padding:16px 18px 28px}
+.pane{display:none;flex-direction:column;gap:12px}
+.pane.active{display:flex}
 
-    /* 預設收合狀態 */
-    #sidebar.collapsed {
-      margin-left: -380px;
-    }
+/* ===== 元件 ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 12px;border-radius:10px;border:1px solid var(--line2);background:var(--card);cursor:pointer;font-size:13px;font-weight:500;transition:.15s;white-space:nowrap}
+.btn:hover{background:var(--card2);border-color:rgba(56,189,248,.45)}
+.btn.primary{background:var(--grad);border-color:transparent;color:#fff;font-weight:700}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn.danger{color:var(--danger);border-color:rgba(248,113,113,.3)}
+.btn.danger:hover{background:rgba(248,113,113,.1)}
+.btn.sm{padding:5px 10px;font-size:12px;border-radius:8px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.icon-btn{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line2);background:var(--card);cursor:pointer;color:var(--muted);font-size:14px;flex:none;transition:.15s;padding:0}
+.icon-btn:hover{color:var(--text);background:var(--card2)}
+.icon-btn.sm{width:28px;height:28px;font-size:12px}
+.icon-btn.danger:hover{color:var(--danger);border-color:rgba(248,113,113,.4)}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.card-title{font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.toolbar{display:flex;gap:8px}
+.toolbar .btn.primary{flex:1}
+.row{display:flex;gap:10px;width:100%}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.field label{font-size:12px;color:var(--muted);font-weight:500}
+.field input,.field select,.search{width:100%;padding:9px 11px;border-radius:9px;border:1px solid var(--line2);background:#0a1120;color:var(--text);font-size:13px;color-scheme:dark;outline:none;transition:border-color .15s,box-shadow .15s;min-width:0}
+.field input:focus,.field select:focus,.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+.field input[type=date],.field input[type=time]{padding-right:4px}
+.hint{font-size:11.5px;color:var(--dim);min-height:16px;line-height:16px}
+.hint.ok{color:var(--ok)}
+.hint.bad{color:var(--warm)}
+.hint a{color:var(--accent);cursor:pointer;text-decoration:underline}
+.form-grid{display:flex;flex-direction:column;gap:10px}
+.swap-wrap{display:flex;justify-content:center;margin:-10px 0 -8px}
+.swap{border:1px solid rgba(56,189,248,.45);background:var(--card2);color:var(--accent);border-radius:99px;padding:3px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;z-index:1}
+.swap:hover{background:var(--accent);color:#04121f}
+.form-actions{display:flex;gap:8px;margin-top:4px}
+.form-actions .btn.primary{flex:1}
+.note{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
+.section-title{font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:baseline;margin:8px 2px -2px}
+.section-title span{font-weight:400;color:var(--muted);font-size:12px}
+details.card>summary{list-style:none;cursor:pointer;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:'＋';color:var(--accent)}
+details.card[open]>summary::after{content:'－'}
+details.card[open]>summary{margin-bottom:12px}
+input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;flex:none;margin:0}
 
-    #mapContainer { flex: 1; min-width: 0; position: relative; height: 100%; }
-    #map { width: 100%; height: 100%; z-index: 1; }
-    
-    #map .leaflet-tile-pane {
-      filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-    }
-    
-    h2 { margin: 0; font-size: 18px; color: #38bdf8; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; width: 100%; min-width: 0; }
-    label { font-size: 12px; color: #94a3b8; }
-    
-    input, select, button { 
-      width: 100%; 
-      max-width: 100%;
-      padding: 8px 10px; 
-      border-radius: 6px; 
-      border: 1px solid #334155; 
-      background: #0f172a; 
-      color: #fff; 
-      font-size: 13px; 
-      color-scheme: dark; 
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    input:focus, select:focus { outline: none; border-color: #38bdf8; }
+/* ===== 航班清單 ===== */
+.list-tools{display:flex;gap:8px;align-items:center}
+.list-tools .search{flex:1}
+.year-head{display:flex;justify-content:space-between;align-items:baseline;padding:10px 4px 6px;font-size:12px;color:var(--muted);position:sticky;top:-16px;background:#0b1323;z-index:2}
+.year-head b{font-size:16px;color:var(--text);font-family:var(--mono)}
+.fl-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:var(--card);border:1px solid transparent;margin-bottom:6px;transition:.15s}
+.fl-item:hover{border-color:var(--line2);background:var(--card2)}
+.fl-item.has-warn{border-color:rgba(251,191,36,.45)}
+.fl-body{flex:1;min-width:0;cursor:pointer}
+.fl-route{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-weight:700;font-size:14px}
+.fl-route .arrow{color:var(--accent);font-size:12px}
+.fl-route .fl-no{margin-left:auto;font-size:11px;color:var(--warm);font-weight:500;background:rgba(251,191,36,.1);padding:1px 7px;border-radius:6px}
+.fl-meta{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fl-warn{font-size:11.5px;color:var(--warm);margin-top:4px}
+.fl-actions{display:flex;gap:4px;opacity:.55;transition:.15s}
+.fl-item:hover .fl-actions{opacity:1}
+.empty{text-align:center;padding:28px 12px;color:var(--muted);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty b{color:var(--text);font-size:15px}
+.empty p{margin:0 0 6px}
+.empty-ico{font-size:38px}
+.empty .row{justify-content:center}
+.empty .row .btn{flex:none}
 
-    input[type="date"], input[type="time"] {
-      min-width: 0;
-      padding-right: 4px;
-    }
+/* ===== 統計 ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+.stat .v{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1.15}
+.stat .v small{font-size:12px;color:var(--muted);font-weight:500;margin-left:3px;font-family:var(--font)}
+.k{font-size:12px;color:var(--muted);margin-top:3px}
+.stat.hero,.summary-top{grid-column:span 2;display:flex;align-items:center;gap:16px}
+.stat.hero{background:linear-gradient(135deg,rgba(14,165,233,.17),rgba(99,102,241,.2));border-color:rgba(129,140,248,.35);padding:14px}
+.hero-v{font-family:var(--mono);font-size:32px;font-weight:700;line-height:1}
+.hero-v small{font-size:14px;color:var(--muted);font-weight:500}
+.hero-sub{font-size:12px;color:#c7d2fe;margin-top:6px}
+.ring{width:92px;height:92px;flex:none;position:relative}
+.ring svg{transform:rotate(-90deg);display:block}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:17px}
+.bar-row{display:grid;grid-template-columns:50px 1fr 46px;align-items:center;gap:10px;font-size:12px;padding:5px 0}
+.bar-row .num{text-align:right;font-family:var(--mono);color:var(--muted)}
+.bar{height:8px;background:rgba(148,163,184,.12);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--grad);border-radius:99px;min-width:2px}
+.year-chart{display:flex;align-items:flex-end;gap:5px;height:150px}
+.yc-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;min-width:0}
+.yc-bar{width:100%;max-width:24px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#38bdf8,rgba(99,102,241,.55));min-height:3px}
+.yc-bar.zero{background:rgba(148,163,184,.15)}
+.yc-n{font-size:10.5px;font-family:var(--mono)}
+.yc-y{font-size:9.5px;color:var(--muted);font-family:var(--mono)}
+.record{display:flex;gap:12px;align-items:center;padding:11px 12px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.rec-ico{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(56,189,248,.12);font-size:17px;flex:none}
+.rec-main{min-width:0}
+.rec-v{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
+.rec-list{display:flex;flex-direction:column;gap:8px}
+.rank-row{display:grid;grid-template-columns:18px minmax(0,1.3fr) 1fr 30px;gap:8px;align-items:center;font-size:12.5px;padding:5px 0}
+.rank-row .rk{color:var(--dim);font-family:var(--mono);font-size:11px}
+.rank-row .rn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-row .rc{text-align:right;font-family:var(--mono);color:var(--muted)}
+.fun{background:linear-gradient(135deg,rgba(167,139,250,.14),rgba(56,189,248,.1));border-color:rgba(167,139,250,.3);font-size:13px;line-height:1.7}
+.fun b{font-family:var(--mono);color:#ddd6fe}
 
-    .row { display: flex; gap: 8px; width: 100%; min-width: 0; }
-    .row .form-group { flex: 1 1 0%; min-width: 0; }
-    
-    button.btn-primary { background: #0284c7; border: none; cursor: pointer; font-weight: bold; margin-top: 5px; }
-    button.btn-primary:hover { background: #0369a1; }
-    
-    button.btn-success { background: #10b981; border: none; cursor: pointer; font-weight: bold; }
-    button.btn-success:hover { background: #059669; }
-    button.btn-success:disabled { background: #334155; cursor: not-allowed; opacity: 0.5; }
-    
-    button.btn-danger { background: #ef4444; border: none; cursor: pointer; font-weight: bold; }
-    button.btn-danger:hover { background: #dc2626; }
-    button.btn-danger:disabled { background: #334155; cursor: not-allowed; opacity: 0.5; }
+/* ===== 足跡 ===== */
+.cont-head{display:flex;justify-content:space-between;align-items:baseline;margin:10px 2px 6px;font-size:13px;font-weight:700}
+.cont-head span{font-weight:400;font-size:12px;color:var(--muted);font-family:var(--mono)}
+.ctry{display:flex;gap:11px;align-items:flex-start;padding:11px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin-bottom:6px}
+.flag{width:30px;height:21px;border-radius:4px;object-fit:cover;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.14);margin-top:1px;background:#1e293b}
+.flag-fb{display:grid;place-items:center;font-size:10px;font-family:var(--mono);color:var(--muted)}
+.ctry-main{flex:1;min-width:0}
+.ctry-name{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+.tag{font-size:10px;font-weight:500;padding:1px 6px;border-radius:5px;background:rgba(52,211,153,.14);color:var(--ok)}
+.ctry-meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.chip{font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(56,189,248,.1);color:#bae6fd;border:1px solid rgba(56,189,248,.2)}
+.chip.manual{background:rgba(167,139,250,.12);color:#ddd6fe;border-color:rgba(167,139,250,.3)}
+.mp-item{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:11px;background:var(--card);border:1px solid var(--line);margin-bottom:6px}
+.mp-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.mp-main b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-main span{font-size:11.5px;color:var(--muted)}
+.legend{display:flex;gap:12px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 
-    button.btn-warning { background: #f59e0b; border: none; cursor: pointer; font-weight: bold; }
-    button.btn-warning:hover { background: #d97706; }
+/* ===== 設定 ===== */
+.basemap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.bm{padding:8px;border-radius:11px;border:1px solid var(--line2);background:var(--card);cursor:pointer;text-align:left;font-size:12.5px;transition:.15s}
+.bm .sw{height:38px;border-radius:7px;margin-bottom:6px}
+.bm.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(56,189,248,.25)}
+.sw-dark{background:radial-gradient(circle at 30% 40%,#3b4250 0 18%,transparent 19%),linear-gradient(135deg,#22262d,#2f343c)}
+.sw-light{background:radial-gradient(circle at 30% 40%,#c5cad2 0 18%,transparent 19%),linear-gradient(135deg,#e6e8ec,#d4d8de)}
+.sw-satellite{background:radial-gradient(circle at 30% 40%,#4f6b3a 0 20%,transparent 21%),linear-gradient(135deg,#0d2742,#1b4a6b)}
+.sw-street{background:radial-gradient(circle at 30% 40%,#f2e6c9 0 18%,transparent 19%),linear-gradient(135deg,#aad3df,#cfe6ec)}
+.switch-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.switch-row:last-child{border-bottom:0;padding-bottom:0}
+.switch-row:first-child{padding-top:0}
+.switch-row small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.switch{position:relative;width:40px;height:22px;flex:none}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch span{position:absolute;inset:0;background:#26334c;border-radius:99px;transition:.2s;cursor:pointer}
+.switch span::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+span{background:var(--grad)}
+.switch input:checked+span::before{transform:translateX(18px)}
 
-    /* 浮動控制列：置中上方，避免遮擋左上角地圖按鈕 */
-    #floatingControls {
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      width: auto;
-      max-width: 90%;
-    }
+/* ===== 地圖與浮動元件 ===== */
+#mapContainer{flex:1;position:relative;min-width:0;height:100vh;height:100dvh}
+#map{position:absolute;inset:0;background:#10141c}
+.glass{background:rgba(9,15,28,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(148,163,184,.18);box-shadow:0 12px 32px rgba(0,0,0,.42)}
+#menuBtn{position:absolute;top:16px;left:16px;z-index:1000;display:none;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;color:var(--text);font-size:13px;font-weight:700;cursor:pointer}
+#menuBtn:hover{border-color:var(--accent)}
+body.sb-collapsed #menuBtn{display:flex}
+.status-card{position:absolute;top:16px;right:16px;z-index:1000;border-radius:14px;padding:12px 16px;min-width:240px;max-width:340px;pointer-events:none}
+#statusK{font-size:11.5px;color:var(--muted)}
+#statusV{font-weight:700;font-size:16px;color:var(--accent);margin-top:3px;font-family:var(--mono)}
+#statusD{font-size:12px;color:#cbd5e1;margin-top:4px;line-height:1.55}
+.player{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:1000;display:flex;align-items:center;gap:10px;padding:9px 12px 9px 9px;border-radius:20px;width:min(680px,calc(100% - 32px))}
+.play-btn{width:46px;height:46px;border-radius:50%;border:0;background:var(--grad);color:#fff;cursor:pointer;flex:none;display:grid;place-items:center;box-shadow:0 6px 18px rgba(56,189,248,.4);transition:transform .15s}
+.play-btn:hover{transform:scale(1.06)}
+.play-btn svg,.ctrl-btn svg{width:18px;height:18px;fill:currentColor}
+.ctrl-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line2);background:var(--card);color:var(--text);cursor:pointer;flex:none;display:grid;place-items:center}
+.ctrl-btn svg{width:13px;height:13px}
+.ctrl-btn:disabled{opacity:.35;cursor:not-allowed}
+.progress-wrap{flex:1;min-width:0}
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;gap:8px}
+#progText{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);font-weight:500}
+#progCount{font-family:var(--mono);flex:none}
+.progress{height:6px;border-radius:99px;background:rgba(148,163,184,.18);overflow:hidden}
+#progBar{height:100%;width:0;background:var(--grad);border-radius:99px}
+.player select{padding:7px 8px;border-radius:9px;border:1px solid var(--line2);background:var(--card);font-size:12px;color-scheme:dark;outline:none;cursor:pointer;max-width:112px}
+#yearStamp{position:absolute;left:28px;bottom:100px;z-index:900;font-family:var(--mono);font-weight:700;font-size:92px;line-height:1;letter-spacing:-3px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(56,189,248,.35));-webkit-background-clip:text;background-clip:text;color:transparent;pointer-events:none;opacity:0;transform:translateY(12px);transition:opacity .4s,transform .4s;text-shadow:none}
+#yearStamp.show{opacity:1;transform:none}
+#pickHint{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:1050;padding:9px 10px 9px 16px;border-radius:12px;font-size:13px;display:none;align-items:center;gap:10px;border-color:rgba(251,191,36,.5)}
+body.picking #pickHint{display:flex}
+body.picking #map{cursor:crosshair}
+#toast{position:absolute;left:50%;bottom:104px;transform:translate(-50%,10px);opacity:0;pointer-events:none;z-index:1200;transition:.25s;padding:10px 12px 10px 16px;border-radius:12px;font-size:13px;display:flex;align-items:center;gap:12px;white-space:nowrap;max-width:calc(100% - 32px)}
+#toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#toast button{border:0;background:rgba(56,189,248,.18);color:var(--accent);padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12px}
+.plane-icon{background:none;border:0}
+.plane{width:30px;height:30px;display:grid;place-items:center;filter:drop-shadow(0 0 6px rgba(56,189,248,.95))}
+.plane svg{width:24px;height:24px;fill:#fff}
+.leaflet-tooltip.ap-tip{background:rgba(9,15,28,.94);color:var(--text);border:1px solid var(--line2);border-radius:9px;font-family:var(--font);font-size:12px;padding:7px 10px;box-shadow:0 8px 20px rgba(0,0,0,.4);line-height:1.5}
+.leaflet-tooltip.ap-tip::before{display:none}
+.leaflet-tooltip.ap-tip b{font-family:var(--mono);color:var(--accent)}
+.leaflet-control-zoom{border:1px solid var(--line2)!important;border-radius:11px!important;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.4)!important}
+.leaflet-control-zoom a{background:rgba(9,15,28,.88)!important;color:#e2e8f0!important;border-color:var(--line)!important;width:34px!important;height:34px!important;line-height:34px!important}
+.leaflet-control-zoom a:hover{background:#192741!important}
+.leaflet-control-attribution{background:rgba(9,15,28,.6)!important;color:#64748b!important;font-size:10px!important}
+.leaflet-control-attribution a{color:#7dd3fc!important}
+.leaflet-bottom.leaflet-right .leaflet-control-zoom{margin-bottom:96px!important}
 
-    #sidebar.collapsed ~ #mapContainer #floatingControls,
-    body.mobile-collapsed #floatingControls {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .floating-btn {
-      background: rgba(30, 41, 59, 0.85);
-      color: #38bdf8;
-      border: 1px solid #0284c7;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 4px;
-      white-space: nowrap;
-      min-width: 65px;
-    }
-    .floating-btn:hover { background: #0284c7; color: #fff; }
-    
-    .floating-btn-success { background: rgba(16, 185, 129, 0.85); color: #fff; border-color: #059669; }
-    .floating-btn-success:hover { background: #059669; }
-    .floating-btn-success:disabled { background: rgba(51, 65, 85, 0.8); border-color: #334155; color: #64748b; cursor: not-allowed; }
-
-    .floating-btn-danger { background: rgba(239, 68, 68, 0.85); color: #fff; border-color: #dc2626; }
-    .floating-btn-danger:hover { background: #dc2626; }
-    .floating-btn-danger:disabled { background: rgba(51, 65, 85, 0.8); border-color: #334155; color: #64748b; cursor: not-allowed; }
-
-    .toggle-form-btn {
-      background: #334155;
-      color: #38bdf8;
-      border: 1px solid #0284c7;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 10px;
-      border-radius: 6px;
-      text-align: center;
-      transition: background 0.2s;
-    }
-    .toggle-form-btn:hover { background: #1e293b; }
-    .form-container {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      background: #0f172a;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-    }
-    .form-container.active { display: flex; }
-
-    .file-actions { display: flex; gap: 8px; margin-top: 5px; border-top: 1px solid #334155; padding-top: 12px; }
-    .file-actions input[type="file"] { display: none; }
-    .file-btn { flex: 1; text-align: center; padding: 8px; border-radius: 6px; background: #334155; cursor: pointer; font-size: 12px; }
-    .file-btn:hover { background: #475569; }
-
-    .control-panel { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
-    
-    .flight-list-section { display: flex; flex-direction: column; gap: 6px; flex: 1; min-height: 200px; }
-    .list-header { display: flex; justify-content: space-between; align-items: center; }
-    .list-actions { display: flex; gap: 6px; }
-    .btn-sm { width: auto; padding: 2px 8px; font-size: 11px; }
-
-    .flight-list { flex: 1; max-height: 260px; overflow-y: auto; background: #0f172a; border-radius: 6px; border: 1px solid #334155; padding: 8px; }
-    .flight-item { 
-      padding: 8px; 
-      border-bottom: 1px solid #1e293b; 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
-      background: #131c2e; 
-      margin-bottom: 6px; 
-      border-radius: 4px; 
-      user-select: none;
-    }
-    .flight-item:last-child { margin-bottom: 0; }
-    .flight-item input[type="checkbox"] { width: auto; cursor: pointer; }
-    .flight-content { flex: 1; }
-    .flight-main { font-weight: bold; font-size: 13px; color: #38bdf8; }
-    .flight-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-    
-    .item-controls { display: flex; gap: 4px; align-items: center; }
-    .btn-move { width: auto; padding: 4px 6px; background: #334155; border: none; border-radius: 4px; color: #fff; font-size: 11px; cursor: pointer; }
-    .btn-move:hover { background: #475569; }
-    .btn-delete { width: auto; padding: 4px 6px; background: #ef4444; border: none; border-radius: 4px; color: #fff; font-size: 11px; cursor: pointer; }
-    .btn-delete:hover { background: #dc2626; }
-    
-    /* 飛行狀態提示 Overlay */
-    .flight-info-overlay {
-      position: absolute; 
-      top: 20px; 
-      right: 20px; 
-      z-index: 1000;
-      background: rgba(15, 23, 42, 0.85); 
-      color: #fff;
-      padding: 12px 18px; 
-      border-radius: 12px; 
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4); 
-      border: 1px solid rgba(255,255,255,0.1);
-      min-width: 220px;
-      pointer-events: none;
-    }
-
-    /* --- 手機：直式 (Portrait) RWD 最佳化 --- */
-    @media (max-width: 768px) and (orientation: portrait) {
-      body { flex-direction: column; }
-      
-      #sidebar {
-        width: 100%;
-        min-width: 0;
-        height: auto;
-        max-height: 55vh;
-        padding: 14px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-      
-      #sidebar.collapsed {
-        margin-left: 0;
-        transform: translateY(-100%);
-      }
-
-      #mapContainer { 
-        flex: 1; 
-        width: 100%; 
-        height: 100vh; 
-      }
-
-      .flight-info-overlay {
-        top: auto;
-        bottom: 25px;
-        right: 12px;
-        padding: 8px 12px;
-        min-width: 150px;
-        max-width: 220px;
-        font-size: 11px;
-      }
-
-      #floatingControls {
-        top: 12px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-
-      .floating-btn {
-        padding: 5px 10px;
-        font-size: 12px;
-        min-width: 55px;
-      }
-    }
-
-    /* --- 手機：橫式 (Landscape) RWD 最佳化 --- */
-    @media (max-width: 900px) and (orientation: landscape) {
-      #sidebar { width: 300px; min-width: 260px; padding: 12px; gap: 8px; }
-      #sidebar.collapsed { margin-left: -300px; }
-      .row { gap: 6px; }
-      input, select, button { font-size: 12px; padding: 6px 8px; }
-      h2 { font-size: 15px; }
-      
-      .flight-info-overlay { 
-        top: 15px; 
-        right: 15px; 
-        padding: 8px 12px; 
-        min-width: 160px; 
-      }
-    }
-  </style>
+/* ===== 手機 ===== */
+@media (max-width:760px){
+  :root{--sb-w:100vw}
+  #sidebar{position:fixed;left:0;right:0;bottom:0;width:100%;min-width:0;height:80vh;height:80dvh;border-radius:22px 22px 0 0;border-right:0;border-top:1px solid var(--line2);box-shadow:0 -12px 40px rgba(0,0,0,.55)}
+  body.sb-collapsed #sidebar{margin-left:0;transform:translateY(105%)}
+  .grab{display:block;width:44px;height:5px;border-radius:99px;background:rgba(148,163,184,.35);margin:10px auto 0}
+  .sb-head{padding:10px 16px 12px}
+  .tabs{margin:0 16px}
+  .tab-body{padding:14px 16px 28px}
+  #menuBtn{top:12px;left:12px;padding:8px 12px}
+  .status-card{top:12px;right:12px;min-width:0;max-width:calc(100% - 130px);padding:9px 12px}
+  #statusV{font-size:14px}
+  #statusD{font-size:11px}
+  .player{bottom:14px;gap:8px;padding:7px 9px 7px 7px}
+  .player .dur-sel{display:none}
+  .play-btn{width:42px;height:42px}
+  #yearStamp{font-size:56px;left:16px;bottom:84px;letter-spacing:-2px}
+  #toast{bottom:88px}
+  .leaflet-bottom.leaflet-right .leaflet-control-zoom{display:none}
+}
+</style>
 </head>
-<body class="mobile-collapsed">
+<body>
 
-<!-- 側邊欄（預設新增 collapsed 屬性進行收合） -->
-<div id="sidebar" class="collapsed">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2>✈️ 飛行紀錄管理</h2>
-    <button class="btn-sm" style="background:#334155; color:#38bdf8; border:1px solid #0284c7; cursor:pointer; padding:6px 10px; border-radius:6px; font-weight:bold;" onclick="toggleSidebar()">◀ 收合面板</button>
+<aside id="sidebar">
+  <div class="grab"></div>
+  <header class="sb-head">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 2.2c.9 0 1.5.8 1.5 1.8v5.6l7.3 4.4c.3.2.5.5.5.9v1.3l-7.8-2.4v4.3l2 1.5v1.5L12 20.3l-3.5.8v-1.5l2-1.5v-4.3l-7.8 2.4v-1.3c0-.4.2-.7.5-.9l7.3-4.4V4c0-1 .6-1.8 1.5-1.8z"/></svg></div>
+      <div style="min-width:0"><h1>飛行足跡</h1><p id="brandSub">尚無資料</p></div>
+    </div>
+    <button class="icon-btn" onclick="toggleSidebar(false)" title="收合面板">✕</button>
+  </header>
+  <nav class="tabs">
+    <button class="tab active" data-tab="flights">航班<span class="badge" id="warnBadge"></span></button>
+    <button class="tab" data-tab="stats">統計</button>
+    <button class="tab" data-tab="places">足跡</button>
+    <button class="tab" data-tab="settings">設定</button>
+  </nav>
+
+  <div class="tab-body" id="tabBody">
+    <!-- 航班 -->
+    <section class="pane active" id="pane-flights">
+      <div class="toolbar">
+        <button class="btn primary" onclick="openForm()">＋ 新增航班</button>
+        <button class="btn" onclick="$('fileInput').click()">📂 匯入</button>
+        <button class="btn" onclick="exportJSON()">💾 匯出</button>
+      </div>
+
+      <div class="card hidden" id="flightForm">
+        <div class="card-title"><span id="formTitle">新增航班</span><button class="icon-btn sm" onclick="closeForm()" title="關閉">✕</button></div>
+        <div class="form-grid">
+          <div class="field">
+            <label>出發地</label>
+            <input list="airportList" id="fromAirport" placeholder="輸入代碼或名稱，例：TPE" autocomplete="off">
+            <div class="hint" id="fromHint"></div>
+          </div>
+          <div class="swap-wrap"><button type="button" class="swap" onclick="swapAirports()" title="出發地 / 目的地對調">⇅ 對調</button></div>
+          <div class="field">
+            <label>目的地</label>
+            <input list="airportList" id="toAirport" placeholder="輸入代碼或名稱，例：NRT" autocomplete="off">
+            <div class="hint" id="toHint"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>出發日期 *</label><input type="date" id="startDate"></div>
+            <div class="field"><label>出發時間</label><input type="time" id="startTime"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>抵達日期</label><input type="date" id="endDate"></div>
+            <div class="field"><label>抵達時間</label><input type="time" id="endTime"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>航班號碼</label><input type="text" id="flightNo" placeholder="例：BR198" autocomplete="off"></div>
+            <div class="field"><label>航空公司</label><input type="text" id="airline" list="airlineList" placeholder="輸入航班號碼會自動帶入" autocomplete="off"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn primary" id="submitFlightBtn" onclick="submitFlight()">新增航班</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hidden" id="customAirportCard">
+        <div class="card-title"><span>新增自訂機場</span><button class="icon-btn sm" onclick="closeCustomAirport()">✕</button></div>
+        <div class="form-grid">
+          <p class="note">清單裡沒有這個機場。填好資料後，之後就能直接選用。</p>
+          <div class="row">
+            <div class="field" style="flex:0 0 90px"><label>代碼 *</label><input id="caCode" maxlength="3" placeholder="例：ASW"></div>
+            <div class="field"><label>機場名稱 *</label><input id="caName" placeholder="例：亞斯文"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>城市</label><input id="caCity" placeholder="不填則同機場名稱"></div>
+            <div class="field"><label>國家/地區 *</label><select id="caCountry"></select></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>緯度 *</label><input id="caLat" type="number" step="any" placeholder="23.964"></div>
+            <div class="field"><label>經度 *</label><input id="caLng" type="number" step="any" placeholder="32.820"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn" onclick="startPick((lat,lng)=>{$('caLat').value=lat.toFixed(4);$('caLng').value=lng.toFixed(4);})">📍 從地圖點選</button>
+            <button class="btn primary" onclick="saveCustomAirport()">儲存機場</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-tools">
+        <input type="search" class="search" id="flightSearch" placeholder="搜尋航班、城市、航空公司…">
+      </div>
+      <div class="list-tools">
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer"><input type="checkbox" id="checkAll"> 全選</label>
+        <div style="flex:1"></div>
+        <button class="btn sm" onclick="deleteSelected()">刪除選取</button>
+        <button class="btn sm danger" onclick="clearFlights()">清空航班</button>
+      </div>
+      <div id="flightList"></div>
+    </section>
+
+    <!-- 統計 -->
+    <section class="pane" id="pane-stats"><div id="statsBody" style="display:flex;flex-direction:column;gap:12px"></div></section>
+
+    <!-- 足跡 -->
+    <section class="pane" id="pane-places">
+      <div id="placesSummary"></div>
+      <details class="card" id="placeForm">
+        <summary>手動新增足跡</summary>
+        <div class="form-grid">
+          <p class="note">沒有搭飛機抵達的地方（火車、自駕、郵輪、陸路過境）可以補在這裡，會一起算進國家與城市統計。</p>
+          <div class="row">
+            <div class="field"><label>國家/地區 *</label><select id="plCountry"></select></div>
+            <div class="field"><label>城市 *</label><input id="plCity" placeholder="例：薩爾斯堡"></div>
+          </div>
+          <div class="row">
+            <div class="field" style="flex:0 0 92px"><label>年份</label><input id="plYear" inputmode="numeric" maxlength="4" placeholder="2026"></div>
+            <div class="field"><label>緯度</label><input id="plLat" type="number" step="any" placeholder="選填"></div>
+            <div class="field"><label>經度</label><input id="plLng" type="number" step="any" placeholder="選填"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn" onclick="startPick((lat,lng)=>{$('plLat').value=lat.toFixed(4);$('plLng').value=lng.toFixed(4);})">📍 從地圖點選</button>
+            <button class="btn primary" onclick="addPlace()">加入足跡</button>
+          </div>
+        </div>
+      </details>
+      <div id="countryList"></div>
+      <div id="manualList"></div>
+    </section>
+
+    <!-- 設定 -->
+    <section class="pane" id="pane-settings">
+      <div class="section-title">底圖</div>
+      <div class="basemap-grid">
+        <button class="bm" data-bm="dark"><div class="sw sw-dark"></div>深色</button>
+        <button class="bm" data-bm="light"><div class="sw sw-light"></div>淺色</button>
+        <button class="bm" data-bm="satellite"><div class="sw sw-satellite"></div>衛星</button>
+        <button class="bm" data-bm="street"><div class="sw sw-street"></div>街道</button>
+      </div>
+      <div class="section-title">地圖顯示</div>
+      <div class="card">
+        <div class="switch-row"><div>顯示地名標籤</div><label class="switch"><input type="checkbox" id="setLabels"><span></span></label></div>
+        <div class="switch-row"><div>顯示所有航線</div><label class="switch"><input type="checkbox" id="setRoutes"><span></span></label></div>
+        <div class="switch-row"><div>標示去過的國家<small>需要連網下載國界資料</small></div><label class="switch"><input type="checkbox" id="setShade"><span></span></label></div>
+      </div>
+      <div class="section-title">播放</div>
+      <div class="card">
+        <div class="switch-row"><div>鏡頭跟著飛機移動<small>關閉時會固定顯示全部範圍</small></div><label class="switch"><input type="checkbox" id="setFollow"><span></span></label></div>
+        <div class="row" style="margin-top:12px">
+          <div class="field"><label>播放長度</label><select id="durSel2"></select></div>
+          <div class="field"><label>航段間停頓（秒）</label><input type="number" id="pauseInp" min="0" max="3" step="0.1"></div>
+        </div>
+      </div>
+      <div class="section-title">統計</div>
+      <div class="card">
+        <div class="field"><label>母國（統計「出國」時排除）</label><select id="homeSel"></select></div>
+      </div>
+      <div class="section-title">資料</div>
+      <div class="card">
+        <p class="note" style="margin-bottom:12px">資料會自動存在這台電腦的瀏覽器裡，重新打開網頁不會不見。換電腦或清除瀏覽器資料前，記得先匯出備份。</p>
+        <div class="row">
+          <button class="btn block" onclick="$('fileInput').click()">📂 匯入 JSON</button>
+          <button class="btn block" onclick="exportJSON()">💾 匯出 JSON</button>
+        </div>
+        <button class="btn danger block" style="margin-top:8px" onclick="clearEverything()">清除所有資料</button>
+      </div>
+      <div class="section-title">自訂機場 <span id="caCount"></span></div>
+      <div id="customAirportList"></div>
+    </section>
   </div>
+</aside>
 
-  <!-- 檔案操作 -->
-  <div class="file-actions" style="border-top: none; padding-top: 0;">
-    <label class="file-btn" for="jsonFileInput">📂 匯入 JSON</label>
-    <input type="file" id="jsonFileInput" accept=".json" onchange="importJSON(event)">
-    <button class="file-btn" onclick="exportJSON()">💾 匯出 JSON</button>
-  </div>
-
-  <!-- 控制面板（播放設定與按鈕） -->
-  <div class="control-panel">
-    <div class="row">
-      <div class="form-group">
-        <label>全部航班總播放秒數</label>
-        <select id="totalDurationSec">
-          <option value="5">5 秒</option>
-          <option value="10" selected>10 秒</option>
-          <option value="15">15 秒</option>
-          <option value="20">20 秒</option>
-          <option value="25">25 秒</option>
-          <option value="30">30 秒</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>航段之間停頓秒數</label>
-        <input type="number" id="intervalSec" value="0.5" step="0.5" min="0">
-      </div>
-    </div>
-    <div class="row" style="margin-top: 8px;">
-      <button class="btn-success" id="playBtn" onclick="startAnimation()">▶ 播放動畫</button>
-      <button class="btn-danger" id="stopBtn" onclick="stopAnimation()" disabled>⏹ 停止播放</button>
-    </div>
-  </div>
-
-  <!-- 新增航班開關按鈕與折疊表單 -->
-  <button class="toggle-form-btn" onclick="toggleForm()">＋ 新增航班資訊</button>
-  
-  <div class="form-container" id="addFlightForm">
-    <div class="form-group">
-      <label>出發地 (起點)</label>
-      <input list="airports" id="fromAirport" placeholder="輸入或選擇機場 (例: TPE)">
-    </div>
-    
-    <div class="form-group">
-      <label>目的地 (終點)</label>
-      <input list="airports" id="toAirport" placeholder="輸入或選擇機場 (例: PHX)">
-    </div>
-
-    <datalist id="airports"></datalist>
-
-    <div class="row">
-      <div class="form-group">
-        <label>開始日期 *</label>
-        <input type="date" id="startDate">
-      </div>
-      <div class="form-group">
-        <label>開始時間 (選填)</label>
-        <input type="time" id="startTime">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group">
-        <label>結束日期</label>
-        <input type="date" id="endDate">
-      </div>
-      <div class="form-group">
-        <label>結束時間 (選填)</label>
-        <input type="time" id="endTime">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group">
-        <label>航班號碼 (選填)</label>
-        <input type="text" id="flightNo" placeholder="請輸入航班號碼">
-      </div>
-      <div class="form-group">
-        <label>航空公司 (選填)</label>
-        <input type="text" id="airline" placeholder="請輸入航空公司">
-      </div>
-    </div>
-
-    <button class="btn-primary" onclick="addFlight()">確認新增至清單</button>
-  </div>
-
-  <!-- 已登錄航班清單 -->
-  <div class="flight-list-section">
-    <div class="list-header">
-      <label>已登錄航班 (<span id="flightCount">0</span>)</label>
-      <div class="list-actions">
-        <button class="btn-warning btn-sm" onclick="deleteSelectedFlights()">刪除選取</button>
-        <button class="btn-danger btn-sm" onclick="clearAllFlights()">清空全部</button>
-      </div>
-    </div>
-    <div class="flight-list" id="flightListContainer"></div>
-  </div>
-</div>
-
-<div id="mapContainer">
-  <!-- 收合時於地圖懸浮顯現的控制按鈕（位於上方中間） -->
-  <div id="floatingControls">
-    <button class="floating-btn" onclick="toggleSidebar()">編輯</button>
-    <button class="floating-btn floating-btn-success" id="floatPlayBtn" onclick="startAnimation()">▶ 播放</button>
-    <button class="floating-btn floating-btn-danger" id="floatStopBtn" onclick="stopAnimation()" disabled>⏹ 停止</button>
-  </div>
-
+<main id="mapContainer">
   <div id="map"></div>
-
-  <div class="flight-info-overlay">
-    <div style="font-size: 11px; color: #94a3b8;">當前狀態</div>
-    <div id="overlay-status" style="font-weight: bold; color: #38bdf8; margin-top: 2px;">待命</div>
-    <div id="overlay-detail" style="font-size: 11px; color: #cbd5e1; margin-top: 2px;">-</div>
+  <button id="menuBtn" class="glass" onclick="toggleSidebar(true)">☰ 編輯</button>
+  <div class="status-card glass">
+    <div id="statusK">飛行足跡</div>
+    <div id="statusV">待命</div>
+    <div id="statusD">-</div>
   </div>
-</div>
+  <div id="yearStamp"></div>
+  <div id="pickHint" class="glass">📍 在地圖上點一下要標記的位置<button class="btn sm" onclick="endPick()">取消</button></div>
+  <div class="player glass">
+    <button class="play-btn" id="playBtn" title="播放 / 暫停（空白鍵）"></button>
+    <button class="ctrl-btn" id="stopBtn" title="停止" disabled><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg></button>
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="progText">準備就緒</span><span id="progCount">0 / 0</span></div>
+      <div class="progress"><div id="progBar"></div></div>
+    </div>
+    <select id="yearSel" title="年份篩選"></select>
+    <select id="durSel" class="dur-sel" title="播放長度"></select>
+  </div>
+  <div id="toast" class="glass"></div>
+</main>
+
+<input type="file" id="fileInput" accept=".json,application/json" class="hidden">
+<datalist id="airportList"></datalist>
+<datalist id="airlineList"></datalist>
 
 <script>
-  const defaultAirports = {
-    // --- 台灣 ---
-    "TPE (台灣桃園)": [121.233, 25.077], "TSA (台北松山)": [121.552, 25.069],
-    "KHH (高雄小港)": [120.350, 22.577], "RMQ (台中)": [120.686, 24.265],
-    "TNN (台南)": [120.206, 22.950], "HUN (花蓮)": [121.618, 23.989],
-    "MZG (澎湖馬公)": [119.628, 23.569], "KNH (金門)": [118.359, 24.428],
+/* =========================================================
+   基礎資料
+   ========================================================= */
+const CONTINENTS = { AS:'亞洲', EU:'歐洲', AF:'非洲', NA:'北美洲', SA:'南美洲', OC:'大洋洲' };
+const COUNTRY_DATA = {
+  AS:'TW:台灣,HK:香港,MO:澳門,JP:日本,KR:南韓,KP:北韓,CN:中國,MN:蒙古,PH:菲律賓,VN:越南,TH:泰國,MY:馬來西亞,SG:新加坡,ID:印尼,BN:汶萊,KH:柬埔寨,LA:寮國,MM:緬甸,TL:東帝汶,IN:印度,PK:巴基斯坦,BD:孟加拉,LK:斯里蘭卡,NP:尼泊爾,BT:不丹,MV:馬爾地夫,AF:阿富汗,KZ:哈薩克,UZ:烏茲別克,KG:吉爾吉斯,TJ:塔吉克,TM:土庫曼,IR:伊朗,IQ:伊拉克,SY:敘利亞,LB:黎巴嫩,JO:約旦,IL:以色列,PS:巴勒斯坦,SA:沙烏地阿拉伯,YE:葉門,OM:阿曼,AE:阿拉伯聯合大公國,QA:卡達,BH:巴林,KW:科威特,TR:土耳其,CY:賽普勒斯,GE:喬治亞,AM:亞美尼亞,AZ:亞塞拜然',
+  EU:'GB:英國,IE:愛爾蘭,FR:法國,DE:德國,NL:荷蘭,BE:比利時,LU:盧森堡,CH:瑞士,AT:奧地利,LI:列支敦斯登,IT:義大利,VA:梵蒂岡,SM:聖馬利諾,MT:馬爾他,ES:西班牙,PT:葡萄牙,AD:安道爾,MC:摩納哥,DK:丹麥,NO:挪威,SE:瑞典,FI:芬蘭,IS:冰島,EE:愛沙尼亞,LV:拉脫維亞,LT:立陶宛,PL:波蘭,CZ:捷克,SK:斯洛伐克,HU:匈牙利,SI:斯洛維尼亞,HR:克羅埃西亞,BA:波士尼亞與赫塞哥維納,RS:塞爾維亞,ME:蒙特內哥羅,MK:北馬其頓,AL:阿爾巴尼亞,GR:希臘,BG:保加利亞,RO:羅馬尼亞,MD:摩爾多瓦,UA:烏克蘭,BY:白俄羅斯,RU:俄羅斯',
+  AF:'EG:埃及,MA:摩洛哥,DZ:阿爾及利亞,TN:突尼西亞,LY:利比亞,SD:蘇丹,SS:南蘇丹,ET:衣索比亞,ER:厄利垂亞,DJ:吉布地,SO:索馬利亞,KE:肯亞,UG:烏干達,TZ:坦尚尼亞,RW:盧安達,BI:蒲隆地,CD:剛果民主共和國,CG:剛果,GA:加彭,GQ:赤道幾內亞,CM:喀麥隆,CF:中非,TD:查德,NE:尼日,NG:奈及利亞,BJ:貝南,TG:多哥,GH:迦納,CI:象牙海岸,BF:布吉納法索,ML:馬利,MR:茅利塔尼亞,SN:塞內加爾,GM:甘比亞,GW:幾內亞比索,GN:幾內亞,SL:獅子山,LR:賴比瑞亞,CV:維德角,ST:聖多美普林西比,AO:安哥拉,ZM:尚比亞,ZW:辛巴威,MW:馬拉威,MZ:莫三比克,MG:馬達加斯加,MU:模里西斯,SC:塞席爾,KM:葛摩,NA:納米比亞,BW:波札那,ZA:南非,LS:賴索托,SZ:史瓦帝尼',
+  NA:'US:美國,CA:加拿大,MX:墨西哥,GT:瓜地馬拉,BZ:貝里斯,SV:薩爾瓦多,HN:宏都拉斯,NI:尼加拉瓜,CR:哥斯大黎加,PA:巴拿馬,CU:古巴,JM:牙買加,HT:海地,DO:多明尼加,BS:巴哈馬,BB:巴貝多,TT:千里達及托巴哥,AG:安地卡及巴布達,DM:多米尼克,GD:格瑞那達,KN:聖克里斯多福及尼維斯,LC:聖露西亞,VC:聖文森及格瑞那丁',
+  SA:'BR:巴西,AR:阿根廷,CL:智利,PE:秘魯,CO:哥倫比亞,VE:委內瑞拉,EC:厄瓜多,BO:玻利維亞,PY:巴拉圭,UY:烏拉圭,GY:蓋亞那,SR:蘇利南',
+  OC:'AU:澳洲,NZ:紐西蘭,FJ:斐濟,PG:巴布亞紐幾內亞,SB:索羅門群島,VU:萬那杜,WS:薩摩亞,TO:東加,KI:吉里巴斯,TV:吐瓦魯,NR:諾魯,MH:馬紹爾群島,FM:密克羅尼西亞,PW:帛琉,GU:關島,MP:北馬里亞納群島,PF:法屬玻里尼西亞,NC:新喀里多尼亞'
+};
+const COUNTRIES = {};
+Object.entries(COUNTRY_DATA).forEach(([cont, s]) => s.split(',').forEach(p => { const [c, n] = p.split(':'); COUNTRIES[c] = { name: n, cont }; }));
+const TOTAL_COUNTRIES = Object.keys(COUNTRIES).length;
 
-    // --- 日本 ---
-    "NRT (東京成田)": [140.386, 35.764], "HND (東京羽田)": [139.781, 35.553],
-    "KIX (大阪關西)": [135.233, 34.434], "ITM (大阪伊丹)": [135.438, 34.785],
-    "CTS (札幌新千歲)": [141.692, 42.775], "FUK (福岡)": [130.451, 33.586],
-    "NGO (名古屋中部)": [136.805, 34.858], "OKA (沖繩那霸)": [127.646, 26.196],
-    "KOJ (鹿兒島)": [130.719, 31.803],
+// 代碼|名稱|城市|國家|經度|緯度
+const AIRPORT_DATA = `
+TPE|台灣桃園|桃園|TW|121.233|25.077
+TSA|台北松山|台北|TW|121.552|25.069
+KHH|高雄小港|高雄|TW|120.350|22.577
+RMQ|台中清泉崗|台中|TW|120.621|24.265
+TNN|台南|台南|TW|120.206|22.950
+HUN|花蓮|花蓮|TW|121.618|23.989
+TTT|台東豐年|台東|TW|121.102|22.755
+MZG|澎湖馬公|澎湖|TW|119.628|23.569
+KNH|金門尚義|金門|TW|118.359|24.428
+LZN|馬祖南竿|馬祖|TW|119.958|26.160
+NRT|東京成田|東京|JP|140.386|35.764
+HND|東京羽田|東京|JP|139.781|35.553
+KIX|大阪關西|大阪|JP|135.244|34.435
+ITM|大阪伊丹|大阪|JP|135.438|34.785
+UKB|神戶|神戶|JP|135.224|34.633
+CTS|札幌新千歲|札幌|JP|141.692|42.775
+HKD|函館|函館|JP|140.822|41.770
+AKJ|旭川|旭川|JP|142.448|43.671
+FUK|福岡|福岡|JP|130.451|33.586
+NGO|名古屋中部|名古屋|JP|136.805|34.858
+OKA|沖繩那霸|那霸|JP|127.646|26.196
+ISG|石垣|石垣島|JP|124.245|24.397
+MMY|宮古|宮古島|JP|125.295|24.783
+KOJ|鹿兒島|鹿兒島|JP|130.719|31.803
+KMJ|熊本|熊本|JP|130.855|32.837
+KMI|宮崎|宮崎|JP|131.449|31.877
+OIT|大分|大分|JP|131.737|33.479
+HSG|佐賀|佐賀|JP|130.302|33.150
+NGS|長崎|長崎|JP|129.914|32.917
+HIJ|廣島|廣島|JP|132.919|34.436
+OKJ|岡山|岡山|JP|133.855|34.757
+TAK|高松|高松|JP|134.016|34.214
+MYJ|松山(愛媛)|松山|JP|132.700|33.827
+KMQ|小松|金澤|JP|136.407|36.395
+TOY|富山|富山|JP|137.188|36.648
+KIJ|新潟|新潟|JP|139.121|37.956
+SDJ|仙台|仙台|JP|140.917|38.139
+AOJ|青森|青森|JP|140.690|40.735
+FSZ|靜岡|靜岡|JP|138.190|34.796
+IBR|茨城|茨城|JP|140.415|36.181
+ICN|首爾仁川|首爾|KR|126.451|37.460
+GMP|首爾金浦|首爾|KR|126.791|37.558
+PUS|釜山金海|釜山|KR|128.938|35.179
+CJU|濟州|濟州|KR|126.493|33.511
+TAE|大邱|大邱|KR|128.659|35.894
+CJJ|清州|清州|KR|127.499|36.717
+PVG|上海浦東|上海|CN|121.805|31.143
+SHA|上海虹橋|上海|CN|121.336|31.198
+PEK|北京首都|北京|CN|116.597|40.080
+PKX|北京大興|北京|CN|116.410|39.510
+CAN|廣州白雲|廣州|CN|113.299|23.392
+SZX|深圳寶安|深圳|CN|113.811|22.639
+CTU|成都雙流|成都|CN|103.947|30.578
+TFU|成都天府|成都|CN|104.445|30.319
+CKG|重慶江北|重慶|CN|106.642|29.719
+XIY|西安咸陽|西安|CN|108.751|34.447
+KMG|昆明長水|昆明|CN|102.929|24.992
+XMN|廈門高崎|廈門|CN|118.128|24.544
+FOC|福州長樂|福州|CN|119.663|25.935
+HGH|杭州蕭山|杭州|CN|120.434|30.236
+NKG|南京祿口|南京|CN|118.862|31.742
+WUH|武漢天河|武漢|CN|114.208|30.784
+CSX|長沙黃花|長沙|CN|113.220|28.189
+TAO|青島膠東|青島|CN|120.088|36.362
+DLC|大連|大連|CN|121.539|38.966
+SHE|瀋陽|瀋陽|CN|123.483|41.640
+HRB|哈爾濱|哈爾濱|CN|126.250|45.623
+TSN|天津|天津|CN|117.346|39.124
+URC|烏魯木齊|烏魯木齊|CN|87.474|43.907
+LXA|拉薩|拉薩|CN|90.912|29.298
+KWL|桂林|桂林|CN|110.039|25.218
+SYX|三亞|三亞|CN|109.412|18.303
+HAK|海口|海口|CN|110.459|19.935
+DYG|張家界|張家界|CN|110.443|29.103
+LJG|麗江|麗江|CN|100.246|26.679
+NNG|南寧|南寧|CN|108.172|22.608
+CGO|鄭州|鄭州|CN|113.841|34.520
+TNA|濟南|濟南|CN|117.216|36.857
+WNZ|溫州|溫州|CN|120.852|27.912
+NGB|寧波|寧波|CN|121.462|29.827
+HKG|香港|香港|HK|113.915|22.308
+MFM|澳門|澳門|MO|113.592|22.149
+BKK|曼谷蘇凡納布|曼谷|TH|100.750|13.690
+DMK|曼谷廊曼|曼谷|TH|100.607|13.912
+HKT|普吉島|普吉島|TH|98.317|8.113
+CNX|清邁|清邁|TH|98.963|18.767
+USM|蘇美島|蘇美島|TH|100.062|9.548
+KBV|喀比|喀比|TH|98.987|8.099
+SIN|新加坡樟宜|新加坡|SG|103.991|1.364
+KUL|吉隆坡|吉隆坡|MY|101.710|2.745
+PEN|檳城|檳城|MY|100.277|5.297
+BKI|亞庇|亞庇|MY|116.051|5.937
+LGK|蘭卡威|蘭卡威|MY|99.729|6.330
+JHB|新山|新山|MY|103.670|1.641
+KCH|古晉|古晉|MY|110.347|1.485
+CGK|雅加達|雅加達|ID|106.655|-6.126
+DPS|峇里島|峇里島|ID|115.167|-8.748
+SUB|泗水|泗水|ID|112.787|-7.380
+MNL|馬尼拉|馬尼拉|PH|121.020|14.509
+CEB|宿霧|宿霧|PH|123.979|10.308
+TAG|薄荷島邦勞|薄荷島|PH|123.853|9.566
+MPH|長灘島卡蒂克蘭|長灘島|PH|121.954|11.925
+KLO|卡利博|卡利博|PH|122.376|11.679
+PPS|公主港|巴拉望|PH|118.759|9.742
+CRK|克拉克|克拉克|PH|120.560|15.186
+HAN|河內內排|河內|VN|105.807|21.221
+SGN|胡志明市|胡志明市|VN|106.652|10.819
+DAD|峴港|峴港|VN|108.199|16.044
+CXR|芽莊金蘭|芽莊|VN|109.219|11.998
+PQC|富國島|富國島|VN|103.991|10.170
+RGN|仰光|仰光|MM|96.133|16.907
+PNH|金邊|金邊|KH|104.844|11.547
+SAI|暹粒吳哥|暹粒|KH|104.230|13.404
+VTE|永珍|永珍|LA|102.563|17.988
+LPQ|琅勃拉邦|琅勃拉邦|LA|102.161|19.897
+BWN|汶萊|斯里巴加灣|BN|114.928|4.944
+DEL|德里|德里|IN|77.103|28.556
+BOM|孟買|孟買|IN|72.868|19.089
+BLR|班加羅爾|班加羅爾|IN|77.706|13.199
+MAA|清奈|清奈|IN|80.169|12.990
+CCU|加爾各答|加爾各答|IN|88.447|22.655
+KTM|加德滿都|加德滿都|NP|85.359|27.696
+CMB|可倫坡|可倫坡|LK|79.884|7.181
+DAC|達卡|達卡|BD|90.397|23.843
+KHI|喀拉蚩|喀拉蚩|PK|67.161|24.906
+MLE|馬爾地夫馬列|馬列|MV|73.529|4.192
+PBH|不丹帕羅|帕羅|BT|89.425|27.403
+ALA|阿拉木圖|阿拉木圖|KZ|77.041|43.352
+TAS|塔什干|塔什干|UZ|69.281|41.258
+UBN|烏蘭巴托|烏蘭巴托|MN|106.766|47.648
+VVO|海參崴|海參崴|RU|132.148|43.399
+SVO|莫斯科謝列梅捷沃|莫斯科|RU|37.415|55.973
+DXB|杜拜|杜拜|AE|55.364|25.253
+AUH|阿布達比|阿布達比|AE|54.651|24.433
+DOH|多哈|多哈|QA|51.608|25.273
+TLV|特拉維夫|特拉維夫|IL|34.887|32.011
+IST|伊斯坦堡|伊斯坦堡|TR|28.752|41.262
+SAW|伊斯坦堡薩比哈|伊斯坦堡|TR|29.309|40.898
+NAV|卡帕多奇亞(內夫謝希爾)|卡帕多奇亞|TR|34.535|38.772
+ASR|開塞利|開塞利|TR|35.495|38.770
+DNZ|代尼茲利(棉花堡)|代尼茲利|TR|29.701|37.786
+ADB|伊茲密爾|伊茲密爾|TR|27.157|38.292
+AYT|安塔利亞|安塔利亞|TR|30.800|36.899
+ESB|安卡拉|安卡拉|TR|32.995|40.128
+AMM|安曼|安曼|JO|35.993|31.722
+CAI|開羅|開羅|EG|31.406|30.122
+ASW|亞斯文|亞斯文|EG|32.820|23.964
+LXR|路克索|路克索|EG|32.706|25.671
+HRG|赫爾格達|赫爾格達|EG|33.799|27.178
+RUH|利雅德|利雅德|SA|46.699|24.958
+JED|吉達|吉達|SA|39.157|21.680
+MCT|馬斯開特|馬斯開特|OM|58.284|23.593
+BAH|巴林|麥納瑪|BH|50.634|26.271
+KWI|科威特|科威特城|KW|47.969|29.227
+TBS|提比里斯|提比里斯|GE|44.954|41.669
+GYD|巴庫|巴庫|AZ|50.047|40.467
+EVN|葉里溫|葉里溫|AM|44.396|40.147
+SYD|雪梨|雪梨|AU|151.177|-33.946
+MEL|墨爾本|墨爾本|AU|144.843|-37.673
+BNE|布里斯本|布里斯本|AU|153.118|-27.384
+OOL|黃金海岸|黃金海岸|AU|153.510|-28.164
+CNS|凱恩斯|凱恩斯|AU|145.755|-16.876
+PER|伯斯|伯斯|AU|115.967|-31.940
+ADL|阿德雷德|阿德雷德|AU|138.531|-34.945
+DRW|達爾文|達爾文|AU|130.877|-12.415
+AYQ|烏魯魯|烏魯魯|AU|130.976|-25.186
+AKL|奧克蘭|奧克蘭|NZ|174.785|-37.008
+CHC|基督城|基督城|NZ|172.532|-43.489
+ZQN|皇后鎮|皇后鎮|NZ|168.739|-45.021
+WLG|威靈頓|威靈頓|NZ|174.805|-41.327
+NAN|斐濟楠迪|楠迪|FJ|177.443|-17.755
+GUM|關島|關島|GU|144.796|13.484
+SPN|塞班|塞班島|MP|145.729|15.119
+ROR|帛琉|帛琉|PW|134.544|7.367
+PPT|大溪地帕皮提|大溪地|PF|-149.607|-17.554
+POM|摩斯比港|摩斯比港|PG|147.220|-9.443
+HNL|檀香山|檀香山|US|-157.922|21.319
+OGG|茂宜島|茂宜島|US|-156.430|20.899
+LHR|倫敦希斯洛|倫敦|GB|-0.454|51.470
+LGW|倫敦蓋威克|倫敦|GB|-0.182|51.148
+MAN|曼徹斯特|曼徹斯特|GB|-2.275|53.354
+EDI|愛丁堡|愛丁堡|GB|-3.372|55.950
+CDG|巴黎戴高樂|巴黎|FR|2.548|49.010
+ORY|巴黎奧利|巴黎|FR|2.380|48.723
+NCE|尼斯|尼斯|FR|7.215|43.658
+LYS|里昂|里昂|FR|5.081|45.726
+AMS|阿姆斯特丹|阿姆斯特丹|NL|4.764|52.309
+FRA|法蘭克福|法蘭克福|DE|8.571|50.038
+MUC|慕尼黑|慕尼黑|DE|11.786|48.354
+BER|柏林|柏林|DE|13.501|52.366
+HAM|漢堡|漢堡|DE|9.988|53.630
+DUS|杜塞道夫|杜塞道夫|DE|6.767|51.289
+MAD|馬德里|馬德里|ES|-3.568|40.498
+BCN|巴塞隆納|巴塞隆納|ES|2.079|41.297
+AGP|馬拉加|馬拉加|ES|-4.499|36.675
+FCO|羅馬|羅馬|IT|12.239|41.800
+MXP|米蘭|米蘭|IT|8.723|45.631
+VCE|威尼斯|威尼斯|IT|12.352|45.505
+NAP|拿坡里|拿坡里|IT|14.291|40.886
+FLR|佛羅倫斯|佛羅倫斯|IT|11.205|43.810
+ZRH|蘇黎世|蘇黎世|CH|8.549|47.465
+GVA|日內瓦|日內瓦|CH|6.109|46.238
+VIE|維也納|維也納|AT|16.569|48.110
+SZG|薩爾斯堡|薩爾斯堡|AT|13.004|47.793
+INN|因斯布魯克|因斯布魯克|AT|11.344|47.260
+CPH|哥本哈根|哥本哈根|DK|12.656|55.618
+ARN|斯德哥爾摩|斯德哥爾摩|SE|17.919|59.652
+OSL|奧斯陸|奧斯陸|NO|11.100|60.198
+TOS|特羅姆瑟|特羅姆瑟|NO|18.919|69.683
+HEL|赫爾辛基|赫爾辛基|FI|24.963|60.317
+RVN|羅凡涅米|羅凡涅米|FI|25.844|66.565
+KEF|雷克雅維克|雷克雅維克|IS|-22.606|63.985
+DUB|都柏林|都柏林|IE|-6.270|53.421
+LIS|里斯本|里斯本|PT|-9.136|38.781
+OPO|波多|波多|PT|-8.678|41.248
+ATH|雅典|雅典|GR|23.945|37.936
+JTR|聖托里尼|聖托里尼|GR|25.479|36.399
+WAW|華沙|華沙|PL|20.968|52.166
+KRK|克拉科夫|克拉科夫|PL|19.785|50.078
+PRG|布拉格|布拉格|CZ|14.263|50.101
+BUD|布達佩斯|布達佩斯|HU|19.261|47.430
+BRU|布魯塞爾|布魯塞爾|BE|4.484|50.901
+ZAG|札格瑞布|札格瑞布|HR|16.069|45.743
+DBV|杜布羅夫尼克|杜布羅夫尼克|HR|18.268|42.561
+SPU|斯普利特|斯普利特|HR|16.298|43.539
+LJU|盧比安納|盧比安納|SI|14.458|46.224
+OTP|布加勒斯特|布加勒斯特|RO|26.085|44.571
+SOF|索菲亞|索菲亞|BG|23.411|42.697
+BEG|貝爾格勒|貝爾格勒|RS|20.309|44.818
+TLL|塔林|塔林|EE|24.833|59.413
+RIX|里加|里加|LV|23.971|56.924
+VNO|維爾紐斯|維爾紐斯|LT|25.288|54.634
+MLA|馬爾他|瓦萊塔|MT|14.477|35.857
+LAX|洛杉磯|洛杉磯|US|-118.409|33.942
+SFO|舊金山|舊金山|US|-122.379|37.621
+SJC|聖荷西|聖荷西|US|-121.929|37.363
+SEA|西雅圖|西雅圖|US|-122.308|47.450
+PDX|波特蘭|波特蘭|US|-122.598|45.589
+SAN|聖地牙哥|聖地牙哥|US|-117.190|32.734
+LAS|拉斯維加斯|拉斯維加斯|US|-115.152|36.084
+PHX|鳳凰城|鳳凰城|US|-112.011|33.435
+SLC|鹽湖城|鹽湖城|US|-111.978|40.788
+DEN|丹佛|丹佛|US|-104.674|39.856
+DFW|達拉斯|達拉斯|US|-97.040|32.900
+IAH|休士頓|休士頓|US|-95.341|29.990
+AUS|奧斯汀|奧斯汀|US|-97.670|30.194
+ORD|芝加哥|芝加哥|US|-87.905|41.974
+MSP|明尼亞波利斯|明尼亞波利斯|US|-93.222|44.885
+DTW|底特律|底特律|US|-83.353|42.212
+ATL|亞特蘭大|亞特蘭大|US|-84.428|33.641
+MCO|奧蘭多|奧蘭多|US|-81.309|28.429
+MIA|邁阿密|邁阿密|US|-80.291|25.796
+JFK|紐約甘迺迪|紐約|US|-73.778|40.641
+EWR|紐華克|紐約|US|-74.175|40.690
+BOS|波士頓|波士頓|US|-71.005|42.366
+IAD|華盛頓杜勒斯|華盛頓|US|-77.456|38.953
+PHL|費城|費城|US|-75.241|39.872
+ANC|安克拉治|安克拉治|US|-149.996|61.174
+FAI|費爾班克斯|費爾班克斯|US|-147.856|64.815
+YVR|溫哥華|溫哥華|CA|-123.182|49.197
+YYC|卡加利|卡加利|CA|-114.020|51.131
+YYZ|多倫多|多倫多|CA|-79.631|43.678
+YUL|蒙特婁|蒙特婁|CA|-73.741|45.471
+YXY|白馬市|白馬市|CA|-135.067|60.710
+YZF|黃刀鎮|黃刀鎮|CA|-114.440|62.463
+MEX|墨西哥城|墨西哥城|MX|-99.072|19.436
+CUN|坎昆|坎昆|MX|-86.877|21.037
+PTY|巴拿馬城|巴拿馬城|PA|-79.384|9.071
+HAV|哈瓦那|哈瓦那|CU|-82.409|22.989
+SJO|聖荷西(哥斯大黎加)|聖荷西|CR|-84.209|9.994
+GRU|聖保羅|聖保羅|BR|-46.473|-23.436
+GIG|里約熱內盧|里約熱內盧|BR|-43.251|-22.809
+EZE|布宜諾斯艾利斯|布宜諾斯艾利斯|AR|-58.536|-34.822
+FTE|卡拉法特|卡拉法特|AR|-72.053|-50.280
+USH|烏斯懷亞|烏斯懷亞|AR|-68.296|-54.843
+SCL|聖地牙哥(智利)|聖地牙哥|CL|-70.786|-33.393
+BOG|波哥大|波哥大|CO|-74.147|4.702
+LIM|利馬|利馬|PE|-77.114|-12.022
+CUZ|庫斯科|庫斯科|PE|-71.939|-13.536
+UIO|基多|基多|EC|-78.358|-0.129
+LPB|拉巴斯|拉巴斯|BO|-68.192|-16.513
+JNB|約翰尼斯堡|約翰尼斯堡|ZA|28.246|-26.137
+CPT|開普敦|開普敦|ZA|18.602|-33.972
+NBO|奈洛比|奈洛比|KE|36.928|-1.319
+ADD|阿迪斯阿貝巴|阿迪斯阿貝巴|ET|38.799|8.978
+LOS|拉哥斯|拉哥斯|NG|3.321|6.577
+CMN|卡薩布蘭加|卡薩布蘭加|MA|-7.590|33.368
+RAK|馬拉喀什|馬拉喀什|MA|-8.036|31.607
+TUN|突尼斯|突尼斯|TN|10.227|36.851
+ZNZ|尚吉巴|尚吉巴|TZ|39.225|-6.222
+JRO|吉力馬札羅|吉力馬札羅|TZ|37.074|-3.429
+MRU|模里西斯|模里西斯|MU|57.683|-20.430
+SEZ|塞席爾|馬埃島|SC|55.522|-4.674
+TNR|塔那那利佛|塔那那利佛|MG|47.479|-18.797
+VFA|維多利亞瀑布|維多利亞瀑布|ZW|25.839|-18.096
+WDH|溫荷克|溫荷克|NA|17.471|-22.480
+`;
+const AIRPORTS = {};
+AIRPORT_DATA.trim().split('\n').forEach(line => {
+  const [code, name, city, cc, lng, lat] = line.trim().split('|');
+  AIRPORTS[code] = { code, name, city, cc, lng: +lng, lat: +lat };
+});
 
-    // --- 韓國 ---
-    "ICN (首爾仁川)": [126.451, 37.460], "GMP (首爾金浦)": [126.791, 37.558],
-    "PUS (釜山金海)": [128.938, 35.179], "CJU (濟州)": [126.493, 33.511],
+const AIRLINES = Object.fromEntries('CI:中華航空,BR:長榮航空,JX:星宇航空,IT:台灣虎航,AE:華信航空,B7:立榮航空,GK:捷星日本航空,3K:捷星亞洲航空,JQ:捷星航空,TR:酷航,SQ:新加坡航空,CX:國泰航空,UO:香港快運,HX:香港航空,NX:澳門航空,KE:大韓航空,OZ:韓亞航空,7C:濟州航空,TW:德威航空,LJ:真航空,ZE:易斯達航空,BX:釜山航空,JL:日本航空,NH:全日空,MM:樂桃航空,JW:香草航空,TG:泰國航空,FD:泰國亞洲航空,VZ:泰越捷航空,VN:越南航空,VJ:越捷航空,PR:菲律賓航空,5J:宿霧太平洋航空,Z2:菲律賓亞洲航空,MH:馬來西亞航空,AK:亞洲航空,D7:全亞洲航空,OD:馬印航空,GA:印尼航空,NZ:紐西蘭航空,QF:澳洲航空,VA:維珍澳洲航空,TK:土耳其航空,PC:飛馬航空,MS:埃及航空,EK:阿聯酋航空,QR:卡達航空,EY:阿提哈德航空,MU:中國東方航空,FM:上海航空,CA:中國國際航空,CZ:中國南方航空,HU:海南航空,MF:廈門航空,UA:聯合航空,AA:美國航空,DL:達美航空,AS:阿拉斯加航空,WN:西南航空,AC:加拿大航空,LH:漢莎航空,AF:法國航空,KL:荷蘭皇家航空,BA:英國航空,OS:奧地利航空,LX:瑞士航空,AY:芬蘭航空,SK:北歐航空,IB:伊比利亞航空,AZ:義大利航空'.split(',').map(p => p.split(':')));
 
-    // --- 中國大陸 ---
-    "PVG (上海浦東)": [121.805, 31.143], "SHA (上海虹橋)": [121.336, 31.198],
-    "PEK (北京首都)": [116.597, 40.080], "PKX (北京大興)": [116.410, 39.510],
-    "CAN (廣州)": [113.299, 23.392], "SZX (深圳)": [113.811, 22.639],
-    "CTU (成都雙流)": [103.947, 30.578], "CKG (重慶江北)": [106.642, 29.719],
-    "XIY (西安)": [108.751, 34.447], "KMG (昆明)": [102.929, 24.992],
-    "XMN (廈門)": [118.128, 24.544], "HGH (杭州)": [119.729, 30.229],
-    "NKG (南京)": [118.862, 31.742], "WUH (武漢)": [114.208, 30.784],
-    "TAO (青島)": [120.374, 36.266], "DLC (大連)": [121.539, 38.966],
-    "HRB (哈爾濱)": [126.250, 45.623], "TSN (天津)": [117.346, 39.124],
-    "URC (烏魯木齊)": [87.474, 43.907],
+const BASEMAPS = {
+  dark:      { base:'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', ref:'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', max:16, route:'#38bdf8' },
+  light:     { base:'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', ref:'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', max:16, route:'#0369a1' },
+  satellite: { base:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', ref:'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', max:18, route:'#7dd3fc' },
+  street:    { base:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', ref:null, max:18, route:'#0369a1' }
+};
 
-    // --- 港澳 ---
-    "HKG (香港)": [113.915, 22.308], "MFM (澳門)": [113.592, 22.149],
+const STORE_KEY = 'flightFootprint.v2';
+const DEFAULT_SETTINGS = { basemap:'dark', labels:true, showRoutes:true, shadeCountries:true, follow:true, home:'TW', pause:0.3, duration:'auto', year:'all' };
+const DURATIONS = [['auto','自動長度'],['15','15 秒'],['30','30 秒'],['45','45 秒'],['60','60 秒'],['90','90 秒'],['120','120 秒']];
+const GEO_URL = 'https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson';
+const OFFSETS = [-360, 0, 360];
+const EARTH_KM = 40075, MOON_KM = 384400;
+const ICON_PLAY = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>';
+const PLANE_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2.2c.9 0 1.5.8 1.5 1.8v5.6l7.3 4.4c.3.2.5.5.5.9v1.3l-7.8-2.4v4.3l2 1.5v1.5L12 20.3l-3.5.8v-1.5l2-1.5v-4.3l-7.8 2.4v-1.3c0-.4.2-.7.5-.9l7.3-4.4V4c0-1 .6-1.8 1.5-1.8z"/></svg>';
 
-    // --- 東南亞 ---
-    "BKK (曼谷蘇凡納布)": [100.750, 13.690], "DMK (曼谷廊曼)": [100.607, 13.912],
-    "HKT (普吉島)": [98.317, 8.113], "CNX (清邁)": [98.963, 18.767],
-    "SIN (新加坡)": [103.991, 1.364], "KUL (吉隆坡)": [101.710, 2.745],
-    "PEN (檳城)": [100.277, 5.297], "CGK (雅加達)": [106.655, -6.126],
-    "DPS (峇里島)": [115.167, -8.748], "MNL (馬尼拉)": [121.020, 14.509],
-    "CEB (宿霧)": [123.979, 10.308], "TAG (薄荷島)": [123.853, 9.565],
-    "HAN (河內)": [105.807, 21.221], "SGN (胡志明市)": [106.652, 10.819],
-    "DAD (峴港)": [108.199, 16.044], "RGN (仰光)": [96.133, 16.907],
-    "PNH (金邊)": [104.844, 11.547], "VTE (永珍)": [102.563, 17.988],
+/* =========================================================
+   工具
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const fmt = n => Math.round(n).toLocaleString('en-US');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const mmdd = d => d ? d.slice(5).replace('-', '/') : '';
+const ymd = d => d ? d.replace(/-/g, '/') : '';
+const isMobile = () => window.innerWidth <= 760;
+const codeOf = s => { const m = String(s || '').trim().toUpperCase().match(/^[A-Z0-9]{3}(?![A-Z0-9])/); return m ? m[0] : ''; };
+const validCoord = c => Array.isArray(c) && c.length >= 2 && Number.isFinite(+c[0]) && Number.isFinite(+c[1]) && !(+c[0] === 0 && +c[1] === 0);
+const hasCoord = p => Number.isFinite(p.lat) && Number.isFinite(p.lng);
+const countryName = cc => COUNTRIES[cc] ? COUNTRIES[cc].name : '未設定國家';
+const label = a => `${a.code} (${a.name})`;
 
-    // --- 南亞 ---
-    "DEL (德里)": [77.103, 28.556], "BOM (孟買)": [72.868, 19.089],
-    "BLR (班加羅爾)": [77.706, 13.199], "MAA (清奈)": [80.169, 12.990],
-    "CCU (加爾各答)": [88.447, 22.655], "KTM (加德滿都)": [85.359, 27.696],
-    "CMB (可倫坡)": [79.884, 7.181], "DAC (達卡)": [90.397, 23.843],
-    "KHI (喀拉蚩)": [67.161, 24.906],
-
-    // --- 中東 ---
-    "DXB (杜拜)": [55.364, 25.253], "AUH (阿布達比)": [54.651, 24.433],
-    "DOH (多哈)": [51.608, 25.273], "TLV (特拉維夫)": [34.887, 32.011],
-    "IST (伊斯坦堡)": [28.752, 41.262], "AMM (安曼)": [35.993, 31.722],
-    "CAI (開羅)": [31.406, 30.122],
-
-    // --- 大洋洲 ---
-    "SYD (雪梨)": [151.177, -33.946], "MEL (墨爾本)": [144.843, -37.673],
-    "BNE (布里斯本)": [153.118, -27.384], "PER (伯斯)": [115.967, -31.940],
-    "ADL (阿德雷德)": [138.531, -34.945], "AKL (奧克蘭)": [174.785, -37.008],
-    "CHC (基督城)": [172.532, -43.487], "NAN (斐濟南迪)": [177.443, -17.755],
-    "GUM (關島)": [144.796, 13.484],
-
-    // --- 歐洲 ---
-    "LHR (倫敦希斯洛)": [-0.454, 51.470], "LGW (倫敦蓋威克)": [-0.182, 51.148],
-    "CDG (巴黎戴高樂)": [2.548, 49.010], "AMS (阿姆斯特丹)": [4.764, 52.309],
-    "FRA (法蘭克福)": [8.571, 50.038], "MUC (慕尼黑)": [11.786, 48.354],
-    "MAD (馬德里)": [-3.568, 40.498], "BCN (巴塞隆納)": [2.079, 41.297],
-    "FCO (羅馬)": [12.239, 41.800], "MXP (米蘭)": [8.723, 45.631],
-    "ZRH (蘇黎世)": [8.549, 47.465], "VIE (維也納)": [16.569, 48.110],
-    "CPH (哥本哈根)": [12.656, 55.618], "ARN (斯德哥爾摩)": [17.919, 59.652],
-    "OSL (奧斯陸)": [11.100, 60.198], "HEL (赫爾辛基)": [24.963, 60.317],
-    "DUB (都柏林)": [-6.270, 53.421], "LIS (里斯本)": [-9.136, 38.781],
-    "ATH (雅典)": [23.945, 37.936], "WAW (華沙)": [20.968, 52.166],
-    "PRG (布拉格)": [14.263, 50.101], "BUD (布達佩斯)": [19.261, 47.430],
-    "BRU (布魯塞爾)": [4.484, 50.901], "GVA (日內瓦)": [6.109, 46.238],
-
-    // --- 北美 ---
-    "LAX (洛杉磯)": [-118.409, 33.942], "SFO (舊金山)": [-122.379, 37.621],
-    "SEA (西雅圖)": [-122.308, 47.450], "JFK (紐約甘迺迪)": [-73.778, 40.641],
-    "EWR (紐華克)": [-74.175, 40.690], "ORD (芝加哥)": [-87.905, 41.974],
-    "ATL (亞特蘭大)": [-84.428, 33.641], "DFW (達拉斯)": [-97.040, 32.900],
-    "IAH (休士頓)": [-95.341, 29.990], "DEN (丹佛)": [-104.674, 39.856],
-    "LAS (拉斯維加斯)": [-115.152, 36.084], "PHX (鳳凰城)": [-112.011, 33.435],
-    "IAD (華盛頓杜勒斯)": [-77.456, 38.953], "BOS (波士頓)": [-71.005, 42.366],
-    "MIA (邁阿密)": [-80.291, 25.796], "YYZ (多倫多)": [-79.631, 43.678],
-    "YVR (溫哥華)": [-123.182, 49.197], "YUL (蒙特樓)": [-73.741, 45.471],
-    "MEX (墨西哥城)": [-99.072, 19.436], "PTY (巴拿馬城)": [-79.384, 9.071],
-
-    // --- 中南美 ---
-    "GRU (聖保羅)": [-46.473, -23.436], "GIG (里約熱內盧)": [-43.251, -22.809],
-    "EZE (布宜諾斯艾利斯)": [-58.536, -34.822], "SCL (聖地牙哥)": [-70.786, -33.393],
-    "BOG (波哥大)": [-74.147, 4.702], "LIM (利馬)": [-77.114, -12.022],
-
-    // --- 非洲 ---
-    "JNB (約翰尼斯堡)": [28.246, -26.137], "CPT (開普敦)": [18.602, -33.972],
-    "NBO (奈洛比)": [36.928, -1.319], "ADD (阿迪斯阿貝巴)": [38.799, 8.978],
-    "LOS (拉哥斯)": [3.321, 6.577], "CMN (卡薩布蘭加)": [-7.590, 33.368]
-  };
-
-  let myFlightLogs = [];
-  let mapLayers = [];
-  let animTimer = null;
-  let isPlaying = false;
-  let flightDistances = [];
-  let segmentDurations = [];
-  let effectiveIntervalSec = 0;
-  let currentViewLng = null;
-
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('collapsed');
-    
-    if (sidebar.classList.contains('collapsed')) {
-      document.body.classList.add('mobile-collapsed');
-    } else {
-      document.body.classList.remove('mobile-collapsed');
-    }
-
-    setTimeout(() => {
-      if (typeof map !== 'undefined') {
-        map.invalidateSize();
-      }
-    }, 320);
+function haversine(a, b) {
+  const R = 6371, r = Math.PI / 180;
+  const dLat = (b[1] - a[1]) * r, dLng = (b[0] - a[0]) * r;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+// 大圓航線插值：輸入 [lng, lat]
+function gcPoints(a, b, n) {
+  const r = Math.PI / 180, d2r = 180 / Math.PI;
+  const p1 = a[1] * r, l1 = a[0] * r, p2 = b[1] * r, l2 = b[0] * r;
+  const d = 2 * Math.asin(Math.sqrt(Math.sin((p2 - p1) / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin((l2 - l1) / 2) ** 2));
+  if (!(d > 1e-9) || Math.abs(Math.sin(d)) < 1e-9) return [[a[0], a[1]], [b[0], b[1]]];
+  const pts = [];
+  for (let i = 0; i <= n; i++) {
+    const f = i / n, A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d);
+    const x = A * Math.cos(p1) * Math.cos(l1) + B * Math.cos(p2) * Math.cos(l2);
+    const y = A * Math.cos(p1) * Math.sin(l1) + B * Math.cos(p2) * Math.sin(l2);
+    const z = A * Math.sin(p1) + B * Math.sin(p2);
+    pts.push([Math.atan2(y, x) * d2r, Math.atan2(z, Math.sqrt(x * x + y * y)) * d2r]);
   }
-
-  function setPlayButtonsState(playing) {
-    document.getElementById('playBtn').disabled = playing;
-    document.getElementById('floatPlayBtn').disabled = playing;
-    document.getElementById('stopBtn').disabled = !playing;
-    document.getElementById('floatStopBtn').disabled = !playing;
-  }
-
-  function calcEffectiveInterval(rawIntervalSec, totalDurationSec, n) {
-    if (n <= 1 || rawIntervalSec <= 0) return rawIntervalSec;
-    const MAX_PAUSE_RATIO = 0.5;
-    const rawPauseTotal = rawIntervalSec * (n - 1);
-    const maxPauseTotal = totalDurationSec * MAX_PAUSE_RATIO;
-    if (rawPauseTotal <= maxPauseTotal) return rawIntervalSec;
-    return maxPauseTotal / (n - 1);
-  }
-
-  function calcSegmentDurations(distances, totalDurationSec, intervalSec) {
-    const MIN_SEG_SEC = 0.5;
-    const MAX_SEG_SEC = 2.0;
-    const n = distances.length;
-
-    if (n === 0) return [];
-
-    const minD = Math.min(...distances);
-    const maxD = Math.max(...distances);
-    let baseDurations;
-    if (n === 1 || maxD === minD) {
-      const flat = (MIN_SEG_SEC + MAX_SEG_SEC) / 2;
-      baseDurations = distances.map(() => flat);
-    } else {
-      baseDurations = distances.map(d => {
-        const ratio = (d - minD) / (maxD - minD);
-        return MIN_SEG_SEC + ratio * (MAX_SEG_SEC - MIN_SEG_SEC);
-      });
-    }
-
-    const pauseTotal = intervalSec * Math.max(0, n - 1);
-    let availableFlightTime = totalDurationSec - pauseTotal;
-
-    const MIN_TOTAL_FLIGHT_TIME = n * 0.05;
-    if (availableFlightTime < MIN_TOTAL_FLIGHT_TIME) {
-      availableFlightTime = MIN_TOTAL_FLIGHT_TIME;
-    }
-
-    const sumBase = baseDurations.reduce((a, b) => a + b, 0);
-    const scale = sumBase > 0 ? (availableFlightTime / sumBase) : 1;
-
-    return baseDurations.map(d => Math.max(0.05, d * scale));
-  }
-
-  const datalist = document.getElementById('airports');
-  for (let key in defaultAirports) {
-    let opt = document.createElement('option');
-    opt.value = key;
-    datalist.appendChild(opt);
-  }
-
-  const map = L.map('map', { worldCopyJump: true }).setView([20, 120], 3);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    noWrap: false,
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
-
-  // 初始化地圖尺寸修正（配合預設收合）
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
+  return pts;
+}
+// 讓跨換日線的航線保持連續
+function unwrapPath(pts, startLng) {
+  const out = []; let offset = startLng - pts[0][0], prev = null;
+  pts.forEach(([lng, lat]) => {
+    if (prev !== null) { const diff = lng - prev; if (diff > 180) offset -= 360; else if (diff < -180) offset += 360; }
+    out.push([lng + offset, lat]); prev = lng;
   });
+  return out;
+}
+const norm = (lng, C) => ((((lng - C + 540) % 360) + 360) % 360) - 180 + C;
+const nearestCopy = (lng, ref) => lng + Math.round((ref - lng) / 360) * 360;
 
-  const movingPlane = L.circleMarker([0, 0], { radius: 7, color: '#ffffff', fillColor: '#38bdf8', fillOpacity: 1 });
+/* =========================================================
+   狀態與儲存
+   ========================================================= */
+let state = { flights: [], places: [], customAirports: {}, settings: { ...DEFAULT_SETTINGS } };
+let allStats = null, viewStats = null;
+let editingId = null, caTarget = null, autoAirline = '', pickCb = null, focusTimer = null, lastDeleted = null;
 
-  function toggleForm() {
-    const form = document.getElementById('addFlightForm');
-    const btn = document.querySelector('.toggle-form-btn');
-    if (form.classList.contains('active')) {
-      form.classList.remove('active');
-      btn.textContent = '＋ 新增航班資訊';
-    } else {
-      form.classList.add('active');
-      btn.textContent = '－ 隱藏航班表單';
-    }
-  }
+const allAirports = () => ({ ...AIRPORTS, ...state.customAirports });
+const getAirport = code => (code && (state.customAirports[code] || AIRPORTS[code])) || null;
+const airportOf = str => getAirport(codeOf(str));
+const cityOf = str => { const a = airportOf(str); return a ? a.city : String(str || ''); };
 
-  function addFlight() {
-    const from = document.getElementById('fromAirport').value;
-    const to = document.getElementById('toAirport').value;
-    const startDate = document.getElementById('startDate').value;
-
-    if (!from || !to || !startDate) {
-      alert("請至少填寫：出發地、目的地與開始日期！");
-      return;
-    }
-
-    const fromCoord = defaultAirports[from] || [0, 0];
-    const toCoord = defaultAirports[to] || [0, 0];
-
-    const newLog = {
-      date: startDate,
-      startTime: document.getElementById('startTime').value || "",
-      endDate: document.getElementById('endDate').value || "",
-      endTime: document.getElementById('endTime').value || "",
-      flight: document.getElementById('flightNo').value || "未定航班",
-      from: from,
-      to: to,
-      fromCoord: fromCoord,
-      toCoord: toCoord,
-      airline: document.getElementById('airline').value || "未指定"
-    };
-
-    myFlightLogs.push(newLog);
-    updateFlightUI();
-    toggleForm();
-  }
-
-  function deleteFlight(index) {
-    myFlightLogs.splice(index, 1);
-    updateFlightUI();
-  }
-
-  function moveFlight(index, direction) {
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= myFlightLogs.length) return;
-    
-    const movedItem = myFlightLogs.splice(index, 1)[0];
-    myFlightLogs.splice(targetIndex, 0, movedItem);
-    updateFlightUI();
-  }
-
-  function deleteSelectedFlights() {
-    const checkboxes = document.querySelectorAll('.flight-checkbox:checked');
-    if (checkboxes.length === 0) {
-      alert("請先勾選要刪除的航班！");
-      return;
-    }
-    
-    if (confirm(`確定要刪除選取的 ${checkboxes.length} 筆航班紀錄嗎？`)) {
-      const indicesToDelete = Array.from(checkboxes)
-        .map(cb => parseInt(cb.dataset.index))
-        .sort((a, b) => b - a);
-      
-      indicesToDelete.forEach(index => {
-        myFlightLogs.splice(index, 1);
-      });
-      
-      updateFlightUI();
-    }
-  }
-
-  function clearAllFlights() {
-    if (myFlightLogs.length === 0) return;
-    if (confirm("確定要清空所有航班紀錄嗎？此動作無法復原！")) {
-      myFlightLogs = [];
-      updateFlightUI();
-      clearMapLayers();
-      document.getElementById('overlay-status').textContent = "待命";
-      document.getElementById('overlay-detail').textContent = "-";
-    }
-  }
-
-  function updateFlightUI() {
-    document.getElementById('flightCount').textContent = myFlightLogs.length;
-    const container = document.getElementById('flightListContainer');
-    container.innerHTML = "";
-    
-    myFlightLogs.forEach((item, index) => {
-      let div = document.createElement('div');
-      div.className = "flight-item";
-      div.dataset.index = index;
-
-      const fromName = item.from.split(' ')[0];
-      const toName = item.to.split(' ')[0];
-      
-      div.innerHTML = `
-        <input type="checkbox" class="flight-checkbox" data-index="${index}">
-        <div class="flight-content">
-          <div class="flight-main">${fromName} ✈️ ${toName} <span style="color:#f59e0b; font-size:11px;">(${item.flight})</span></div>
-          <div class="flight-sub">${item.date} ${item.startTime} | ${item.airline}</div>
-        </div>
-        <div class="item-controls">
-          <button class="btn-move" onclick="moveFlight(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>▲</button>
-          <button class="btn-move" onclick="moveFlight(${index}, 1)" ${index === myFlightLogs.length - 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>▼</button>
-          <button class="btn-delete" onclick="deleteFlight(${index})">刪除</button>
-        </div>
-      `;
-
-      container.appendChild(div);
-    });
-  }
-
-  function exportJSON() {
-  if (myFlightLogs.length === 0) {
-    alert("沒有任何飛行紀錄可匯出！");
-    return;
-  }
-
-  // 1. 將資料轉為 JSON 字串與 Blob 物件
-  const jsonStr = JSON.stringify(myFlightLogs, null, 2);
-  const blob = new Blob([jsonStr], { type: "application/json;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  // 2. 建立下載連結
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.href = url;
-  downloadAnchor.setAttribute("download", "myFlightLogs.json");
-  
-  // 3. 觸發點擊與清理
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  
-  setTimeout(() => {
-    document.body.removeChild(downloadAnchor);
-    URL.revokeObjectURL(url); 
-  }, 100);
+function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* 儲存失敗時忽略 */ } }
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY); if (!raw) return;
+    const d = JSON.parse(raw);
+    state.customAirports = d.customAirports || {};
+    state.flights = Array.isArray(d.flights) ? d.flights : [];
+    state.places = Array.isArray(d.places) ? d.places.map(normPlace) : [];
+    state.settings = { ...DEFAULT_SETTINGS, ...(d.settings || {}) };
+  } catch (e) { console.warn('讀取暫存資料失敗', e); }
 }
 
-  function importJSON(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+function findAirport(input) {
+  const s = String(input || '').trim(); if (!s) return null;
+  const code = codeOf(s);
+  if (code && getAirport(code)) return getAirport(code);
+  const list = Object.values(allAirports());
+  return list.find(a => a.name === s || a.city === s) || list.find(a => a.name.includes(s) || s.includes(a.name)) || null;
+}
+function ensureAirport(code, str, coord) {
+  if (!code || getAirport(code) || !validCoord(coord)) return;
+  const name = String(str || '').replace(/^[A-Za-z0-9]{3}\s*/, '').replace(/[()（）]/g, '').trim() || code;
+  state.customAirports[code] = { code, name, city: name.split('/')[0], cc: '', lng: +coord[0], lat: +coord[1], custom: true };
+}
+function normalizeFlight(r) {
+  const fc = codeOf(r.from), tc = codeOf(r.to);
+  ensureAirport(fc, r.from, r.fromCoord); ensureAirport(tc, r.to, r.toCoord);
+  const fa = getAirport(fc), ta = getAirport(tc);
+  return {
+    id: (typeof r.id === 'string' && /^[a-z0-9]+$/i.test(r.id)) ? r.id : uid(),
+    date: r.date || '', startTime: r.startTime || '', endDate: r.endDate || '', endTime: r.endTime || '',
+    flight: (r.flight && r.flight !== '未定航班') ? String(r.flight) : '',
+    airline: (r.airline && r.airline !== '未指定') ? String(r.airline) : '',
+    from: fa ? label(fa) : String(r.from || ''), to: ta ? label(ta) : String(r.to || ''),
+    fromCoord: fa ? [fa.lng, fa.lat] : (validCoord(r.fromCoord) ? r.fromCoord.map(Number) : null),
+    toCoord: ta ? [ta.lng, ta.lat] : (validCoord(r.toCoord) ? r.toCoord.map(Number) : null)
+  };
+}
+function normPlace(p) {
+  const lat = parseFloat(p.lat), lng = parseFloat(p.lng);
+  return { id: (typeof p.id === 'string' && /^[a-z0-9]+$/i.test(p.id)) ? p.id : uid(), cc: String(p.cc || ''), city: String(p.city || '').trim(), year: /^\d{4}$/.test(String(p.year || '')) ? String(p.year) : '', lat: Number.isFinite(lat) ? lat : null, lng: Number.isFinite(lng) ? lng : null };
+}
+function fCoordsPair(f) {
+  const fa = airportOf(f.from), ta = airportOf(f.to);
+  const a = fa ? [fa.lng, fa.lat] : (validCoord(f.fromCoord) ? f.fromCoord : null);
+  const b = ta ? [ta.lng, ta.lat] : (validCoord(f.toCoord) ? f.toCoord : null);
+  return [a, b];
+}
+const fDist = f => { const [a, b] = fCoordsPair(f); return a && b ? haversine(a, b) : null; };
+const sortFlights = () => state.flights.sort((a, b) => (a.date + (a.startTime || '')).localeCompare(b.date + (b.startTime || '')));
+const filteredFlights = () => state.settings.year === 'all' ? state.flights : state.flights.filter(f => (f.date || '').startsWith(state.settings.year));
+const filteredPlaces = () => state.settings.year === 'all' ? state.places : state.places.filter(p => p.year === state.settings.year);
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (Array.isArray(data)) {
-          myFlightLogs = data;
-          updateFlightUI();
-          alert(`成功載入 ${myFlightLogs.length} 筆飛行資料！`);
-        } else {
-          alert("檔案格式不正確，應為陣列 JSON");
-        }
-      } catch (err) {
-        alert("讀取檔案失敗，請確認是否為標準 JSON 格式");
-      }
-    };
-    reader.readAsText(file);
+function flightWarnings(f) {
+  const w = []; const [a, b] = fCoordsPair(f);
+  if (!a || !b) w.push('找不到機場座標');
+  if (codeOf(f.from) && codeOf(f.from) === codeOf(f.to)) w.push('出發地與目的地相同');
+  if (f.date && f.endDate) {
+    const d = (Date.parse(f.endDate) - Date.parse(f.date)) / 86400000;
+    if (d > 2) w.push(`抵達日期比出發晚 ${Math.round(d)} 天，可能打錯了`);
+    if (d < -1) w.push('抵達日期早於出發日期');
   }
+  return w;
+}
 
-  function clearMapLayers() {
-    if (animTimer) clearTimeout(animTimer);
-    if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
-    mapLayers.forEach(layer => map.removeLayer(layer));
-    mapLayers = [];
-  }
-
-  function startAnimation() {
-    if (myFlightLogs.length === 0) {
-      alert("目前沒有航班可播放！");
-      return;
+/* =========================================================
+   統計
+   ========================================================= */
+function computeStats(flights, places) {
+  const s = { n: flights.length, km: 0, hours: 0, airports: {}, airlines: {}, routes: {}, years: {}, countries: {}, cities: {}, longest: null, shortest: null, north: null, south: null, far: null };
+  const touch = (cc, city, year, arrival, manual) => {
+    const key = cc || '??';
+    const c = s.countries[key] ||= { cc: key, visits: 0, first: '', cities: {} };
+    if (arrival) c.visits++;
+    if (year && (!c.first || year < c.first)) c.first = year;
+    if (city) {
+      const ct = c.cities[city] ||= { name: city, manual: true, count: 0 };
+      if (!manual) ct.manual = false;
+      ct.count++; s.cities[key + '|' + city] = true;
     }
-    if (isPlaying) return;
-    clearMapLayers();
-
-    flightDistances = myFlightLogs.map(log => {
-      const p1 = turf.point(log.fromCoord);
-      const p2 = turf.point(log.toCoord);
-      return turf.distance(p1, p2, { units: 'kilometers' });
+  };
+  const extreme = (name, lat, lng) => {
+    if (!s.north || lat > s.north.lat) s.north = { name, lat, lng };
+    if (!s.south || lat < s.south.lat) s.south = { name, lat, lng };
+  };
+  flights.forEach(f => {
+    const [a, b] = fCoordsPair(f); const fa = airportOf(f.from), ta = airportOf(f.to);
+    const y = (f.date || '').slice(0, 4);
+    const yr = s.years[y] ||= { n: 0, km: 0 }; yr.n++;
+    if (a && b) {
+      const d = haversine(a, b); s.km += d; s.hours += d / 800 + 0.5; yr.km += d;
+      if (!s.longest || d > s.longest.d) s.longest = { f, d };
+      if (!s.shortest || d < s.shortest.d) s.shortest = { f, d };
+    }
+    [[fa, false], [ta, true]].forEach(([ap, arr]) => {
+      if (!ap) return;
+      s.airports[ap.code] = (s.airports[ap.code] || 0) + 1;
+      touch(ap.cc, ap.city, y, arr, false);
+      extreme(`${ap.city}（${ap.code}）`, ap.lat, ap.lng);
     });
+    if (f.airline) s.airlines[f.airline] = (s.airlines[f.airline] || 0) + 1;
+    const rk = [codeOf(f.from) || '?', codeOf(f.to) || '?'].sort().join(' ⇄ ');
+    s.routes[rk] = (s.routes[rk] || 0) + 1;
+  });
+  places.forEach(p => { touch(p.cc, p.city, p.year, true, true); if (hasCoord(p)) extreme(p.city, p.lat, p.lng); });
 
-    const totalDurationSec = parseFloat(document.getElementById('totalDurationSec').value) || 10;
-    const rawIntervalSec = parseFloat(document.getElementById('intervalSec').value) || 0;
-    effectiveIntervalSec = calcEffectiveInterval(rawIntervalSec, totalDurationSec, flightDistances.length);
-    segmentDurations = calcSegmentDurations(flightDistances, totalDurationSec, effectiveIntervalSec);
-
-    currentViewLng = null;
-    const firstFlight = myFlightLogs[0];
-    map.setView([firstFlight.fromCoord[1], firstFlight.fromCoord[0]], 3, { animate: false });
-
-    isPlaying = true;
-    setPlayButtonsState(true);
-    playFlightSequence(0);
+  const home = state.settings.home;
+  const homeAps = Object.entries(s.airports).map(([c, n]) => [getAirport(c), n]).filter(([a]) => a && a.cc === home).sort((x, y) => y[1] - x[1]);
+  s.homeAirport = homeAps.length ? homeAps[0][0] : (Object.values(AIRPORTS).find(a => a.cc === home) || null);
+  if (s.homeAirport) {
+    const h = [s.homeAirport.lng, s.homeAirport.lat];
+    Object.keys(s.airports).forEach(c => { const a = getAirport(c); if (!a) return; const d = haversine(h, [a.lng, a.lat]); if (!s.far || d > s.far.d) s.far = { a, d }; });
   }
+  const known = Object.keys(s.countries).filter(c => COUNTRIES[c]);
+  s.countryCount = known.length;
+  s.abroadCount = known.filter(c => c !== home).length;
+  s.cityCount = Object.keys(s.cities).length;
+  s.contStats = Object.entries(CONTINENTS).map(([k, name]) => {
+    const total = Object.values(COUNTRIES).filter(c => c.cont === k).length;
+    return { k, name, total, v: known.filter(c => COUNTRIES[c].cont === k).length };
+  });
+  return s;
+}
+const homeLng = () => (allStats && allStats.homeAirport) ? allStats.homeAirport.lng : 121;
 
-  function stopAnimation() {
-    if (animTimer) clearTimeout(animTimer);
-    isPlaying = false;
-    setPlayButtonsState(false);
-    document.getElementById('overlay-status').textContent = "已停止";
-    document.getElementById('overlay-detail').textContent = "使用者手動取消播放";
-    if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
+/* =========================================================
+   地圖
+   ========================================================= */
+const map = L.map('map', { zoomControl: false, worldCopyJump: true, preferCanvas: true, minZoom: 2, maxZoom: 18, zoomSnap: 0.5 }).setView([25, 121], 3);
+L.control.zoom({ position: 'bottomright' }).addTo(map);
+map.createPane('countries'); map.getPane('countries').style.zIndex = 350;
+const countryRenderer = L.canvas({ pane: 'countries' });
+const countryLayer = L.layerGroup().addTo(map);
+const routeLayer = L.layerGroup().addTo(map);
+const airportLayer = L.layerGroup().addTo(map);
+const animLayer = L.layerGroup().addTo(map);
+let baseTiles = null, refTiles = null, worldGeo = null;
+const routeColor = () => (BASEMAPS[state.settings.basemap] || BASEMAPS.dark).route;
+
+function applyBasemap() {
+  const bm = BASEMAPS[state.settings.basemap] || BASEMAPS.dark;
+  if (baseTiles) map.removeLayer(baseTiles);
+  if (refTiles) { map.removeLayer(refTiles); refTiles = null; }
+  baseTiles = L.tileLayer(bm.base, { maxNativeZoom: bm.max, maxZoom: 18, attribution: 'Tiles &copy; Esri' }).addTo(map);
+  if (state.settings.labels && bm.ref) refTiles = L.tileLayer(bm.ref, { maxNativeZoom: bm.max, maxZoom: 18, zIndex: 5 }).addTo(map);
+}
+
+function renderMap() {
+  routeLayer.clearLayers(); airportLayer.clearLayers();
+  const flights = filteredFlights(), C = homeLng(), col = routeColor();
+  if (state.settings.showRoutes) {
+    const routes = {};
+    flights.forEach(f => {
+      const [a, b] = fCoordsPair(f); if (!a || !b) return;
+      const key = [a.join(','), b.join(',')].sort().join('|');
+      (routes[key] ||= { a, b, n: 0 }).n++;
+    });
+    Object.values(routes).forEach(r => {
+      const pts = unwrapPath(gcPoints(r.a, r.b, 72), norm(r.a[0], C));
+      const w = 1.3 + Math.min(r.n, 10) * 0.3;
+      OFFSETS.forEach(o => {
+        const ll = pts.map(([lng, lat]) => [lat, lng + o]);
+        L.polyline(ll, { color: col, weight: w + 5, opacity: 0.1, interactive: false }).addTo(routeLayer);
+        L.polyline(ll, { color: col, weight: w, opacity: 0.8, interactive: false }).addTo(routeLayer);
+      });
+    });
   }
+  const visits = {};
+  flights.forEach(f => [f.from, f.to].forEach(s => { const c = codeOf(s); if (c && getAirport(c)) visits[c] = (visits[c] || 0) + 1; }));
+  Object.entries(visits).forEach(([code, n]) => {
+    const a = getAirport(code); const r = 3.2 + Math.sqrt(n) * 1.5;
+    const tip = `<b>${esc(code)}</b> ${esc(a.name)}<br>${esc(countryName(a.cc))} · ${n} 次`;
+    OFFSETS.forEach(o => {
+      L.circleMarker([a.lat, norm(a.lng, C) + o], { radius: r, color: '#fff', weight: 1.3, fillColor: '#fbbf24', fillOpacity: 0.95 })
+        .bindTooltip(tip, { className: 'ap-tip', direction: 'top', offset: [0, -r] }).addTo(airportLayer);
+    });
+  });
+  filteredPlaces().filter(hasCoord).forEach(p => {
+    const tip = `<b>📍</b> ${esc(p.city)}<br>${esc(countryName(p.cc))}${p.year ? ' · ' + p.year : ''}（手動新增）`;
+    OFFSETS.forEach(o => {
+      L.circleMarker([p.lat, norm(p.lng, C) + o], { radius: 5, color: '#fff', weight: 1.3, fillColor: '#a78bfa', fillOpacity: 0.95 })
+        .bindTooltip(tip, { className: 'ap-tip', direction: 'top', offset: [0, -5] }).addTo(airportLayer);
+    });
+  });
+}
 
-  function flattenGreatCircleCoords(geometry) {
-    if (geometry.type === 'MultiLineString') {
-      return geometry.coordinates.flat();
+async function loadWorld() {
+  if (worldGeo || !state.settings.shadeCountries) return;
+  try { const res = await fetch(GEO_URL); worldGeo = await res.json(); renderCountries(); }
+  catch (e) { console.warn('國界資料載入失敗', e); }
+}
+function renderCountries() {
+  countryLayer.clearLayers();
+  if (!state.settings.shadeCountries) return;
+  if (!worldGeo) { loadWorld(); return; }
+  const visited = new Set(Object.keys(viewStats.countries));
+  const codeOfGeo = p => (p.ISO_A2_EH && p.ISO_A2_EH !== '-99') ? p.ISO_A2_EH : p.ISO_A2;
+  const feats = worldGeo.features.filter(f => visited.has(codeOfGeo(f.properties)));
+  if (!feats.length) return;
+  const col = routeColor();
+  OFFSETS.forEach(o => {
+    L.geoJSON({ type: 'FeatureCollection', features: feats }, {
+      pane: 'countries', renderer: countryRenderer, interactive: false,
+      coordsToLatLng: c => L.latLng(c[1], c[0] + o),
+      style: { color: col, weight: 1, opacity: 0.45, fillColor: col, fillOpacity: 0.15 }
+    }).addTo(countryLayer);
+  });
+}
+
+function fitAll() {
+  const C = homeLng(), pts = [];
+  filteredFlights().forEach(f => fCoordsPair(f).forEach(c => { if (c) pts.push([c[1], norm(c[0], C)]); }));
+  filteredPlaces().filter(hasCoord).forEach(p => pts.push([p.lat, norm(p.lng, C)]));
+  if (!pts.length) { map.setView([25, C], 3); return; }
+  map.fitBounds(L.latLngBounds(pts), { paddingTopLeft: [60, 90], paddingBottomRight: [60, 120], maxZoom: 6 });
+}
+
+function focusFlight(id) {
+  if (anim.playing) return;
+  const f = state.flights.find(x => x.id === id); if (!f) return;
+  const [a, b] = fCoordsPair(f); if (!a || !b) { toast('這段航班缺少機場座標'); return; }
+  const pts = unwrapPath(gcPoints(a, b, 72), norm(a[0], homeLng())).map(([lng, lat]) => [lat, lng]);
+  animLayer.clearLayers();
+  L.polyline(pts, { color: '#fbbf24', weight: 10, opacity: 0.22, interactive: false }).addTo(animLayer);
+  L.polyline(pts, { color: '#fde68a', weight: 3, interactive: false }).addTo(animLayer);
+  if (isMobile()) toggleSidebar(false);
+  map.fitBounds(L.latLngBounds(pts), { paddingTopLeft: [60, 90], paddingBottomRight: [60, 120], maxZoom: 6 });
+  showFlightStatus(f, '航班詳細');
+  clearTimeout(focusTimer);
+  focusTimer = setTimeout(() => { if (!anim.playing) { animLayer.clearLayers(); setStatusIdle(); } }, 5000);
+}
+
+/* =========================================================
+   播放動畫
+   ========================================================= */
+const anim = { playing: false, paused: false, timer: null, pending: null, seq: [], durations: [], pause: 0, lastLng: null };
+let planeMarker = null;
+const planeIcon = L.divIcon({ className: 'plane-icon', html: `<div class="plane">${PLANE_SVG}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] });
+
+function schedule(fn, ms) {
+  anim.timer = setTimeout(() => { anim.timer = null; if (anim.paused) anim.pending = fn; else fn(); }, ms);
+}
+function computeDurations(dists, total, pause) {
+  const n = dists.length, min = Math.min(...dists), max = Math.max(...dists);
+  const base = dists.map(d => max === min ? 1 : 0.4 + (d - min) / (max - min) * 1.6);
+  const avail = Math.max(total - pause * (n - 1), n * 0.15);
+  const sum = base.reduce((x, y) => x + y, 0);
+  return base.map(b => Math.max(0.15, b * avail / sum));
+}
+function startPlayback() {
+  const seq = filteredFlights().filter(f => { const [a, b] = fCoordsPair(f); return a && b; });
+  if (!seq.length) { toast('目前沒有可以播放的航班'); return; }
+  clearTimeout(anim.timer); clearTimeout(focusTimer);
+  const n = seq.length;
+  const total = state.settings.duration === 'auto' ? Math.min(90, Math.max(10, n * 0.9)) : Number(state.settings.duration);
+  const rawPause = Math.max(0, Number(state.settings.pause) || 0);
+  anim.pause = n > 1 ? Math.min(rawPause, total * 0.35 / (n - 1)) : 0;
+  anim.durations = computeDurations(seq.map(fDist), total, anim.pause);
+  Object.assign(anim, { seq, playing: true, paused: false, pending: null, lastLng: null });
+  map.removeLayer(routeLayer); map.removeLayer(airportLayer); animLayer.clearLayers();
+  if (isMobile()) toggleSidebar(false);
+  const [a] = fCoordsPair(seq[0]);
+  if (state.settings.follow) map.setView([a[1], norm(a[0], homeLng())], 3, { animate: false }); else fitAll();
+  $('yearStamp').classList.add('show');
+  updatePlayerUI();
+  playSegment(0);
+}
+function playSegment(i) {
+  if (!anim.playing) return;
+  const n = anim.seq.length;
+  if (i >= n) { finishPlayback(); return; }
+  const f = anim.seq[i]; const [a, b] = fCoordsPair(f); const dur = anim.durations[i];
+  const raw = gcPoints(a, b, Math.max(12, Math.min(240, Math.round(dur * 1000 / 16))));
+  const start = anim.lastLng === null ? norm(raw[0][0], homeLng()) : nearestCopy(raw[0][0], anim.lastLng);
+  const pts = unwrapPath(raw, start).map(([lng, lat]) => [lat, lng]);
+  anim.lastLng = pts[pts.length - 1][1];
+
+  const y = (f.date || '').slice(0, 4);
+  if ($('yearStamp').textContent !== y) $('yearStamp').textContent = y;
+  showFlightStatus(f, `飛行中 · 第 ${i + 1} / ${n} 段`);
+  $('progText').textContent = `${y}　${codeOf(f.from)} → ${codeOf(f.to)}　${cityOf(f.from)} → ${cityOf(f.to)}`;
+  $('progCount').textContent = `${i + 1} / ${n}`;
+
+  const col = routeColor();
+  const glow = L.polyline([], { color: col, weight: 8, opacity: 0.14, interactive: false }).addTo(animLayer);
+  const line = L.polyline([], { color: col, weight: 2.6, opacity: 0.95, interactive: false }).addTo(animLayer);
+  L.circleMarker(pts[0], { radius: 4, color: '#fff', weight: 1.2, fillColor: col, fillOpacity: 1, interactive: false }).addTo(animLayer);
+  if (!planeMarker) planeMarker = L.marker(pts[0], { icon: planeIcon, interactive: false, keyboard: false, zIndexOffset: 1000 }).addTo(map);
+
+  const stepMs = dur * 1000 / pts.length; let step = 0;
+  const tick = () => {
+    if (!anim.playing) return;
+    if (step < pts.length) {
+      const p = pts[step];
+      line.addLatLng(p); glow.addLatLng(p); planeMarker.setLatLng(p);
+      setPlaneAngle(pts[Math.max(0, step - 1)], pts[Math.min(pts.length - 1, step + 1)]);
+      if (state.settings.follow) map.setView(p, map.getZoom(), { animate: false });
+      $('progBar').style.width = ((i + step / pts.length) / n * 100) + '%';
+      step++; schedule(tick, stepMs);
+    } else {
+      L.circleMarker(pts[pts.length - 1], { radius: 5.5, color: '#fff', weight: 1.5, fillColor: '#fbbf24', fillOpacity: 1, interactive: false }).addTo(animLayer);
+      schedule(() => playSegment(i + 1), anim.pause * 1000);
     }
-    return geometry.coordinates;
+  };
+  tick();
+}
+function setPlaneAngle(p1, p2) {
+  if (!planeMarker) return;
+  const a = map.latLngToLayerPoint(p1), b = map.latLngToLayerPoint(p2);
+  const dx = b.x - a.x, dy = b.y - a.y; if (Math.abs(dx) + Math.abs(dy) < 0.01) return;
+  const el = planeMarker.getElement(); const pl = el && el.querySelector('.plane');
+  if (pl) pl.style.transform = `rotate(${Math.atan2(dx, -dy) * 180 / Math.PI}deg)`;
+}
+function togglePause() {
+  if (!anim.playing) return;
+  anim.paused = !anim.paused;
+  updatePlayerUI();
+  $('statusK').textContent = anim.paused ? '已暫停' : '飛行中';
+  if (!anim.paused && anim.pending) { const fn = anim.pending; anim.pending = null; fn(); }
+}
+function removePlane() { if (planeMarker) { map.removeLayer(planeMarker); planeMarker = null; } }
+function restoreStatic() { if (!map.hasLayer(routeLayer)) routeLayer.addTo(map); if (!map.hasLayer(airportLayer)) airportLayer.addTo(map); renderMap(); }
+function finishPlayback() {
+  anim.playing = false; anim.paused = false; updatePlayerUI(); removePlane();
+  const km = anim.seq.reduce((s, f) => s + (fDist(f) || 0), 0);
+  $('progText').textContent = '播放完成'; $('progBar').style.width = '100%';
+  $('statusK').textContent = '播放完成';
+  $('statusV').textContent = `${anim.seq.length} 段航程`;
+  $('statusD').textContent = `共 ${fmt(km)} km，約繞地球 ${(km / EARTH_KM).toFixed(2)} 圈`;
+  anim.timer = setTimeout(() => { animLayer.clearLayers(); restoreStatic(); fitAll(); $('yearStamp').classList.remove('show'); }, 1200);
+}
+function stopPlayback(silent) {
+  clearTimeout(anim.timer);
+  const was = anim.playing;
+  Object.assign(anim, { playing: false, paused: false, pending: null });
+  removePlane(); animLayer.clearLayers(); restoreStatic();
+  $('yearStamp').classList.remove('show');
+  updatePlayerUI(); setStatusIdle(); resetProgress();
+  if (was && !silent) toast('已停止播放');
+}
+function updatePlayerUI() {
+  $('playBtn').innerHTML = (anim.playing && !anim.paused) ? ICON_PAUSE : ICON_PLAY;
+  $('stopBtn').disabled = !anim.playing;
+}
+function resetProgress() {
+  $('progText').textContent = filteredFlights().length ? '按 ▶ 開始播放' : '尚無航班';
+  $('progCount').textContent = `0 / ${filteredFlights().length}`;
+  $('progBar').style.width = '0';
+}
+function showFlightStatus(f, title) {
+  const d = fDist(f);
+  $('statusK').textContent = title;
+  $('statusV').textContent = `${codeOf(f.from) || '?'} → ${codeOf(f.to) || '?'}`;
+  const parts = [[f.airline, f.flight].filter(Boolean).join(' '), d != null ? fmt(d) + ' km' : ''].filter(Boolean).join(' · ');
+  $('statusD').innerHTML = `${esc(cityOf(f.from))} → ${esc(cityOf(f.to))}<br>${esc(ymd(f.date))} ${esc(f.startTime)}${parts ? '<br>' + esc(parts) : ''}`;
+}
+function setStatusIdle() {
+  if (anim.playing) return;
+  const s = viewStats; const y = state.settings.year;
+  $('statusK').textContent = y === 'all' ? '我的飛行足跡' : `${y} 年的飛行足跡`;
+  $('statusV').textContent = s.n ? `${s.n} 段航程` : '尚無資料';
+  $('statusD').textContent = s.n || s.countryCount
+    ? `${fmt(s.km)} km · ${s.countryCount} 個國家/地區 · ${s.cityCount} 座城市`
+    : '點「編輯」匯入 JSON 或新增航班';
+}
+
+/* =========================================================
+   畫面：航班清單
+   ========================================================= */
+function renderList() {
+  const box = $('flightList');
+  if (!state.flights.length) {
+    box.innerHTML = `<div class="empty"><div class="empty-ico">🛫</div><b>還沒有航班</b><p>匯入以前匯出的 JSON，或手動新增第一段航程。</p><div class="row"><button class="btn primary" onclick="$('fileInput').click()">📂 匯入 JSON</button><button class="btn" onclick="openForm()">＋ 新增航班</button></div></div>`;
+    return;
   }
+  const q = $('flightSearch').value.trim().toLowerCase();
+  let list = filteredFlights().slice().reverse();
+  if (q) list = list.filter(f => [f.flight, f.airline, f.from, f.to, f.date, cityOf(f.from), cityOf(f.to)].join(' ').toLowerCase().includes(q));
+  if (!list.length) { box.innerHTML = '<div class="empty">沒有符合條件的航班</div>'; return; }
+  const groups = {}, order = [];
+  list.forEach(f => { const y = (f.date || '----').slice(0, 4); if (!groups[y]) { groups[y] = []; order.push(y); } groups[y].push(f); });
+  box.innerHTML = order.map(y => {
+    const fl = groups[y]; const km = fl.reduce((s, f) => s + (fDist(f) || 0), 0);
+    return `<div class="year-head"><b>${esc(y)}</b><span>${fl.length} 段 · ${fmt(km)} km</span></div>` + fl.map(itemHTML).join('');
+  }).join('');
+}
+function itemHTML(f) {
+  const w = flightWarnings(f), d = fDist(f);
+  const meta = [`${mmdd(f.date)} ${f.startTime}`.trim(), `${cityOf(f.from)} → ${cityOf(f.to)}`, f.airline, d != null ? fmt(d) + ' km' : ''].filter(Boolean).join(' · ');
+  return `<div class="fl-item ${w.length ? 'has-warn' : ''}">
+    <input type="checkbox" class="fl-check" data-id="${f.id}">
+    <div class="fl-body" onclick="focusFlight('${f.id}')" title="在地圖上顯示">
+      <div class="fl-route"><span>${esc(codeOf(f.from) || '?')}</span><span class="arrow">✈</span><span>${esc(codeOf(f.to) || '?')}</span>${f.flight ? `<span class="fl-no">${esc(f.flight)}</span>` : ''}</div>
+      <div class="fl-meta">${esc(meta)}</div>
+      ${w.length ? `<div class="fl-warn">⚠ ${esc(w.join('；'))}</div>` : ''}
+    </div>
+    <div class="fl-actions">
+      <button class="icon-btn sm" onclick="openForm('${f.id}')" title="編輯">✎</button>
+      <button class="icon-btn sm danger" onclick="deleteFlight('${f.id}')" title="刪除">🗑</button>
+    </div>
+  </div>`;
+}
 
-  function playFlightSequence(index) {
-    if (!isPlaying) return;
+/* =========================================================
+   畫面：統計
+   ========================================================= */
+function ringSVG(p, gid) {
+  const r = 38, c = 2 * Math.PI * r, off = c * (1 - Math.min(p, 100) / 100);
+  return `<div class="ring"><svg width="92" height="92" viewBox="0 0 92 92"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs><circle cx="46" cy="46" r="${r}" fill="none" stroke="rgba(148,163,184,.16)" stroke-width="9"/><circle cx="46" cy="46" r="${r}" fill="none" stroke="url(#${gid})" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}"/></svg><div class="pct">${p.toFixed(1)}%</div></div>`;
+}
+function rankHTML(entries, nameFn) {
+  if (!entries.length) return '<div class="card note">尚無資料</div>';
+  const max = entries[0][1] || 1;
+  return `<div class="card">${entries.map(([k, n], i) => `<div class="rank-row"><span class="rk">${i + 1}</span><span class="rn">${nameFn(k)}</span><span class="bar"><i style="width:${n / max * 100}%"></i></span><span class="rc">${n}</span></div>`).join('')}</div>`;
+}
+const recHTML = (ico, k, v, sub) => `<div class="record"><div class="rec-ico">${ico}</div><div class="rec-main"><div class="k" style="margin:0">${k}</div><div class="rec-v">${v}</div>${sub ? `<div class="rec-sub">${sub}</div>` : ''}</div></div>`;
+const flightLine = f => `${esc(codeOf(f.from))} → ${esc(codeOf(f.to))}　${esc(cityOf(f.from))} → ${esc(cityOf(f.to))}`;
 
-    if (index >= myFlightLogs.length) {
-      document.getElementById('overlay-status').textContent = "播放完成";
-      document.getElementById('overlay-detail').textContent = "全數航線已繪製完畢";
-      isPlaying = false;
-      setPlayButtonsState(false);
-      if (map.hasLayer(movingPlane)) map.removeLayer(movingPlane);
-      return;
-    }
+function renderStats() {
+  const s = viewStats, el = $('statsBody');
+  if (!s.n && !s.countryCount) {
+    el.innerHTML = `<div class="empty"><div class="empty-ico">📊</div><b>還沒有資料</b><p>匯入 JSON 或新增航班後，這裡會顯示你的飛行統計。</p></div>`;
+    return;
+  }
+  const pct = s.countryCount / TOTAL_COUNTRIES * 100;
+  const top = (obj, k = 5) => Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, k);
+  let yearChart = '';
+  const ys = Object.keys(s.years).filter(y => /^\d{4}$/.test(y)).sort();
+  if (state.settings.year === 'all' && ys.length) {
+    const all = []; for (let y = +ys[0]; y <= +ys[ys.length - 1]; y++) all.push(String(y));
+    const max = Math.max(...all.map(y => s.years[y] ? s.years[y].n : 0), 1);
+    yearChart = `<div class="section-title">每年飛行次數 <span>${ys.length} 個年份</span></div>
+      <div class="card"><div class="year-chart">${all.map(y => { const n = s.years[y] ? s.years[y].n : 0; return `<div class="yc-col" title="${y} 年：${n} 段${n ? '，' + fmt(s.years[y].km) + ' km' : ''}"><span class="yc-n">${n || ''}</span><div class="yc-bar ${n ? '' : 'zero'}" style="height:${Math.max(3, n / max * 100)}px"></div><span class="yc-y">${y.slice(2)}</span></div>`; }).join('')}</div></div>`;
+  }
+  const records = [];
+  if (s.longest) records.push(recHTML('🛫', '最長航段', flightLine(s.longest.f), `${fmt(s.longest.d)} km · ${ymd(s.longest.f.date)}`));
+  if (s.shortest) records.push(recHTML('🛬', '最短航段', flightLine(s.shortest.f), `${fmt(s.shortest.d)} km · ${ymd(s.shortest.f.date)}`));
+  if (s.far) records.push(recHTML('🧭', `離家最遠（從 ${esc(s.homeAirport.code)} 算）`, `${esc(s.far.a.city)}（${esc(s.far.a.code)}）· ${esc(countryName(s.far.a.cc))}`, `直線距離 ${fmt(s.far.d)} km`));
+  if (s.north) records.push(recHTML('⬆️', '最北到過', esc(s.north.name), `北緯 ${s.north.lat.toFixed(2)}°`));
+  if (s.south) records.push(recHTML('⬇️', '最南到過', esc(s.south.name), s.south.lat < 0 ? `南緯 ${(-s.south.lat).toFixed(2)}°` : `北緯 ${s.south.lat.toFixed(2)}°`));
+  const apName = c => { const a = getAirport(c); return `<b style="font-family:var(--mono)">${esc(c)}</b> ${a ? esc(a.city) : ''}`; };
 
-    const flight = myFlightLogs[index];
-    const intervalSec = effectiveIntervalSec;
-    const thisFlightDurationSec = segmentDurations[index] || 0.05;
+  el.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat hero">${ringSVG(pct, 'rgStats')}<div><div class="hero-v">${s.countryCount}<small> / ${TOTAL_COUNTRIES}</small></div><div class="k">造訪的國家及地區</div><div class="hero-sub">出國 ${s.abroadCount} 個 · ${s.cityCount} 座城市</div></div></div>
+      <div class="stat"><div class="v">${s.n}<small>段</small></div><div class="k">航程</div></div>
+      <div class="stat"><div class="v">${fmt(s.km)}<small>km</small></div><div class="k">飛行距離</div></div>
+      <div class="stat"><div class="v">${(s.km / EARTH_KM).toFixed(2)}<small>圈</small></div><div class="k">繞地球</div></div>
+      <div class="stat"><div class="v">${fmt(s.hours)}<small>小時</small></div><div class="k">估計飛行時間</div></div>
+      <div class="stat"><div class="v">${Object.keys(s.airports).length}<small>座</small></div><div class="k">機場</div></div>
+      <div class="stat"><div class="v">${Object.keys(s.airlines).length}<small>家</small></div><div class="k">航空公司</div></div>
+    </div>
+    ${yearChart}
+    ${records.length ? `<div class="section-title">紀錄</div><div class="rec-list">${records.join('')}</div>` : ''}
+    <div class="section-title">最常去的機場</div>${rankHTML(top(s.airports), apName)}
+    <div class="section-title">最常搭的航空公司</div>${rankHTML(top(s.airlines), k => esc(k))}
+    <div class="section-title">最常飛的航線</div>${rankHTML(top(s.routes), k => `<span style="font-family:var(--mono)">${esc(k)}</span>`)}
+    <div class="card fun">🌙 地球到月球約 384,400 km，你已經飛了 <b>${(s.km / MOON_KM * 100).toFixed(1)}%</b> 的距離。<br>⏱ 估計在空中待了約 <b>${(s.hours / 24).toFixed(1)}</b> 天。</div>
+    <p class="note" style="font-size:11px;color:var(--dim)">＊距離以大圓直線計算；飛行時間以平均時速 800 km 加起降 30 分鐘估算。國家數以 ${TOTAL_COUNTRIES} 個國家及地區計。</p>`;
+}
 
-    document.getElementById('overlay-status').textContent = `${flight.flight} (${flight.from.split(' ')[0]} ➔ ${flight.to.split(' ')[0]})`;
-    document.getElementById('overlay-detail').textContent = `日期：${flight.date} ${flight.startTime}`;
+/* =========================================================
+   畫面：足跡
+   ========================================================= */
+function flagHTML(cc) {
+  if (!COUNTRIES[cc]) return '<span class="flag flag-fb">?</span>';
+  return `<img class="flag" src="https://flagcdn.com/w80/${cc.toLowerCase()}.png" alt="" loading="lazy" onerror="this.outerHTML='<span class=&quot;flag flag-fb&quot;>${cc}</span>'">`;
+}
+function renderPlaces() {
+  const s = viewStats;
+  $('placesSummary').innerHTML = `<div class="card">
+      <div class="summary-top">${ringSVG(s.countryCount / TOTAL_COUNTRIES * 100, 'rgPlaces')}<div><div class="hero-v">${s.countryCount}<small> / ${TOTAL_COUNTRIES}</small></div><div class="k">國家及地區</div><div class="hero-sub">${s.cityCount} 座城市 · 出國 ${s.abroadCount} 個</div></div></div>
+      <div style="margin-top:12px">${s.contStats.map(c => `<div class="bar-row"><span>${c.name}</span><div class="bar"><i style="width:${c.v / c.total * 100}%"></i></div><span class="num">${c.v}/${c.total}</span></div>`).join('')}</div>
+      <div class="legend" style="margin-top:10px"><span><i style="background:#38bdf8"></i>搭機抵達的城市</span><span><i style="background:#a78bfa"></i>手動新增</span></div>
+    </div>`;
 
-    const FRAME_MS = 20;
-    const npoints = Math.min(300, Math.max(8, Math.round((thisFlightDurationSec * 1000) / FRAME_MS)));
-    const gc = turf.greatCircle(flight.fromCoord, flight.toCoord, { npoints });
-    const rawCoords = flattenGreatCircleCoords(gc.geometry);
-
-    const unwrappedCoords = [];
-    let prevLng = null;
-
-    let offset = 0;
-    if (currentViewLng !== null) {
-      const rawStartLng = rawCoords[0][0];
-      offset = Math.round((currentViewLng - rawStartLng) / 360) * 360;
-    }
-
-    for (let i = 0; i < rawCoords.length; i++) {
-      let lng = rawCoords[i][0];
-      let lat = rawCoords[i][1];
-
-      if (!Number.isFinite(lng) || !Number.isFinite(lat)) continue;
-
-      if (prevLng !== null) {
-        let diff = lng - prevLng;
-        if (diff > 180) offset -= 360;
-        else if (diff < -180) offset += 360;
+  const contOrder = Object.keys(CONTINENTS);
+  const list = Object.values(s.countries).sort((a, b) => {
+    const ca = COUNTRIES[a.cc] ? contOrder.indexOf(COUNTRIES[a.cc].cont) : 99, cb = COUNTRIES[b.cc] ? contOrder.indexOf(COUNTRIES[b.cc].cont) : 99;
+    return ca - cb || (a.first || '9999').localeCompare(b.first || '9999') || a.cc.localeCompare(b.cc);
+  });
+  if (!list.length) { $('countryList').innerHTML = '<div class="empty"><div class="empty-ico">🗺️</div><b>還沒有足跡</b><p>新增航班或手動新增足跡後，去過的國家會列在這裡。</p></div>'; }
+  else {
+    let html = '', cur = null;
+    list.forEach(c => {
+      const cont = COUNTRIES[c.cc] ? COUNTRIES[c.cc].cont : '??';
+      if (cont !== cur) {
+        cur = cont;
+        const cs = s.contStats.find(x => x.k === cont);
+        html += `<div class="cont-head">${cont === '??' ? '未設定國家' : CONTINENTS[cont]}${cs ? `<span>${cs.v} / ${cs.total}</span>` : ''}</div>`;
       }
-      
-      unwrappedCoords.push([lat, lng + offset]);
-      prevLng = lng;
-    }
-
-    if (unwrappedCoords.length < 2) {
-      console.warn('航段座標異常，已跳過：', flight);
-      animTimer = setTimeout(() => playFlightSequence(index + 1), 300);
-      return;
-    }
-
-    const startPt = unwrappedCoords[0];
-    const endPt = unwrappedCoords[unwrappedCoords.length - 1];
-    currentViewLng = endPt[1];
-
-    const startMarker = L.circleMarker(startPt, { radius: 5, color: '#38bdf8', fillColor: '#fff', fillOpacity: 1 }).addTo(map);
-    const endMarker = L.circleMarker(endPt, { radius: 6, color: '#f43f5e', fillColor: '#f43f5e', fillOpacity: 0.8 }).addTo(map);
-    const historyLine = L.polyline([], { color: '#00f2fe', weight: 3, opacity: 0.8 }).addTo(map);
-
-    mapLayers.push(startMarker, endMarker, historyLine);
-
-    if (!map.hasLayer(movingPlane)) movingPlane.addTo(map);
-
-    const stepIntervalMs = Math.max(4, (thisFlightDurationSec * 1000) / unwrappedCoords.length);
-    let step = 0;
-
-    function animateStep() {
-      if (!isPlaying) return;
-
-      if (step < unwrappedCoords.length) {
-        const currentCoord = unwrappedCoords[step];
-        
-        movingPlane.setLatLng(currentCoord);
-        historyLine.addLatLng(currentCoord);
-        map.setView(currentCoord, 3, { animate: false });
-
-        step++;
-        animTimer = setTimeout(animateStep, stepIntervalMs);
-      } else {
-        animTimer = setTimeout(() => {
-          playFlightSequence(index + 1);
-        }, intervalSec * 1000);
-      }
-    }
-
-    animateStep();
+      const cities = Object.values(c.cities).sort((x, y) => y.count - x.count);
+      const meta = [c.first ? `首次 ${c.first}` : '', c.visits ? `抵達 ${c.visits} 次` : ''].filter(Boolean).join(' · ');
+      html += `<div class="ctry">${flagHTML(c.cc)}<div class="ctry-main"><div class="ctry-name">${esc(countryName(c.cc))}${c.cc === state.settings.home ? '<span class="tag">母國</span>' : ''}</div>${meta ? `<div class="ctry-meta">${meta}</div>` : ''}<div class="chips">${cities.map(ct => `<span class="chip ${ct.manual ? 'manual' : ''}">${esc(ct.name)}</span>`).join('')}</div></div></div>`;
+    });
+    $('countryList').innerHTML = html;
   }
+
+  $('manualList').innerHTML = state.places.length
+    ? `<div class="section-title">手動新增的足跡 <span>${state.places.length} 筆</span></div>` + state.places.map(p => `<div class="mp-item">${flagHTML(p.cc)}<div class="mp-main"><b>${esc(p.city)}</b><span>${esc(countryName(p.cc))}${p.year ? ' · ' + p.year : ''}${hasCoord(p) ? ' · 📍 已標記位置' : ''}</span></div><button class="icon-btn sm danger" onclick="deletePlace('${p.id}')" title="刪除">✕</button></div>`).join('')
+    : '';
+}
+
+/* =========================================================
+   畫面：設定 / 其他
+   ========================================================= */
+function renderCustomAirports() {
+  const cas = Object.values(state.customAirports);
+  $('caCount').textContent = cas.length ? `${cas.length} 座` : '';
+  $('customAirportList').innerHTML = cas.length
+    ? cas.map(a => `<div class="mp-item">${flagHTML(a.cc)}<div class="mp-main"><b>${esc(a.code)} ${esc(a.name)}</b><span>${esc(countryName(a.cc))} · ${a.lat.toFixed(3)}, ${a.lng.toFixed(3)}</span></div><button class="icon-btn sm" onclick="editCustomAirport('${a.code}')" title="編輯">✎</button><button class="icon-btn sm danger" onclick="deleteCustomAirport('${a.code}')" title="刪除">✕</button></div>`).join('')
+    : '<div class="card note">目前沒有自訂機場。輸入清單裡沒有的機場時，會引導你新增。</div>';
+}
+function renderYearFilter() {
+  const years = [...new Set([...state.flights.map(f => (f.date || '').slice(0, 4)), ...state.places.map(p => p.year)].filter(y => /^\d{4}$/.test(y)))].sort().reverse();
+  if (state.settings.year !== 'all' && !years.includes(state.settings.year)) state.settings.year = 'all';
+  $('yearSel').innerHTML = '<option value="all">全部年份</option>' + years.map(y => `<option value="${y}">${y} 年</option>`).join('');
+  $('yearSel').value = state.settings.year;
+}
+function refreshAll() {
+  renderYearFilter();
+  allStats = computeStats(state.flights, state.places);
+  viewStats = state.settings.year === 'all' ? allStats : computeStats(filteredFlights(), filteredPlaces());
+  renderList(); renderStats(); renderPlaces(); renderCustomAirports();
+  $('brandSub').textContent = allStats.n || allStats.countryCount ? `${allStats.n} 段航程 · ${allStats.countryCount} 個國家/地區 · ${allStats.cityCount} 座城市` : '尚無資料';
+  const warns = state.flights.filter(f => flightWarnings(f).length).length;
+  $('warnBadge').textContent = warns || '';
+  $('checkAll').checked = false;
+  if (!anim.playing) { renderMap(); setStatusIdle(); resetProgress(); }
+  renderCountries();
+  save();
+}
+function buildDatalist() {
+  $('airportList').innerHTML = Object.values(allAirports()).sort((a, b) => a.code.localeCompare(b.code))
+    .map(a => `<option value="${esc(label(a))}">${esc(countryName(a.cc))} · ${esc(a.city)}</option>`).join('');
+  const names = [...new Set([...Object.values(AIRLINES), ...state.flights.map(f => f.airline).filter(Boolean)])];
+  $('airlineList').innerHTML = names.map(n => `<option value="${esc(n)}">`).join('');
+}
+function countryOptions() {
+  return '<option value="">請選擇</option>' + Object.entries(CONTINENTS).map(([k, name]) =>
+    `<optgroup label="${name}">${Object.entries(COUNTRIES).filter(([, c]) => c.cont === k).map(([cc, c]) => `<option value="${cc}">${c.name}</option>`).join('')}</optgroup>`).join('');
+}
+function syncSettingsUI() {
+  const st = state.settings;
+  document.querySelectorAll('.bm').forEach(b => b.classList.toggle('active', b.dataset.bm === st.basemap));
+  $('setLabels').checked = st.labels; $('setRoutes').checked = st.showRoutes; $('setShade').checked = st.shadeCountries; $('setFollow').checked = st.follow;
+  $('homeSel').value = st.home; $('pauseInp').value = st.pause;
+  $('durSel').value = st.duration; $('durSel2').value = st.duration;
+}
+
+let toastTimer = null;
+function toast(msg, action) {
+  const t = $('toast');
+  t.innerHTML = `<span>${esc(msg)}</span>${action ? `<button id="toastAct">${esc(action.label)}</button>` : ''}`;
+  if (action) $('toastAct').onclick = () => { action.fn(); t.classList.remove('show'); };
+  t.classList.add('show'); clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), action ? 6000 : 2600);
+}
+function toggleSidebar(open) {
+  const want = open === undefined ? document.body.classList.contains('sb-collapsed') : open;
+  document.body.classList.toggle('sb-collapsed', !want);
+  setTimeout(() => map.invalidateSize(), 340);
+}
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + name));
+  $('tabBody').scrollTop = 0;
+}
+
+/* =========================================================
+   航班新增 / 編輯 / 刪除
+   ========================================================= */
+const FORM_FIELDS = ['fromAirport', 'toAirport', 'startDate', 'startTime', 'endDate', 'endTime', 'flightNo', 'airline'];
+function openForm(id) {
+  editingId = id || null;
+  const f = id ? state.flights.find(x => x.id === id) : null;
+  if (f) {
+    $('fromAirport').value = f.from; $('toAirport').value = f.to;
+    $('startDate').value = f.date; $('startTime').value = f.startTime;
+    $('endDate').value = f.endDate; $('endTime').value = f.endTime;
+    $('flightNo').value = f.flight; $('airline').value = f.airline;
+  }
+  autoAirline = '';
+  $('formTitle').textContent = f ? '編輯航班' : '新增航班';
+  $('submitFlightBtn').textContent = f ? '儲存修改' : '新增航班';
+  $('flightForm').classList.remove('hidden');
+  toggleSidebar(true); switchTab('flights');
+  updateHint('from'); updateHint('to');
+  setTimeout(() => $('flightForm').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+function closeForm() {
+  if (editingId) FORM_FIELDS.forEach(k => $(k).value = '');
+  editingId = null;
+  $('flightForm').classList.add('hidden'); closeCustomAirport();
+  updateHint('from'); updateHint('to');
+}
+function swapAirports() {
+  const a = $('fromAirport'), b = $('toAirport');
+  [a.value, b.value] = [b.value, a.value];
+  updateHint('from'); updateHint('to');
+}
+function updateHint(which) {
+  const v = $(which + 'Airport').value.trim(), h = $(which + 'Hint');
+  if (!v) { h.className = 'hint'; h.innerHTML = ''; return; }
+  const a = findAirport(v);
+  if (a) { h.className = 'hint ok'; h.innerHTML = `✓ ${esc(a.code)} ${esc(a.name)} · ${esc(countryName(a.cc))}`; }
+  else { h.className = 'hint bad'; h.innerHTML = `找不到這個機場 · <a onclick="openCustomAirport('${which}')">新增自訂機場</a>`; }
+}
+function submitFlight() {
+  const fromV = $('fromAirport').value.trim(), toV = $('toAirport').value.trim();
+  if (!fromV || !toV) { toast('請填寫出發地與目的地'); return; }
+  const fa = findAirport(fromV), ta = findAirport(toV);
+  if (!fa) { openCustomAirport('from'); toast('找不到出發地機場，請先新增自訂機場'); return; }
+  if (!ta) { openCustomAirport('to'); toast('找不到目的地機場，請先新增自訂機場'); return; }
+  const date = $('startDate').value;
+  if (!date) { toast('請填寫出發日期'); $('startDate').focus(); return; }
+  const data = {
+    date, startTime: $('startTime').value || '', endDate: $('endDate').value || '', endTime: $('endTime').value || '',
+    flight: $('flightNo').value.trim().toUpperCase(), airline: $('airline').value.trim(),
+    from: label(fa), to: label(ta), fromCoord: [fa.lng, fa.lat], toCoord: [ta.lng, ta.lat]
+  };
+  if (state.settings.year !== 'all' && !date.startsWith(state.settings.year)) state.settings.year = 'all';
+  if (editingId) {
+    const i = state.flights.findIndex(x => x.id === editingId);
+    if (i >= 0) state.flights[i] = { ...state.flights[i], ...data };
+    closeForm(); toast('已儲存修改');
+  } else {
+    state.flights.push({ id: uid(), ...data });
+    ['startTime', 'endTime', 'flightNo', 'airline'].forEach(k => $(k).value = '');
+    autoAirline = '';
+    toast(`已新增 ${fa.code} → ${ta.code}，可按「對調」接著輸入回程`);
+  }
+  sortFlights(); buildDatalist(); refreshAll();
+}
+function deleteFlight(id) {
+  const i = state.flights.findIndex(x => x.id === id); if (i < 0) return;
+  lastDeleted = state.flights.splice(i, 1);
+  refreshAll();
+  toast('已刪除 1 段航班', { label: '復原', fn: undoDelete });
+}
+function deleteSelected() {
+  const ids = [...document.querySelectorAll('.fl-check:checked')].map(c => c.dataset.id);
+  if (!ids.length) { toast('請先勾選要刪除的航班'); return; }
+  lastDeleted = state.flights.filter(f => ids.includes(f.id));
+  state.flights = state.flights.filter(f => !ids.includes(f.id));
+  refreshAll();
+  toast(`已刪除 ${ids.length} 段航班`, { label: '復原', fn: undoDelete });
+}
+function undoDelete() {
+  if (!lastDeleted) return;
+  state.flights.push(...lastDeleted); lastDeleted = null; sortFlights(); refreshAll(); toast('已復原');
+}
+function clearFlights() {
+  if (!state.flights.length) return;
+  if (!confirm(`確定要清空全部 ${state.flights.length} 段航班嗎？\n建議先按「匯出」備份。`)) return;
+  if (anim.playing) stopPlayback(true);
+  state.flights = []; refreshAll(); toast('已清空航班');
+}
+function clearEverything() {
+  if (!confirm('確定要清除所有資料（航班、手動足跡、自訂機場）嗎？\n此動作無法復原，建議先匯出備份。')) return;
+  if (anim.playing) stopPlayback(true);
+  state.flights = []; state.places = []; state.customAirports = {};
+  buildDatalist(); refreshAll(); toast('已清除所有資料');
+}
+
+/* ---------- 自訂機場 ---------- */
+function openCustomAirport(which) {
+  caTarget = which || null;
+  const raw = which ? $(which + 'Airport').value.trim() : '';
+  const code = codeOf(raw);
+  $('caCode').value = code;
+  const name = code ? raw.replace(/^[A-Za-z0-9]{3}\s*/, '').replace(/[()（）]/g, '').trim() : raw;
+  $('caName').value = name; $('caCity').value = ''; $('caCountry').value = '';
+  $('caLat').value = ''; $('caLng').value = '';
+  $('customAirportCard').classList.remove('hidden');
+  toggleSidebar(true); switchTab('flights');
+  setTimeout(() => $('customAirportCard').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+function closeCustomAirport() { $('customAirportCard').classList.add('hidden'); caTarget = null; }
+function editCustomAirport(code) {
+  const a = state.customAirports[code]; if (!a) return;
+  caTarget = null;
+  $('caCode').value = a.code; $('caName').value = a.name; $('caCity').value = a.city === a.name ? '' : a.city;
+  $('caCountry').value = a.cc; $('caLat').value = a.lat; $('caLng').value = a.lng;
+  $('customAirportCard').classList.remove('hidden');
+  switchTab('flights');
+  setTimeout(() => $('customAirportCard').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+function saveCustomAirport() {
+  const code = $('caCode').value.trim().toUpperCase(), name = $('caName').value.trim();
+  const city = $('caCity').value.trim() || name, cc = $('caCountry').value;
+  const lat = parseFloat($('caLat').value), lng = parseFloat($('caLng').value);
+  if (!/^[A-Z0-9]{3}$/.test(code)) { toast('機場代碼需為 3 個英數字'); return; }
+  if (!name) { toast('請填寫機場名稱'); return; }
+  if (!cc) { toast('請選擇國家/地區'); return; }
+  if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) { toast('請填寫正確的經緯度，或從地圖點選'); return; }
+  state.customAirports[code] = { code, name, city, cc, lat, lng, custom: true };
+  state.flights.forEach(f => {
+    if (codeOf(f.from) === code) { f.from = label(state.customAirports[code]); f.fromCoord = [lng, lat]; }
+    if (codeOf(f.to) === code) { f.to = label(state.customAirports[code]); f.toCoord = [lng, lat]; }
+  });
+  if (caTarget) $(caTarget + 'Airport').value = label(state.customAirports[code]);
+  closeCustomAirport(); buildDatalist(); refreshAll();
+  updateHint('from'); updateHint('to');
+  toast(`已儲存機場 ${code} ${name}`);
+}
+function deleteCustomAirport(code) {
+  const used = state.flights.filter(f => codeOf(f.from) === code || codeOf(f.to) === code).length;
+  if (used && !confirm(`有 ${used} 段航班使用 ${code}，刪除後這些航班會缺少座標。確定刪除？`)) return;
+  delete state.customAirports[code]; buildDatalist(); refreshAll();
+}
+
+/* ---------- 手動足跡 ---------- */
+function addPlace() {
+  const cc = $('plCountry').value, city = $('plCity').value.trim(), year = $('plYear').value.trim();
+  const lat = parseFloat($('plLat').value), lng = parseFloat($('plLng').value);
+  if (!cc) { toast('請選擇國家/地區'); return; }
+  if (!city) { toast('請輸入城市名稱'); return; }
+  if (year && !/^\d{4}$/.test(year)) { toast('年份請輸入 4 位數字'); return; }
+  const hasLL = Number.isFinite(lat) && Number.isFinite(lng);
+  if ((Number.isFinite(lat) || Number.isFinite(lng)) && !hasLL) { toast('經緯度要兩個都填，或都不填'); return; }
+  state.places.push({ id: uid(), cc, city, year, lat: hasLL ? lat : null, lng: hasLL ? lng : null });
+  if (state.settings.year !== 'all' && year !== state.settings.year) state.settings.year = 'all';
+  ['plCity', 'plYear', 'plLat', 'plLng'].forEach(k => $(k).value = '');
+  refreshAll(); toast(`已加入足跡：${city}`);
+}
+function deletePlace(id) { state.places = state.places.filter(p => p.id !== id); refreshAll(); }
+
+/* ---------- 地圖點選 ---------- */
+function startPick(cb) {
+  pickCb = cb; document.body.classList.add('picking');
+  if (isMobile()) toggleSidebar(false);
+}
+function endPick() {
+  pickCb = null; document.body.classList.remove('picking');
+  if (isMobile()) toggleSidebar(true);
+}
+map.on('click', e => {
+  if (!pickCb) return;
+  const lat = e.latlng.lat, lng = ((((e.latlng.lng + 180) % 360) + 360) % 360) - 180;
+  const cb = pickCb; endPick(); cb(lat, lng); toast('已填入座標');
+});
+
+/* ---------- 匯入 / 匯出 ---------- */
+function importFile(e) {
+  const file = e.target.files[0]; e.target.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    let data;
+    try { data = JSON.parse(ev.target.result); } catch (err) { toast('讀取失敗：不是有效的 JSON 檔'); return; }
+    const flights = Array.isArray(data) ? data : (data && Array.isArray(data.flights) ? data.flights : null);
+    if (!flights) { toast('檔案格式不正確'); return; }
+    let mode = 'replace';
+    if (state.flights.length || state.places.length) {
+      mode = confirm(`目前已有 ${state.flights.length} 段航班。\n\n按「確定」＝合併（自動略過重複的航班）\n按「取消」＝用匯入的檔案整個取代`) ? 'merge' : 'replace';
+    }
+    if (anim.playing) stopPlayback(true);
+    if (mode === 'replace') state.customAirports = {};
+    if (!Array.isArray(data) && data.customAirports && typeof data.customAirports === 'object') {
+      Object.values(data.customAirports).forEach(a => {
+        if (a && /^[A-Z0-9]{3}$/.test(a.code) && Number.isFinite(+a.lat) && Number.isFinite(+a.lng))
+          state.customAirports[a.code] = { code: a.code, name: String(a.name || a.code), city: String(a.city || a.name || a.code), cc: String(a.cc || ''), lat: +a.lat, lng: +a.lng, custom: true };
+      });
+    }
+    const incoming = flights.filter(f => f && typeof f === 'object').map(normalizeFlight);
+    const places = (!Array.isArray(data) && Array.isArray(data.places)) ? data.places.map(normPlace).filter(p => p.city) : [];
+    let added = incoming.length;
+    if (mode === 'replace') { state.flights = incoming; state.places = places; }
+    else {
+      const key = f => [f.date, f.startTime, codeOf(f.from), codeOf(f.to), f.flight].join('|');
+      const seen = new Set(state.flights.map(key)); added = 0;
+      incoming.forEach(f => { if (!seen.has(key(f))) { state.flights.push(f); seen.add(key(f)); added++; } });
+      const pk = p => [p.cc, p.city, p.year].join('|'); const ps = new Set(state.places.map(pk));
+      places.forEach(p => { if (!ps.has(pk(p))) { state.places.push(p); ps.add(pk(p)); } });
+    }
+    state.settings.year = 'all';
+    sortFlights(); buildDatalist(); refreshAll(); fitAll();
+    const warns = state.flights.filter(f => flightWarnings(f).length).length;
+    toast(`${mode === 'merge' ? '合併' : '匯入'}完成：${added} 段航班${warns ? `，有 ${warns} 筆需要檢查（黃框）` : ''}`);
+  };
+  reader.readAsText(file);
+}
+function exportJSON() {
+  if (!state.flights.length && !state.places.length) { toast('沒有資料可以匯出'); return; }
+  const out = {
+    app: 'flight-footprint', version: 2, exportedAt: new Date().toISOString(),
+    flights: state.flights.map(f => { const [a, b] = fCoordsPair(f); return { ...f, fromCoord: a, toCoord: b }; }),
+    places: state.places, customAirports: state.customAirports
+  };
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url; link.download = 'myFlightLogs.json';
+  document.body.appendChild(link); link.click();
+  setTimeout(() => { link.remove(); URL.revokeObjectURL(url); }, 200);
+  toast('已匯出 myFlightLogs.json');
+}
+
+/* =========================================================
+   事件綁定與初始化
+   ========================================================= */
+function bindEvents() {
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+  $('fileInput').addEventListener('change', importFile);
+  $('flightSearch').addEventListener('input', renderList);
+  $('checkAll').addEventListener('change', e => document.querySelectorAll('.fl-check').forEach(c => c.checked = e.target.checked));
+  ['from', 'to'].forEach(w => $(w + 'Airport').addEventListener('input', () => updateHint(w)));
+  $('flightNo').addEventListener('input', () => {
+    const name = AIRLINES[$('flightNo').value.trim().toUpperCase().slice(0, 2)];
+    const cur = $('airline').value.trim();
+    if (name && (!cur || cur === autoAirline)) { $('airline').value = name; autoAirline = name; }
+  });
+  $('startDate').addEventListener('change', () => { if (!$('endDate').value) $('endDate').value = $('startDate').value; });
+
+  $('playBtn').addEventListener('click', () => anim.playing ? togglePause() : startPlayback());
+  $('stopBtn').addEventListener('click', () => stopPlayback());
+  $('yearSel').addEventListener('change', e => {
+    if (anim.playing) stopPlayback(true);
+    state.settings.year = e.target.value; refreshAll(); fitAll();
+  });
+  const setDur = v => { state.settings.duration = v; $('durSel').value = v; $('durSel2').value = v; save(); };
+  $('durSel').addEventListener('change', e => setDur(e.target.value));
+  $('durSel2').addEventListener('change', e => setDur(e.target.value));
+  $('pauseInp').addEventListener('change', e => { const v = Math.min(3, Math.max(0, parseFloat(e.target.value) || 0)); state.settings.pause = v; e.target.value = v; save(); });
+
+  document.querySelectorAll('.bm').forEach(b => b.addEventListener('click', () => {
+    state.settings.basemap = b.dataset.bm; syncSettingsUI(); applyBasemap();
+    if (!anim.playing) renderMap(); renderCountries(); save();
+  }));
+  $('setLabels').addEventListener('change', e => { state.settings.labels = e.target.checked; applyBasemap(); save(); });
+  $('setRoutes').addEventListener('change', e => { state.settings.showRoutes = e.target.checked; if (!anim.playing) renderMap(); save(); });
+  $('setShade').addEventListener('change', e => { state.settings.shadeCountries = e.target.checked; renderCountries(); save(); });
+  $('setFollow').addEventListener('change', e => { state.settings.follow = e.target.checked; save(); });
+  $('homeSel').addEventListener('change', e => { state.settings.home = e.target.value || 'TW'; refreshAll(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && pickCb) { endPick(); return; }
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (e.code === 'Space' && !['input', 'select', 'textarea', 'button'].includes(tag)) {
+      e.preventDefault(); anim.playing ? togglePause() : startPlayback();
+    }
+  });
+}
+
+function init() {
+  const opts = countryOptions();
+  $('caCountry').innerHTML = opts; $('plCountry').innerHTML = opts;
+  $('homeSel').innerHTML = opts.replace('<option value="">請選擇</option>', '');
+  const durOpts = DURATIONS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
+  $('durSel').innerHTML = durOpts; $('durSel2').innerHTML = durOpts;
+
+  load();
+  state.flights = state.flights.map(normalizeFlight);
+  sortFlights();
+  if (isMobile()) document.body.classList.add('sb-collapsed');
+  buildDatalist(); syncSettingsUI(); applyBasemap(); bindEvents(); updatePlayerUI();
+  refreshAll();
+  setTimeout(() => { map.invalidateSize(); fitAll(); }, 200);
+}
+init();
 </script>
-
 </body>
 </html>
